@@ -1,0 +1,7 @@
+2025-02-23 17:29:31,657 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=4. Параметры поиска: search=УДВН, mit_number=14557-15, mi_number=3261, year=2024
+2025-02-23 17:29:31,657 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'search': '*УДВН*', 'mit_number': '14557-15', 'mi_number': '3261', 'year': 2024}
+2025-02-23 17:29:39,058 - app.routers.instruments - INFO - Создание нового средства измерений с mit_number=14557-15 и mi_number=3261
+2025-02-23 17:30:43,427 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=4. Параметры поиска: search=УДВН, mit_number=14557-15, mi_number=3261, year=2024
+2025-02-23 17:30:43,427 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'search': '*УДВН*', 'mit_number': '14557-15', 'mi_number': '3261', 'year': 2024}
+2025-02-23 17:30:51,553 - app.routers.instruments - WARNING - Попытка добавить уже существующий прибор с mit_number=14557-15 и mi_number=3261
+2025-02-23 17:30:51,553 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 409: Прибор уже существует в базе данных.
