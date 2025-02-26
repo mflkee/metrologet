@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from app import models, schemas
 
 # CRUD для узлов
@@ -8,6 +9,9 @@ def create_node(db: Session, node: schemas.NodeCreate):
     db.commit()
     db.refresh(db_node)
     return db_node
+
+def get_node_by_id(db: Session, node_id: int):
+    return db.query(models.Node).filter(models.Node.id == node_id).first()
 
 # CRUD для средств измерений
 def create_measuring_instrument(db: Session, instrument: schemas.MeasuringInstrumentCreate, node_id: int):
@@ -47,3 +51,10 @@ def get_nodes(db: Session):
 def get_instruments_by_node(db: Session, node_id: int):
     return db.query(models.MeasuringInstrument).filter(models.MeasuringInstrument.node_id == node_id).all()
 
+def search_nodes(db: Session, query: str):
+    return db.query(models.Node).filter(
+        or_(
+            models.Node.name.ilike(f"%{query}%"),  # Поиск по названию
+            models.Node.description.ilike(f"%{query}%")  # Поиск по описанию
+        )
+    ).all()

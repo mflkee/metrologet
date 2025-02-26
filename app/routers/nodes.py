@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from .. import crud, schemas
 from .. database import get_db
@@ -15,6 +15,24 @@ def create_node(node: schemas.NodeCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=list[schemas.NodeResponse])
 def read_nodes(db: Session = Depends(get_db)):
     return crud.get_nodes(db)
+
+# В файле app/routers/nodes.py
+@router.get("/{node_id}", response_model=schemas.NodeResponse)
+def read_node(node_id: int, db: Session = Depends(get_db)):
+    node = crud.get_node_by_id(db, node_id)
+    if not node:
+        raise HTTPException(status_code=404, detail="Node not found")
+    return node
+
+# маршрут для поиска и фильтрации узлов
+# В файле app/routers/nodes.py
+@router.get("/search/", response_model=list[schemas.NodeResponse])
+def search_nodes(
+    query: str = Query(..., min_length=1),  # Обязательный параметр
+    db: Session = Depends(get_db)
+):
+    nodes = crud.search_nodes(db, query)
+    return nodes
 
 # Маршрут для получения всех средств измерений для конкретного узла
 @router.get("/{node_id}/instruments/", response_model=list[schemas.MeasuringInstrumentResponse])

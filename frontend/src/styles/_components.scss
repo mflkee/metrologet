@@ -1,0 +1,181 @@
+// Правильные импорты
+@use './variables' as *;
+@use './mixins' as *; // Теперь миксины доступны без префикса
+
+.card {
+  position: relative;
+  text-align: center;
+  background-color: $foreground;
+  color: $background;
+  border-radius: 6px;
+  padding: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 220px;
+  border: 1px solid transparent; // изначально прозрачная окантовка
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  overflow: hidden;
+  min-height: 10px;
+
+  &:hover {
+    transform: scale(1.05); // увеличение карточки
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border: 4px solid $purple; // окантовка карточки (можно выбрать другой цвет)
+  }
+
+  .card-header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-body {
+    font-size: 0.9rem;
+    font-weight: normal;
+  }
+  
+  // Кнопка удаления (крестик) – появляется при наведении
+  .delete-button {
+    position: absolute;
+
+    top: 10px;
+    right: 8px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: $red;
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+  
+  &:hover .delete-button {
+    opacity: 1;
+  }
+  
+  // Контейнер для меню удаления внутри карточки
+  .delete-menu-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 42, 54, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  
+  .delete-menu {
+  background-color: $foreground;
+  padding: 1.5rem;
+  border-radius: 6px;
+  width: 100%;  // Делаем его на всю карточку
+  height: 100%;
+  box-shadow: none; // Убираем доп. тень, т.к. уже есть у родителя
+
+    p {
+      text-align: center;
+      /* margin-bottom: 1rem; */
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    
+    .delete-menu-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      
+      button {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.05);
+        }
+        
+        &:first-child {
+          background-color: $red;  // Кнопка "Да"
+          color: $foreground;
+        }
+        
+        &:last-child {
+          background-color: $comment; // Кнопка "Нет"
+          color: $foreground;
+        }
+      }
+    }
+  }
+}
+
+.add-node-button {
+  background-color: $green; // зеленый фон
+  width: 40px;             // начальная узкая ширина (1/3 карточки)
+  height: 102px;            
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;  // черный бортик
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: width 0.3s ease, padding 0.3s ease;
+  justify-self: start; // выравнивание по левому краю (в grid-контейнере)
+
+  .plus-icon {
+    pointer-events: none;  // отключаем реакции на курсор
+    display: block;
+    font-size: 2rem;
+    line-height: 1;
+    color: black;
+    caret-color: transparent;  /* Убирает текстовый курсор */
+  }
+  
+  .add-node-form {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+    display: flex;
+
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      background-color: #fff; /* Белый фон */
+      font-size: 1rem;
+      color: #000; /* Текст черного цвета */
+      border: 2px solid #000; /* Черная граница */
+      border-radius: 8px; /* Закругленные углы */
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #000; /* Черная граница остается при фокусе */
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Легкая тень */
+    }
+  }
+  
+  &:hover {
+    width: 220px;       // расширяется до полноценной карточки
+    padding: 1rem;
+    
+    .plus-icon {
+      display: none;
+    }
+  }
+}

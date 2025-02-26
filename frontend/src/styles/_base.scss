@@ -1,0 +1,29 @@
+// _base.scss
+
+@use './variables' as *; // Путь от src/styles/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $background;
+  color: $foreground;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+a {
+  color: $cyan;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+::selection {
+  background-color: $selection;
+}

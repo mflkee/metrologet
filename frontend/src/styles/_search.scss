@@ -1,0 +1,57 @@
+@use './variables' as *; // Путь от src/styles/
+
+.search-container {
+  position: relative;
+  width: 50px;               // изначально маленький круг
+  height: 50px;
+  border: 3px solid #000;    // черный бортик
+  border-radius: 50%;        // круглая форма
+  background-color: $orange;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: width 0.4s ease, border-radius 0.4s ease;
+  margin: 10px auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+
+  // При наведении, фокусе или когда в поле ввода есть текст
+  &:hover,
+  &:focus-within,
+  &:has(.search-bar:not(:placeholder-shown)) {
+    width: 200px;            // фиксированная ширина
+    border-radius: 20px;      // превращается в прямоугольник с закругленными углами
+  }
+
+  &::before {
+    content: '\1F50D';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    background-color: $orange;
+    border-radius: 50%;
+    color: $background;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+}
+
+.search-bar {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #000;
+  font-size: 16px;
+  padding: 0 10px;
+  margin-left: 50px;         // смещаем поле ввода вправо от значка
+  width: calc(100% - 50px);
+  display: inline-block;
+
+  &::placeholder {
+    color: $comment;
+  }
+}

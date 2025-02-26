@@ -1,0 +1,42 @@
+@use './variables' as *; // Путь от src/styles/
+
+.header {
+  background-color: $background;
+  padding: 1rem;
+  text-align: center;
+
+  .title {
+    color: $foreground;
+    font-size: 3rem;
+    margin: 0;
+  }
+}
+
+.home-page {
+  padding: 1rem;
+
+  // Контейнер карточек с 5 колонками, центрирование и фиксированная ширина
+  
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-items: center;
+    align-items: stretch;       // заставляет содержимое растягиваться по высоте
+    grid-auto-rows: 100px;       // фиксированная высота для каждой строки
+    margin-top: 1rem;
+  }
+}
+
+.node-details-page {
+  padding: 1rem;
+  
+  h1.node-title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}
+
+
