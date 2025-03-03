@@ -1,0 +1,1108 @@
+
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Получение всех узлов
+export const fetchNodes = async () => {
+  try {
+    const response = await apiClient.get('/nodes/');
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении узлов");
+  }
+};
+
+// Создание нового узла
+export const createNode = async (nodeData) => {
+  try {
+    const response = await apiClient.post('/nodes/', nodeData);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при создании узла");
+  }
+};
+
+// Удаление узла
+export const deleteNode = async (nodeId) => {
+  try {
+    const response = await apiClient.delete(`/nodes/${nodeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при удалении узла");
+  }
+};
+
+// Поиск узлов
+export const searchNodes = async (query) => {
+  try {
+    const response = await apiClient.get(`/nodes/search/?query=${query}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при поиске узлов");
+  }
+};
+
+// Получение всех СИ для узла
+export const fetchInstrumentsByNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/nodes/${nodeId}/instruments/`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении СИ");
+  }
+};
+
+// Поиск и добавление СИ через API "АРШИН"
+export const searchAndAddInstrument = async (nodeId, searchParams) => {
+  try {
+    const response = await apiClient.get(`/instruments/${nodeId}/search_instruments/`, { params: searchParams });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при добавлении СИ");
+  }
+};
+
+// В файле api/apiClient.js
+export const fetchNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/nodes/${nodeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении данных узла");
+  }
+};
+import React from 'react';
+import AppRoutes from './routes';
+import './styles/App.scss';
+
+function App() {
+  return (
+    <div className="App">
+      {/* Фоновая секция */}
+      <header className="header">
+          <h1 className="title">metrologet.mkair</h1>
+      </header>
+      <AppRoutes />
+    </div>
+  );
+}
+
+export default App;
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+import React, { useState } from 'react';
+
+function AddInstrumentModal({ onClose, onAdd }) {
+  const [searchParams, setSearchParams] = useState({
+    search: '',
+    mit_number: '',
+    mi_number: '',
+    year: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await onAdd(searchParams);
+    onClose();
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Добавить средство измерений</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="search"
+            placeholder="Поиск..."
+            value={searchParams.search}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="mit_number"
+            placeholder="Номер MIT"
+            value={searchParams.mit_number}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="mi_number"
+            placeholder="Номер MI"
+            value={searchParams.mi_number}
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="year"
+            placeholder="Год"
+            value={searchParams.year}
+            onChange={handleChange}
+          />
+          <button type="submit">Добавить</button>
+          <button type="button" onClick={onClose}>
+            Отмена
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default AddInstrumentModal;
+import React, { useState, useRef } from 'react';
+
+function AddNodeButton({ onAdd }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const nameInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
+
+  const handleSubmit = () => {
+    if (name.trim() === '') return;
+    onAdd({ name, description });
+    setIsExpanded(false);
+    setName('');
+    setDescription('');
+  };
+
+  const handleKeyDown = (e, field) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (field === 'name' && descriptionInputRef.current) {
+        descriptionInputRef.current.focus(); // Перевод фокуса на описание
+      } else if (field === 'description') {
+        handleSubmit(); // Добавляем узел
+      }
+    }
+  };
+
+  return (
+    <div
+      className="add-node-button"
+      onMouseEnter={() => {
+        setIsExpanded(true);
+        setTimeout(() => nameInputRef.current?.focus(), 100); // Фокус на название
+      }}
+      onMouseLeave={() => setIsExpanded(false)}
+    >
+      {!isExpanded && <div className="plus-icon">+</div>}
+      {isExpanded && (
+        <div className="add-node-form">
+          <input
+            type="text"
+            placeholder="Название объекта"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, 'name')}
+            ref={nameInputRef} // Фокусируется автоматически
+          />
+          <input
+            type="text"
+            placeholder="Описание"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, 'description')}
+            ref={descriptionInputRef}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AddNodeButton;
+import React from 'react';
+
+function DeleteNodeMenu({ onClose, onDelete }) {
+  return (
+    <div className="delete-menu">
+      <p>Удалить узел?</p>
+      <div className="delete-menu-buttons">
+        <button onClick={onDelete}>Да</button>
+        <button onClick={onClose}>Нет</button>
+      </div>
+    </div>
+  );
+}
+
+export default DeleteNodeMenu;
+import React from 'react';
+
+function InstrumentTable({ instruments }) {
+  return (
+    <div className="instrument-table">
+      {/* Заголовки колонок */}
+      <div className="table-header">
+        <div className="header-cell">ID</div>
+        <div className="header-cell">Название</div>
+        <div className="header-cell">Номер MIT</div>
+        <div className="header-cell">Номер MI</div>
+        <div className="header-cell">Дата поверки</div>
+        <div className="header-cell">Действителен до</div>
+      </div>
+
+      {/* Карточки средств измерений */}
+      <div className="card-container">
+        {instruments.length > 0 ? (
+          instruments.map((instrument) => (
+            <div key={instrument.id} className="instrument-card">
+              <div className="card-cell">{instrument.id}</div>
+              <div className="card-cell">{instrument.mit_title}</div>
+              <div className="card-cell">{instrument.mit_number}</div>
+              <div className="card-cell">{instrument.mi_number}</div>
+              <div className="card-cell">{instrument.verification_date}</div>
+              <div className="card-cell">{instrument.valid_date}</div>
+            </div>
+          ))
+        ) : (
+          <div className="no-data">Нет данных</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default InstrumentTable;
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DeleteNodeMenu from './DeleteNodeMenu';
+
+function NodeCard({ node, onDelete }) {
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (!showDeleteMenu) navigate(`/node/${node.id}`);
+  };
+
+  return (
+    <div className="card" onClick={handleCardClick}>
+      {/* Контент карточки */}
+      {!showDeleteMenu && (
+        <>
+          <div className="card-header">{node.name}</div>
+          <div className="card-body">{node.description || "Описание отсутствует"}</div>
+          <button
+            className="delete-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteMenu(true);
+            }}
+            aria-label={`Удалить узел ${node.name}`}
+          >
+            ×
+          </button>
+        </>
+      )}
+
+      {/* Меню подтверждения удаления */}
+      {showDeleteMenu && (
+        <div className="delete-menu-container">
+          <DeleteNodeMenu
+            onClose={() => setShowDeleteMenu(false)}
+            onDelete={() => {
+              onDelete(node.id);
+              setShowDeleteMenu(false);
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default NodeCard;
+import React, { useState } from 'react';
+
+function SearchBar({ onSearch }) {
+  const [query, setQuery] = useState("");
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    onSearch(value);
+  };
+
+  return (
+    <div className="search-container">
+      <input
+        type="text"
+        placeholder="Поиск..."
+        value={query}
+        onChange={handleChange}
+        className="search-bar"
+      />
+    </div>
+  );
+}
+
+export default SearchBar;
+export default SearchBar;
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.scss';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3"><g fill="#61DAFB"><path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/><circle cx="420.9" cy="296.5" r="45.7"/><path d="M520.5 78.1z"/></g></svg>import React, { useEffect, useState } from 'react';
+import {
+  fetchNodes,
+  createNode,
+  deleteNode,
+  searchNodes,
+} from '../api/apiClient';
+import NodeCard from '../components/NodeCard';
+import AddNodeButton from '../components/AddNodeButton';
+import SearchBar from '../components/SearchBar';
+import '../styles/App.scss'; // Глобальные стили
+
+function HomePage() {
+  const [nodes, setNodes] = useState([]); // Все узлы
+  const [filteredNodes, setFilteredNodes] = useState([]); // Отфильтрованные узлы
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Загрузка узлов при монтировании
+  useEffect(() => {
+    const loadNodes = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchNodes();
+        setNodes(data);
+        setFilteredNodes(data);
+      } catch (error) {
+        console.error("Ошибка при загрузке узлов:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadNodes();
+  }, []);
+
+  // Обработчик поиска
+  const handleSearch = async (query) => {
+    setIsLoading(true);
+    try {
+      if (!query) {
+        setFilteredNodes(nodes);
+      } else {
+        const data = await searchNodes(query);
+        setFilteredNodes(data);
+      }
+    } catch (error) {
+      console.error("Ошибка при поиске:", error);
+      setFilteredNodes([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Добавление нового узла
+  const handleAddNode = async (nodeData) => {
+    try {
+      setIsLoading(true);
+      const newNode = await createNode(nodeData);
+      setNodes([...nodes, newNode]);
+      setFilteredNodes([...filteredNodes, newNode]);
+    } catch (error) {
+      console.error("Ошибка при добавлении узла:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Удаление узла
+  const handleDeleteNode = async (nodeId) => {
+    try {
+      setIsLoading(true);
+      await deleteNode(nodeId);
+      setNodes(nodes.filter((node) => node.id !== nodeId));
+      setFilteredNodes(filteredNodes.filter((node) => node.id !== nodeId));
+    } catch (error) {
+      console.error("Ошибка при удалении узла:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="home-page">
+      <SearchBar onSearch={handleSearch} />
+      <div className="card-container">
+        {isLoading ? (
+          <p>Загрузка...</p>
+        ) : filteredNodes.length > 0 ? (
+          filteredNodes.map((node) => (
+            <NodeCard key={node.id} node={node} onDelete={handleDeleteNode} />
+          ))
+        ) : (
+          <div className="no-data">Нет данных</div>
+        )}
+        <AddNodeButton onAdd={handleAddNode} />
+      </div>
+    </div>
+  );
+}
+
+export default HomePage;
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import {
+  fetchInstrumentsByNode,
+  searchAndAddInstrument,
+  fetchNode,
+} from '../api/apiClient';
+import AddInstrumentModal from '../components/AddInstrumentModal';
+
+function NodeDetailsPage() {
+  const { nodeId } = useParams();
+  const [instruments, setInstruments] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nodeName, setNodeName] = useState('');
+
+  // Загрузка данных узла
+  useEffect(() => {
+    const loadNode = async () => {
+      try {
+        const nodeData = await fetchNode(nodeId);
+        setNodeName(nodeData.name);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных узла:", error);
+      }
+    };
+    loadNode();
+  }, [nodeId]);
+
+  // Загрузка средств измерения для узла
+  useEffect(() => {
+    const loadInstruments = async () => {
+      try {
+        const data = await fetchInstrumentsByNode(nodeId);
+        setInstruments(data);
+      } catch (error) {
+        console.error("Ошибка при загрузке СИ:", error);
+      }
+    };
+    loadInstruments();
+  }, [nodeId]);
+
+  // Обработчик добавления нового СИ
+  const handleAddInstrument = async (searchParams) => {
+    try {
+      const newInstrument = await searchAndAddInstrument(nodeId, searchParams);
+      setInstruments([...instruments, newInstrument]);
+    } catch (error) {
+      console.error("Ошибка при добавлении СИ:", error);
+    }
+  };
+
+  // Обработка завершения перетаскивания карточки
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reordered = Array.from(instruments);
+    const [removed] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, removed);
+    setInstruments(reordered);
+
+    // Здесь можно добавить вызов API для обновления порядка карточек в БД
+    // updateInstrumentOrder(reordered);
+  };
+
+  return (
+    <div className="node-details-page">
+      <h1 className="node-title">{nodeName || "Загрузка..."}</h1>
+      <button onClick={() => setIsModalOpen(true)}>Добавить СИ</button>
+      {isModalOpen && (
+        <AddInstrumentModal
+          onClose={() => setIsModalOpen(false)}
+          onAdd={handleAddInstrument}
+        />
+      )}
+
+      {/* Статическая строка-заголовок */}
+      <div className="header-row">
+        <div className="card-cell">ID</div>
+        <div className="card-cell">Название</div>
+        <div className="card-cell">Номер MIT</div>
+        <div className="card-cell">Номер MI</div>
+        <div className="card-cell">Дата поверки</div>
+        <div className="card-cell">Действителен до</div>
+      </div>
+
+      {/* Интерактивные карточки с информацией о СИ */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="instruments">
+          {(provided) => (
+            <div
+              className="draggable-instruments"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {instruments.map((instrument, index) => (
+                <Draggable
+                  key={instrument.id}
+                  draggableId={instrument.id.toString()}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      className="instrument-card"
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <div className="card-cell">{instrument.id}</div>
+                      <div className="card-cell">{instrument.mit_title}</div>
+                      <div className="card-cell">{instrument.mit_number}</div>
+                      <div className="card-cell">{instrument.mi_number}</div>
+                      <div className="card-cell">{instrument.verification_date}</div>
+                      <div className="card-cell">{instrument.valid_date}</div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </div>
+  );
+}
+
+export default NodeDetailsPage;
+import React from 'react';
+
+function NotFound() {
+  return (
+    <div>
+      <h1>404 - Страница не найдена</h1>
+      <p>К сожалению, запрашиваемая страница не существует.</p>
+    </div>
+  );
+}
+
+export default NotFound;
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import NodeDetails from './pages/NodeDetails';
+import NotFound from './pages/NotFound';
+
+function AppRoutes() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/node/:nodeId" element={<NodeDetails />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default AppRoutes;
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+// App.scss
+@use 'variables';
+@use 'mixins';
+@use 'base';
+@use 'layout';
+@use 'components';
+@use 'search';
+@use 'nodedetail';
+// _base.scss
+
+@use './variables' as *; // Путь от src/styles/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $background;
+  color: $foreground;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+a {
+  color: $cyan;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+::selection {
+  background-color: $selection;
+}
+// Правильные импорты
+@use './variables' as *;
+@use './mixins' as *; // Теперь миксины доступны без префикса
+
+.card {
+  position: relative;
+  text-align: center;
+  background-color: $foreground;
+  color: $background;
+  border-radius: 6px;
+  padding: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 220px;
+  border: 1px solid transparent; // изначально прозрачная окантовка
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  overflow: hidden;
+  min-height: 10px;
+
+  &:hover {
+    transform: scale(1.12); // увеличение карточки
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-body {
+    font-size: 0.9rem;
+    font-weight: normal;
+  }
+  
+  // Кнопка удаления (крестик) – появляется при наведении
+  .delete-button {
+    position: absolute;
+
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: $red;
+    color: $background;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+  
+  &:hover .delete-button {
+    opacity: 1;
+  }
+  
+  // Контейнер для меню удаления внутри карточки
+  .delete-menu-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 42, 54, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  
+  .delete-menu {
+  background-color: $foreground;
+  padding: 1.5rem;
+  border-radius: 6px;
+  width: 100%;  // Делаем его на всю карточку
+  height: 100%;
+  box-shadow: none; // Убираем доп. тень, т.к. уже есть у родителя
+
+    p {
+      text-align: center;
+      /* margin-bottom: 1rem; */
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    
+    .delete-menu-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      
+      button {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.05);
+        }
+        
+        &:first-child {
+          background-color: $red;  // Кнопка "Да"
+          color: $foreground;
+        }
+        
+        &:last-child {
+          background-color: $comment; // Кнопка "Нет"
+          color: $foreground;
+        }
+      }
+    }
+  }
+}
+
+.add-node-button {
+  background-color: $green; // зеленый фон
+  width: 40px;             // начальная узкая ширина (1/3 карточки)
+  height: 102px;            
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;  // черный бортик
+  border-radius: 6px; cursor: pointer;
+  overflow: hidden;
+  transition: width 0.3s ease, padding 0.3s ease;
+  justify-self: start; // выравнивание по левому краю (в grid-контейнере)
+
+  .plus-icon {
+    pointer-events: none;  // отключаем реакции на курсор
+    display: block;
+    font-size: 2rem;
+    line-height: 1;
+    color: black;
+    caret-color: transparent;  /* Убирает текстовый курсор */
+  }
+  
+  .add-node-form {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+    display: flex;
+
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      background-color: #fff; /* Белый фон */
+      font-size: 1rem;
+      color: #000; /* Текст черного цвета */
+      border: 2px solid #000; /* Черная граница */
+      border-radius: 8px; /* Закругленные углы */
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #000; /* Черная граница остается при фокусе */
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Легкая тень */
+    }
+  }
+  
+  &:hover {
+    width: 220px;       // расширяется до полноценной карточки
+    padding: 1rem;
+    
+    .plus-icon {
+      display: none;
+    }
+  }
+}
+
+.instrument-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  th, td {
+    padding: 0.75rem;
+    border: 1px solid $comment;
+    text-align: left;
+  }
+
+  th {
+    background-color: $background;
+    color: $foreground;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: lighten($background, 10%);
+  }
+}
+
+@use './variables' as *; // Путь от src/styles/
+
+.header {
+  background-color: $background;
+  padding: 1rem;
+  text-align: center;
+  caret-color: transparent;  /* Убирает текстовый курсор */
+
+
+
+  .title {
+    color: $foreground;
+    font-size: 3rem;
+    margin: 0;
+
+  }
+}
+
+.home-page {
+  padding: 1rem;
+
+  // Контейнер карточек с 5 колонками, центрирование и фиксированная ширина
+  
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-items: center;
+    align-items: stretch;       // заставляет содержимое растягиваться по высоте
+    grid-auto-rows: 100px;       // фиксированная высота для каждой строки
+    margin-top: 1rem;
+  }
+}
+
+.node-details-page {
+  padding: 1rem;
+  
+  h1.node-title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}
+// _mixins.scss
+
+@mixin card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+@use './variables' as *;
+
+.node-details-page {
+  padding: 1rem;
+
+  .node-title {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: $foreground;
+  }
+
+  button {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: $green;
+    border: none;
+    border-radius: 4px;
+    color: $background;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($green, 10%);
+    }
+  }
+
+  // Статическая заголовочная карточка (не интерактивная)
+  .header-row {
+    display: flex;
+    align-items: center;
+    background-color: $foreground;
+    color: $background;
+    border: 1px solid $comment;
+    border-radius: 6px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    cursor: default; // Без анимации при наведении
+  }
+
+  // Контейнер для интерактивных карточек СИ
+  .draggable-instruments {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .instrument-card {
+      display: flex;
+      align-items: center;
+      background-color: $foreground;
+      color: $background;
+      border: 1px solid $comment;
+      border-radius: 6px;
+      padding: 0.5rem;
+      transition: transform 0.2s ease;
+      cursor: grab;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+
+      .card-cell {
+        flex: 1;
+        padding: 0 0.5rem;
+        word-break: break-word;
+      }
+    }
+  }
+}
+@use './variables' as *; // Путь от src/styles/
+
+.search-container {
+  position: relative;
+  width: 50px;               // изначально маленький круг
+  height: 50px;
+  border: 3px solid #000;    // черный бортик
+  border-radius: 50%;        // круглая форма
+  background-color: $orange;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: width 0.4s ease, border-radius 0.4s ease;
+  margin: 10px auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+
+  // При наведении, фокусе или когда в поле ввода есть текст
+  &:hover,
+  &:focus-within,
+  &:has(.search-bar:not(:placeholder-shown)) {
+    width: 200px;            // фиксированная ширина
+    border-radius: 20px;      // превращается в прямоугольник с закругленными углами
+  }
+
+  &::before {
+    content: '\1F50D';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    background-color: $orange;
+    border-radius: 50%;
+    color: $background;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+}
+
+.search-bar {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #000;
+  font-size: 16px;
+  padding: 0 10px;
+  margin-left: 50px;         // смещаем поле ввода вправо от значка
+  width: calc(100% - 50px);
+  display: inline-block;
+
+  &::placeholder {
+    color: $comment;
+  }
+}
+// Dracula color palette
+$background: #282A36;
+$foreground: #F8F8F2;
+$selection: #44475A;
+$comment:   #6272A4;
+$red:       #FF5555;
+$orange:    #FFB86C;
+$yellow:    #F1FA8C;
+$green:     #50FA7B;
+$purple:    #BD93F9;
+$cyan:      #8BE9FD;
+$pink:      #FF79C6;
+
+// ANSI color palette
+$ansi-black:          #21222C;
+$ansi-red:            #FF5555;
+$ansi-green:          #50FA7B;
+$ansi-yellow:         #F1FA8C;
+$ansi-blue:           #BD93F9;
+$ansi-magenta:        #FF79C6;
+$ansi-cyan:           #8BE9FD;
+$ansi-white:          #F8F8F2;
+$ansi-bright-black:   #6272A4;
+$ansi-bright-red:     #FF6E6E;
+$ansi-bright-green:   #69FF94;
+$ansi-bright-yellow:  #FFFFA5;
+$ansi-bright-blue:    #D6ACFF;
+$ansi-bright-magenta: #FF92DF;
+$ansi-bright-cyan:    #A4FFFF;
+$ansi-bright-white:   #FFFFFF;

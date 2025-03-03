@@ -1,51 +1,86 @@
-// Правильные импорты
 @use './variables' as *;
-@use './mixins' as *; // Теперь миксины доступны без префикса
+@use './mixins' as *;
 
 .card {
   position: relative;
   text-align: center;
-  background-color: $foreground;
-  color: $background;
+  background-color: $ansi-black;
+  color: $foreground;
   border-radius: 6px;
   padding: 1rem;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 220px;
-  border: 1px solid transparent; // изначально прозрачная окантовка
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
-  overflow: hidden;
-  min-height: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 100px;
 
   &:hover {
-    transform: scale(1.05); // увеличение карточки
+    transform: scale(1.12);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    border: 4px solid $purple; // окантовка карточки (можно выбрать другой цвет)
+
+    .delete-button {
+      opacity: 1;
+    }
   }
 
-  .card-header {
-    font-size: 1.3rem;
+  .card-title,
+  .card-description {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+  }
+
+  .card-title {
+    font-size: 1rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
-  
-  .card-body {
+
+  .card-description {
     font-size: 0.9rem;
-    font-weight: normal;
+    color: $comment;
+    line-height: 1.4;
   }
-  
-  // Кнопка удаления (крестик) – появляется при наведении
+
+  .signal-circle {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+
+    &.green {
+      @include signal-circle($green, led-glow-green);
+    }
+
+    &.yellow {
+      @include signal-circle($yellow, led-glow-yellow);
+    }
+
+    &.orange {
+      @include signal-circle($orange, led-glow-orange);
+    }
+
+    &.red {
+      @include signal-circle($red, led-glow-red);
+    }
+
+    &.black {
+      @include signal-circle($ansi-black, none); // Черный без анимации
+    }
+  }
+
   .delete-button {
     position: absolute;
-
-    top: 10px;
-    right: 8px;
-    width: 25px;
-    height: 25px;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background-color: $red;
-    color: #fff;
+    color: $background;
     border: none;
     display: flex;
     align-items: center;
@@ -55,127 +90,185 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
   }
-  
-  &:hover .delete-button {
-    opacity: 1;
-  }
-  
-  // Контейнер для меню удаления внутри карточки
-  .delete-menu-container {
+
+  .delete-menu {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: rgba(40, 42, 54, 0.9);
+    border-radius: 6px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 10;
-  }
-  
-  .delete-menu {
-  background-color: $foreground;
-  padding: 1.5rem;
-  border-radius: 6px;
-  width: 100%;  // Делаем его на всю карточку
-  height: 100%;
-  box-shadow: none; // Убираем доп. тень, т.к. уже есть у родителя
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    background-color: $ansi-black;
 
     p {
-      text-align: center;
-      /* margin-bottom: 1rem; */
+      margin-bottom: 1rem;
       font-size: 1rem;
       font-weight: bold;
+      color: $foreground;
     }
-    
+
     .delete-menu-buttons {
       display: flex;
-      justify-content: space-between;
       gap: 0.5rem;
-      
+
       button {
-        flex: 1;
-        padding: 0.5rem;
+        width: 40px;
+        height: 30px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border: none;
         border-radius: 4px;
         cursor: pointer;
         font-size: 0.9rem;
         transition: background-color 0.3s ease, transform 0.3s ease;
-        
+
         &:hover {
-          transform: scale(1.05);
+          transform: scale(1.1);
         }
-        
+
         &:first-child {
-          background-color: $red;  // Кнопка "Да"
-          color: $foreground;
+          background-color: $red;
+          color: $ansi-black;
         }
-        
+
         &:last-child {
-          background-color: $comment; // Кнопка "Нет"
-          color: $foreground;
+          background-color: $comment;
+          color: $ansi-black;
         }
       }
+    }
+  }
+
+  &.show-delete-menu {
+    .delete-menu {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .card-content {
+      display: none;
     }
   }
 }
 
 .add-node-button {
-  background-color: $green; // зеленый фон
-  width: 40px;             // начальная узкая ширина (1/3 карточки)
-  height: 102px;            
+  background-color: $ansi-black; // Черный фон
+  width: 220px; // Фиксированная ширина
+  height: 100px; // Фиксированная высота
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2px solid #000;  // черный бортик
-  border-radius: 6px;
+  /* border: 2px solid $green; // Зеленая рамка */
+  border-radius: 8px;
   cursor: pointer;
-  overflow: hidden;
-  transition: width 0.3s ease, padding 0.3s ease;
-  justify-self: start; // выравнивание по левому краю (в grid-контейнере)
+  transition: transform 0.3s ease;
+  position: relative;
+
+  &:hover {
+    transform: scale(1.1); // Увеличиваем кнопку при наведении
+  }
 
   .plus-icon {
-    pointer-events: none;  // отключаем реакции на курсор
-    display: block;
-    font-size: 2rem;
-    line-height: 1;
-    color: black;
-    caret-color: transparent;  /* Убирает текстовый курсор */
+    font-size: 2rem; // Большой размер плюсика
+    font-weight: bold; // Жирный плюс
+    color: $green; // Зеленый цвет
+    pointer-events: none; // Отключаем реакции на клик
+    caret-color: transparent;
   }
-  
-  .add-node-form {
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(40, 42, 54, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.modal-content {
+  background-color: $ansi-black;
+  padding: 1.5rem;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  input {
     width: 100%;
-    flex-direction: column;
-    gap: 0.5rem;
-    display: flex;
+    padding: 0.5rem;
+    background-color: $foreground;
+    color: $background;
+    border: 2px solid $background;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    font-size: 0.9rem;
 
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      background-color: #fff; /* Белый фон */
-      font-size: 1rem;
-      color: #000; /* Текст черного цвета */
-      border: 2px solid #000; /* Черная граница */
-      border-radius: 8px; /* Закругленные углы */
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-
-    input:focus {
-      border-color: #000; /* Черная граница остается при фокусе */
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Легкая тень */
+    &:focus {
+      border-color: $green;
     }
   }
-  
-  &:hover {
-    width: 220px;       // расширяется до полноценной карточки
-    padding: 1rem;
-    
-    .plus-icon {
-      display: none;
+
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+
+      &:first-child {
+        background-color: $green;
+        color: $ansi-black;
+
+        &:hover {
+          background-color: darken($green, 10%);
+        }
+      }
+
+      &:last-child {
+        background-color: $comment;
+        color: $ansi-black;
+
+        &:hover {
+          background-color: darken($comment, 10%);
+        }
+      }
     }
   }
 }

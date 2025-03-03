@@ -1,45 +1,58 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DeleteNodeMenu from './DeleteNodeMenu';
 
 function NodeCard({ node, onDelete }) {
-  const [showDeleteMenu, setShowDeleteMenu] = useState(false);
-  const navigate = useNavigate();
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false); // Состояние меню удаления
+  const navigate = useNavigate(); // Для навигации
 
+  // Обработчик клика по карточке
   const handleCardClick = () => {
-    if (!showDeleteMenu) navigate(`/node/${node.id}`);
+    if (!showDeleteMenu) navigate(`/node/${node.id}`); // Переход к деталям узла
   };
 
   return (
-    <div className="card" onClick={handleCardClick}>
-      {/* Контент карточки */}
-      {!showDeleteMenu && (
-        <>
-          <div className="card-header">{node.name}</div>
-          <div className="card-body">{node.description || "Описание отсутствует"}</div>
-          <button
-            className="delete-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowDeleteMenu(true);
-            }}
-            aria-label={`Удалить узел ${node.name}`}
-          >
-            ×
-          </button>
-        </>
-      )}
+    <div
+      className={`card ${showDeleteMenu ? 'show-delete-menu' : ''}`} // Добавляем класс при открытии меню
+      onClick={handleCardClick} // Обработчик клика
+    >
+      {/* Основное содержимое карточки */}
+      <div>
+        <div className="card-title">{node.name}</div> {/* Название узла */}
+        <div className="card-description">{node.description || "Описание отсутствует"}</div> {/* Описание узла */}
+
+        {/* Сигнальный кружок (индикатор состояния) */}
+        <div className={`signal-circle ${node.color}`}></div>
+
+        {/* Кнопка удаления */}
+        <button
+          className="delete-button"
+          onClick={(e) => {
+            e.stopPropagation(); // Предотвращаем всплытие события
+            setShowDeleteMenu(true); // Показываем меню подтверждения удаления
+          }}
+          aria-label={`Удалить узел ${node.name}`}
+        >
+          ×
+        </button>
+      </div>
 
       {/* Меню подтверждения удаления */}
       {showDeleteMenu && (
-        <div className="delete-menu-container">
-          <DeleteNodeMenu
-            onClose={() => setShowDeleteMenu(false)}
-            onDelete={() => {
-              onDelete(node.id);
-              setShowDeleteMenu(false);
-            }}
-          />
+        <div className="delete-menu">
+          <p>Удалить узел?</p> {/* Вопрос подтверждения */}
+          <div className="delete-menu-buttons">
+            {/* Кнопка "Да" */}
+            <button
+              onClick={() => {
+                onDelete(node.id); // Удаляем узел через пропс onDelete
+                setShowDeleteMenu(false); // Скрываем меню
+              }}
+            >
+              Да
+            </button>
+            {/* Кнопка "Нет" */}
+            <button onClick={() => setShowDeleteMenu(false)}>Нет</button>
+          </div>
         </div>
       )}
     </div>

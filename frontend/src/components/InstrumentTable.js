@@ -1,36 +1,39 @@
+// components/InstrumentTable.jsx
+
 import React from 'react';
 
 function InstrumentTable({ instruments }) {
   return (
-    <div className="instrument-table">
-      {/* Заголовки колонок */}
-      <div className="table-header">
-        <div className="header-cell">ID</div>
-        <div className="header-cell">Название</div>
-        <div className="header-cell">Номер MIT</div>
-        <div className="header-cell">Номер MI</div>
-        <div className="header-cell">Дата поверки</div>
-        <div className="header-cell">Действителен до</div>
-      </div>
-
-      {/* Карточки средств измерений */}
-      <div className="card-container">
+    <table className="instrument-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Название</th>
+          <th>Номер MIT</th>
+          <th>Номер MI</th>
+          <th>Дата поверки</th>
+          <th>Действителен до</th>
+        </tr>
+      </thead>
+      <tbody>
         {instruments.length > 0 ? (
           instruments.map((instrument) => (
-            <div key={instrument.id} className="instrument-card">
-              <div className="card-cell">{instrument.id}</div>
-              <div className="card-cell">{instrument.mit_title}</div>
-              <div className="card-cell">{instrument.mit_number}</div>
-              <div className="card-cell">{instrument.mi_number}</div>
-              <div className="card-cell">{instrument.verification_date}</div>
-              <div className="card-cell">{instrument.valid_date}</div>
-            </div>
+            <tr key={instrument.id}>
+              <td>{instrument.id}</td>
+              <td>{instrument.mit_title}</td>
+              <td>{instrument.mit_number}</td>
+              <td>{instrument.mi_number}</td>
+              <td>{instrument.verification_date}</td>
+              <td>{instrument.valid_date}</td>
+            </tr>
           ))
         ) : (
-          <div className="no-data">Нет данных</div>
+          <tr>
+            <td colSpan="6">Нет данных</td>
+          </tr>
         )}
-      </div>
-    </div>
+      </tbody>
+    </table>
   );
 }
 

@@ -10,12 +10,11 @@ load_dotenv()
 # Получение URL базы данных из переменной окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Проверка, что DATABASE_URL существует
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set in the environment variables.")
 
 # Подключение к базе данных
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, echo=True, future=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

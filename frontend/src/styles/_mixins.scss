@@ -1,4 +1,4 @@
-// _mixins.scss
+@use './variables' as *;
 
 @mixin card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -7,3 +7,50 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 }
+
+@mixin signal-circle($color, $animation-name: none) {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: $color;
+  border-radius: 50%;
+  box-shadow: 
+    0 0 6px rgba($color, 0.8),
+    0 0 12px rgba($color, 0.6),
+    0 0 18px rgba($color, 0.4);
+  
+  @if $animation-name != none {
+    animation: $animation-name 1.8s infinite alternate ease-in-out;
+  }
+}
+
+@keyframes led-glow-green {
+  0% { box-shadow: 0 0 6px rgba(80, 250, 123, 0.8), 0 0 12px rgba(80, 250, 123, 0.6), 0 0 18px rgba(80, 250, 123, 0.4); }
+  50% { box-shadow: 0 0 10px rgba(80, 250, 123, 1), 0 0 18px rgba(80, 250, 123, 0.9), 0 0 26px rgba(80, 250, 123, 0.7); }
+  100% { box-shadow: 0 0 6px rgba(80, 250, 123, 0.8), 0 0 12px rgba(80, 250, 123, 0.6), 0 0 18px rgba(80, 250, 123, 0.4); }
+}
+
+@keyframes led-glow-yellow {
+  0% { box-shadow: 0 0 6px rgba(241, 250, 140, 0.8), 0 0 12px rgba(241, 250, 140, 0.6), 0 0 18px rgba(241, 250, 140, 0.4); }
+  50% { box-shadow: 0 0 10px rgba(241, 250, 140, 1), 0 0 18px rgba(241, 250, 140, 0.9), 0 0 26px rgba(241, 250, 140, 0.7); }
+  100% { box-shadow: 0 0 6px rgba(241, 250, 140, 0.8), 0 0 12px rgba(241, 250, 140, 0.6), 0 0 18px rgba(241, 250, 140, 0.4); }
+}
+
+@keyframes led-glow-orange {
+  0% { box-shadow: 0 0 6px rgba(255, 184, 108, 0.8), 0 0 12px rgba(255, 184, 108, 0.6), 0 0 18px rgba(255, 184, 108, 0.4); }
+  50% { box-shadow: 0 0 10px rgba(255, 184, 108, 1), 0 0 18px rgba(255, 184, 108, 0.9), 0 0 26px rgba(255, 184, 108, 0.7); }
+  100% { box-shadow: 0 0 6px rgba(255, 184, 108, 0.8), 0 0 12px rgba(255, 184, 108, 0.6), 0 0 18px rgba(255, 184, 108, 0.4); }
+}
+
+@keyframes led-glow-red {
+  0% { box-shadow: 0 0 6px rgba(255, 85, 85, 0.8), 0 0 12px rgba(255, 85, 85, 0.6), 0 0 18px rgba(255, 85, 85, 0.4); }
+  50% { box-shadow: 0 0 10px rgba(255, 85, 85, 1), 0 0 18px rgba(255, 85, 85, 0.9), 0 0 26px rgba(255, 85, 85, 0.7); }
+  100% { box-shadow: 0 0 6px rgba(255, 85, 85, 0.8), 0 0 12px rgba(255, 85, 85, 0.6), 0 0 18px rgba(255, 85, 85, 0.4); }
+}
+
+@keyframes led-glow-black {
+  0% { box-shadow: 0 0 2px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4); }
+  50% { box-shadow: 0 0 3px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.5); }
+  100% { box-shadow: 0 0 2px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4); }
+}
+

@@ -1,42 +1,35 @@
-@use './variables' as *; // Путь от src/styles/
+@use './variables' as *;
 
 .search-container {
   position: relative;
-  width: 50px;               // изначально маленький круг
+  width: 50px; // Начальный размер (кружок)
   height: 50px;
-  border: 3px solid #000;    // черный бортик
-  border-radius: 50%;        // круглая форма
-  background-color: $orange;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  transition: width 0.4s ease, border-radius 0.4s ease;
+  border: 2px solid #000; // Черный бортик
+  border-radius: 50%; // Круглая форма
+  background-color: $ansi-black; // Цвет фона
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); // Тень
+  transition: width 0.4s ease, border-radius 0.4s ease; // Плавные переходы
   margin: 10px auto;
   overflow: hidden;
   display: flex;
   align-items: center;
+  justify-content: center;
 
-  // При наведении, фокусе или когда в поле ввода есть текст
+  // При наведении или фокусе
   &:hover,
-  &:focus-within,
-  &:has(.search-bar:not(:placeholder-shown)) {
-    width: 200px;            // фиксированная ширина
-    border-radius: 20px;      // превращается в прямоугольник с закругленными углами
+  &:focus-within {
+    width: 200px; // Расширяется вправо
+    border-radius: 20px; // Превращается в закругленный прямоугольник
   }
 
   &::before {
-    content: '\1F50D';
+    content: '\1F50D'; // Unicode символ лупы
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 50px;
-    height: 50px;
-    background-color: $orange;
-    border-radius: 50%;
-    color: $background;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    z-index: 2;
+    left: 10px; // Фиксированное положение слева
+    font-size: 1.5rem;
+    color: $background; // Белый цвет лупы
+    z-index: 2; // Лупа поверх всего
+    pointer-events: none; // Отключаем взаимодействие с лупой
   }
 }
 
@@ -44,14 +37,19 @@
   border: none;
   outline: none;
   background: transparent;
-  color: #000;
+  color: $foreground; // Цвет текста
   font-size: 16px;
   padding: 0 10px;
-  margin-left: 50px;         // смещаем поле ввода вправо от значка
-  width: calc(100% - 50px);
-  display: inline-block;
+  margin-left: 50px; // Отступ от лупы
+  width: calc(100% - 60px); // Ширина поля ввода
+  opacity: 0; // Скрыто по умолчанию
+  transition: opacity 0.3s ease;
+
+  &:focus {
+    opacity: 1; // Появляется при фокусе
+  }
 
   &::placeholder {
-    color: $comment;
+    color: $comment; // Цвет placeholder
   }
 }

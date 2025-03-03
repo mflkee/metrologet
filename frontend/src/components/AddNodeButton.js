@@ -1,62 +1,94 @@
 import React, { useState, useRef } from 'react';
 
 function AddNodeButton({ onAdd }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние модального окна
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+
+  // Создаем рефы для полей ввода
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
 
+  // Обработчик отправки формы
   const handleSubmit = () => {
-    if (name.trim() === '') return;
-    onAdd({ name, description });
-    setIsExpanded(false);
+    if (name.trim() === '') return; // Проверяем, что название не пустое
+    onAdd({ name, description }); // Вызываем функцию добавления узла
+    setIsModalOpen(false); // Закрываем модальное окно
     setName('');
     setDescription('');
   };
 
-  const handleKeyDown = (e, field) => {
+  // Обработчик закрытия модального окна
+  const handleClose = () => {
+    setIsModalOpen(false);
+    setName('');
+    setDescription('');
+  };
+
+  // Обработчик открытия модального окна
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    // Устанавливаем фокус на поле ввода "Название" после открытия модального окна
+    setTimeout(() => {
+      if (nameInputRef.current) {
+        nameInputRef.current.focus();
+      }
+    }, 0);
+  };
+
+  // Обработчик нажатия клавиш в поле "Название"
+  const handleNameKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault();
-      if (field === 'name' && descriptionInputRef.current) {
-        descriptionInputRef.current.focus(); // Перевод фокуса на описание
-      } else if (field === 'description') {
-        handleSubmit(); // Добавляем узел
+      e.preventDefault(); // Предотвращаем стандартное поведение (например, отправку формы)
+      if (descriptionInputRef.current) {
+        descriptionInputRef.current.focus(); // Перемещаем фокус на поле "Описание"
       }
     }
   };
 
+  // Обработчик нажатия клавиш в поле "Описание"
+  const handleDescriptionKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Предотвращаем стандартное поведение
+      handleSubmit(); // Добавляем карточку
+    }
+  };
+
   return (
-    <div
-      className="add-node-button"
-      onMouseEnter={() => {
-        setIsExpanded(true);
-        setTimeout(() => nameInputRef.current?.focus(), 100); // Фокус на название
-      }}
-      onMouseLeave={() => setIsExpanded(false)}
-    >
-      {!isExpanded && <div className="plus-icon">+</div>}
-      {isExpanded && (
-        <div className="add-node-form">
-          <input
-            type="text"
-            placeholder="Название объекта"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e, 'name')}
-            ref={nameInputRef} // Фокусируется автоматически
-          />
-          <input
-            type="text"
-            placeholder="Описание"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e, 'description')}
-            ref={descriptionInputRef}
-          />
+    <>
+      {/* Кнопка с плюсом */}
+      <div className="add-node-button" onClick={handleOpenModal}>
+        <span className="plus-icon">+</span>
+      </div>
+
+      {/* Модальное окно */}
+      {isModalOpen && (
+        <div className={`modal-overlay active`}>
+          <div className="modal-content">
+            <input
+              type="text"
+              placeholder="Название"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              ref={nameInputRef} // Привязываем реф к полю ввода "Название"
+              onKeyDown={handleNameKeyDown} // Обработчик нажатий клавиш
+            />
+            <input
+              type="text"
+              placeholder="Описание"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              ref={descriptionInputRef} // Привязываем реф к полю ввода "Описание"
+              onKeyDown={handleDescriptionKeyDown} // Обработчик нажатий клавиш
+            />
+            <div className="modal-buttons">
+              <button onClick={handleSubmit}>Да</button>
+              <button onClick={handleClose}>Нет</button>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -1,14 +1,46 @@
-// _variables.scss
-
 // Dracula color palette
 $background: #282A36;
 $foreground: #F8F8F2;
 $selection: #44475A;
-$comment:   #6272A4;
-$red:       #FF5555;
-$orange:    #FFB86C;
-$yellow:    #F1FA8C;
-$green:     #50FA7B;
-$purple:    #BD93F9;
-$cyan:      #8BE9FD;
-$pink:      #FF79C6;
+$comment: #6272A4;
+$red: #FF5555;
+$orange: #FFB86C;
+$yellow: #F1FA8C;
+$green: #50FA7B;
+$purple: #BD93F9;
+$cyan: #8BE9FD;
+$pink: #FF79C6;
+
+// ANSI color palette
+$ansi-black: #21222C;
+$ansi-red: #FF5555;
+$ansi-green: #50FA7B;
+$ansi-yellow: #F1FA8C;
+$ansi-blue: #BD93F9;
+$ansi-magenta: #FF79C6;
+$ansi-cyan: #8BE9FD;
+$ansi-white: #F8F8F2;
+$ansi-bright-black: #6272A4;
+$ansi-bright-red: #FF6E6E;
+$ansi-bright-green: #69FF94;
+$ansi-bright-yellow: #FFFFA5;
+$ansi-bright-blue: #D6ACFF;
+$ansi-bright-magenta: #FF92DF;
+$ansi-bright-cyan: #A4FFFF;
+$ansi-bright-white: #FFFFFF;
+
+// Global spacing
+$spacing-small: 0.5rem;
+$spacing-medium: 1rem;
+$spacing-large: 2rem;
+
+// Font sizes
+$font-size-small: 0.8rem;
+$font-size-base: 1rem;
+$font-size-large: 1.5rem;
+$font-size-title: 3rem;
+
+// Breakpoints
+$breakpoint-mobile: 600px;
+$breakpoint-tablet: 900px;
+$breakpoint-desktop: 1200px;

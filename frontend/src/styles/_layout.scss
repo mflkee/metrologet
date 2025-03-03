@@ -1,42 +1,36 @@
-@use './variables' as *; // Путь от src/styles/
+@use './variables' as *;
 
 .header {
   background-color: $background;
-  padding: 1rem;
+  padding: $spacing-large;
   text-align: center;
 
   .title {
     color: $foreground;
-    font-size: 3rem;
+    font-size: $font-size-title;
     margin: 0;
   }
 }
 
 .home-page {
-  padding: 1rem;
+  padding: $spacing-large;
 
-  // Контейнер карточек с 5 колонками, центрирование и фиксированная ширина
-  
   .card-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
-    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-medium;
+    max-width: $breakpoint-desktop;
     margin: 0 auto;
     justify-items: center;
-    align-items: stretch;       // заставляет содержимое растягиваться по высоте
-    grid-auto-rows: 100px;       // фиксированная высота для каждой строки
-    margin-top: 1rem;
+    align-items: stretch;
   }
 }
 
 .node-details-page {
-  padding: 1rem;
-  
+  padding: $spacing-large;
+
   h1.node-title {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: $spacing-large;
   }
 }
-
-

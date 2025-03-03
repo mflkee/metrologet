@@ -1,0 +1,68 @@
+@use './variables' as *;
+
+.node-details-page {
+  padding: $spacing-large;
+
+  .node-title {
+    text-align: center;
+    margin-bottom: $spacing-large;
+    font-size: $font-size-large;
+    color: $foreground;
+  }
+
+  button {
+    margin-bottom: $spacing-medium;
+    padding: $spacing-small $spacing-medium;
+    background-color: $green;
+    border: none;
+    border-radius: 4px;
+    color: $background;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($green, 10%);
+    }
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    background-color: $foreground;
+    color: $background;
+    border: 1px solid $comment;
+    border-radius: 6px;
+    padding: $spacing-small;
+    margin-bottom: $spacing-small;
+    font-weight: bold;
+    cursor: default;
+  }
+
+  .draggable-instruments {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-small;
+
+    .instrument-card {
+      display: flex;
+      align-items: center;
+      background-color: $foreground;
+      color: $background;
+      border: 1px solid $comment;
+      border-radius: 6px;
+      padding: $spacing-small;
+      transition: transform 0.2s ease;
+      cursor: grab;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+
+      .card-cell {
+        flex: 1;
+        padding: 0 $spacing-small;
+        word-break: break-word;
+      }
+    }
+  }
+}
