@@ -12,6 +12,7 @@
   display: inline-block;
   width: 10px;
   height: 10px;
+  right: 14px;
   background-color: $color;
   border-radius: 50%;
   box-shadow: 
@@ -54,3 +55,36 @@
   100% { box-shadow: 0 0 2px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4); }
 }
 
+@mixin delete-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; // Добавляем !important
+  background-color: $red;
+  color: $background;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+  z-index: 2;
+  display: block; // Изменено с flex на block
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  line-height: 20px; // Добавлено для выравнивания
+  text-align: center;
+
+  &::before {
+    content: '×';
+    color: $ansi-black;
+    display: block;
+    line-height: 1; // Исправляем выравнивание
+    transform: translateY(-1px); // Точная настройка позиции
+  }
+
+  &:hover {
+    background-color: darken($red, 15%);
+    opacity: 1;
+  }
+}

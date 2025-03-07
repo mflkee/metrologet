@@ -1,4 +1,6 @@
+// _nodedetail.scss
 @use './variables' as *;
+@use './mixins' as *;
 
 .node-details-page {
   padding: $spacing-large;
@@ -28,40 +30,96 @@
   .header-row {
     display: flex;
     align-items: center;
-    background-color: $foreground;
-    color: $background;
-    border: 1px solid $comment;
+    background-color: $ansi-black;
+    color: $foreground;
     border-radius: 6px;
     padding: $spacing-small;
     margin-bottom: $spacing-small;
     font-weight: bold;
     cursor: default;
+
+    .card-cell {
+      flex: 1;
+      padding: 0 $spacing-small;
+      text-align: center;
+      word-break: break-word;
+    }
   }
 
   .draggable-instruments {
     display: flex;
     flex-direction: column;
     gap: $spacing-small;
+  }
 
-    .instrument-card {
+  .instrument-card {
+    position: relative;
+    overflow: visible; // Исправляем обрезку содержимого
+    display: flex;
+    align-items: center;
+    background-color: $ansi-black;
+    color: $foreground;
+    border-radius: 8px;
+    padding: $spacing-small;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 50px;
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+
+      .delete-button {
+        opacity: 1; // Важно: оставляем opacity 1 при наведении
+      }
+    }
+
+    .delete-button {
+      @include delete-button;
+      width: 22px;
+      height: 22px;
+      opacity: 0;
+      padding: 0;
+    }
+
+    .signal-circle {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      opacity: 1;
+
+      &.green {
+        @include signal-circle($green, led-glow-green);
+      }
+      &.yellow {
+        @include signal-circle($yellow, led-glow-yellow);
+      }
+      &.orange {
+        @include signal-circle($orange, led-glow-orange);
+      }
+      &.red {
+        @include signal-circle($red, led-glow-red);
+      }
+      &.black {
+        @include signal-circle($ansi-black, none);
+      }
+    }
+
+    .card-content {
       display: flex;
       align-items: center;
-      background-color: $foreground;
-      color: $background;
-      border: 1px solid $comment;
-      border-radius: 6px;
-      padding: $spacing-small;
-      transition: transform 0.2s ease;
-      cursor: grab;
-
-      &:hover {
-        transform: scale(1.02);
-      }
+      gap: $spacing-small;
+      flex: 1;
 
       .card-cell {
         flex: 1;
         padding: 0 $spacing-small;
-        word-break: break-word;
+        text-align: center;
+        color: $foreground;
+        font-size: 0.9rem;
       }
     }
   }

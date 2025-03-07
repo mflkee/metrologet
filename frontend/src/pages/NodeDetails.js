@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import {
-  fetchInstrumentsByNode,
-  searchAndAddInstrument,
-  fetchNode,
-} from '../api/apiClient';
+import { fetchInstrumentsByNode, searchAndAddInstrument, fetchNode, deleteInstrument } from '../api/apiClient';
 import AddInstrumentModal from '../components/AddInstrumentModal';
 
 function NodeDetailsPage() {
@@ -32,6 +28,7 @@ function NodeDetailsPage() {
     const loadInstruments = async () => {
       try {
         const data = await fetchInstrumentsByNode(nodeId);
+        console.log("Fetched Instruments:", data); // Логирование данных
         setInstruments(data);
       } catch (error) {
         console.error("Ошибка при загрузке СИ:", error);
@@ -50,23 +47,36 @@ function NodeDetailsPage() {
     }
   };
 
+  // Обработчик удаления СИ
+  const handleDeleteInstrument = async (instrumentId) => {
+    try {
+      await deleteInstrument(instrumentId, nodeId); // Удаление через API
+      setInstruments((prev) => prev.filter((item) => item.id !== instrumentId)); // Обновление состояния
+    } catch (error) {
+      console.error("Ошибка при удалении СИ:", error);
+    }
+  };
+
   // Обработка завершения перетаскивания карточки
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-
     const reordered = Array.from(instruments);
     const [removed] = reordered.splice(result.source.index, 1);
     reordered.splice(result.destination.index, 0, removed);
     setInstruments(reordered);
-
     // Здесь можно добавить вызов API для обновления порядка карточек в БД
     // updateInstrumentOrder(reordered);
   };
 
   return (
     <div className="node-details-page">
+      {/* Заголовок страницы */}
       <h1 className="node-title">{nodeName || "Загрузка..."}</h1>
+
+      {/* Кнопка добавления СИ */}
       <button onClick={() => setIsModalOpen(true)}>Добавить СИ</button>
+
+      {/* Модальное окно добавления СИ */}
       {isModalOpen && (
         <AddInstrumentModal
           onClose={() => setIsModalOpen(false)}
@@ -84,7 +94,6 @@ function NodeDetailsPage() {
         <div className="card-cell">Действителен до</div>
       </div>
 
-      {/* Интерактивные карточки с информацией о СИ */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="instruments">
           {(provided) => (
@@ -93,29 +102,46 @@ function NodeDetailsPage() {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {instruments.map((instrument, index) => (
-                <Draggable
-                  key={instrument.id}
-                  draggableId={instrument.id.toString()}
-                  index={index}
-                >
-                  {(provided) => (
-                    <div
-                      className="instrument-card"
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <div className="card-cell">{instrument.id}</div>
-                      <div className="card-cell">{instrument.mit_title}</div>
-                      <div className="card-cell">{instrument.mit_number}</div>
-                      <div className="card-cell">{instrument.mi_number}</div>
-                      <div className="card-cell">{instrument.verification_date}</div>
-                      <div className="card-cell">{instrument.valid_date}</div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              {instruments.length > 0 ? (
+                instruments.map((instrument, index) => (
+                  <Draggable
+                    key={instrument.id}
+                    draggableId={instrument.id.toString()}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        className="instrument-card"
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        {/* Кнопка удаления */}
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDeleteInstrument(instrument.id)}
+                        >
+                        </button>
+
+                        {/* Основная информация */}
+                        <div className="card-content">
+                          <div className="card-cell">{instrument.id}</div>
+                          <div className="card-cell">{instrument.mit_title || "Название отсутствует"}</div>
+                          <div className="card-cell">{instrument.mit_number}</div>
+                          <div className="card-cell">{instrument.mi_number}</div>
+                          <div className="card-cell">{instrument.verification_date}</div>
+                          <div className="card-cell">{instrument.valid_date}</div>
+                        </div>
+
+                        {/* Сигнальная лампочка */}
+                        <div className={`signal-circle ${instrument.color}`}></div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))
+              ) : (
+                <p>Нет данных</p>
+              )}
               {provided.placeholder}
             </div>
           )}

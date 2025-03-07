@@ -32,7 +32,6 @@ function NodeCard({ node, onDelete }) {
           }}
           aria-label={`Удалить узел ${node.name}`}
         >
-          ×
         </button>
       </div>
 

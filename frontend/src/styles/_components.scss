@@ -14,14 +14,23 @@
   max-width: 220px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   min-height: 100px;
+  transform-style: preserve-3d; // Добавлено для корректного масштабирования
+  overflow: visible; // Разрешаем отображение за пределами
+  margin-top: 3rem; // или любое другое значение
+
+  &:hover .delete-button {
+    opacity: 1; // Добавляем принудительное отображение
+  }
+
+  .delete-button {
+    @include delete-button;
+  }
 
   &:hover {
     transform: scale(1.12);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    
 
-    .delete-button {
-      opacity: 1;
-    }
   }
 
   .card-title,
@@ -68,31 +77,7 @@
     }
 
     &.black {
-      @include signal-circle($ansi-black, none); // Черный без анимации
-    }
-  }
-
-  .delete-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: $red;
-    color: $background;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    line-height: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 1;
+      @include signal-circle($ansi-black, none);
     }
   }
 
@@ -168,28 +153,28 @@
 }
 
 .add-node-button {
-  background-color: $ansi-black; // Черный фон
-  width: 220px; // Фиксированная ширина
-  height: 100px; // Фиксированная высота
+  background-color: $ansi-black;
+  width: 220px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* border: 2px solid $green; // Зеленая рамка */
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.3s ease;
   position: relative;
+  margin-top: 3rem; // или любое другое значение
+
 
   &:hover {
-    transform: scale(1.1); // Увеличиваем кнопку при наведении
+    transform: scale(1.1);
   }
 
   .plus-icon {
-    font-size: 2rem; // Большой размер плюсика
-    font-weight: bold; // Жирный плюс
-    color: $green; // Зеленый цвет
-    pointer-events: none; // Отключаем реакции на клик
-    caret-color: transparent;
+    font-size: 2rem;
+    font-weight: bold;
+    color: $green;
+    pointer-events: none;
   }
 }
 

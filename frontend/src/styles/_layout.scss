@@ -16,7 +16,7 @@
   padding: $spacing-large;
 
   .card-container {
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: $spacing-medium;
     max-width: $breakpoint-desktop;

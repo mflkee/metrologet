@@ -47,10 +47,10 @@ export const searchNodes = async (query) => {
   }
 };
 
-// Получение всех СИ для узла
 export const fetchInstrumentsByNode = async (nodeId) => {
   try {
-    const response = await apiClient.get(`/nodes/${nodeId}/instruments/`);
+    const response = await apiClient.get(`/instruments/${nodeId}/`);
+    console.log("API Response:", response.data); // Логирование данных
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при получении СИ");
@@ -74,5 +74,15 @@ export const fetchNode = async (nodeId) => {
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при получении данных узла");
+  }
+};
+
+// Удаление СИ
+export const deleteInstrument = async (instrumentId) => {
+  try {
+    const response = await apiClient.delete(`/instruments/${instrumentId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при удалении СИ");
   }
 };
