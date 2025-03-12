@@ -1,4 +1,3 @@
-// _nodedetail.scss
 @use './variables' as *;
 @use './mixins' as *;
 
@@ -120,6 +119,194 @@
         text-align: center;
         color: $foreground;
         font-size: 0.9rem;
+      }
+    }
+  }
+
+  .delete-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 42, 54, 0.9);
+    border-radius: 6px;
+    display: none; // Скрыто по умолчанию
+    flex-direction: row; // Располагаем элементы в строку
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    p {
+      margin: 0; // Убираем отступы
+      font-size: 1rem;
+      font-weight: bold;
+      color: $foreground;
+    }
+
+    .delete-menu-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem; // Отступ между текстом и кнопками
+
+      button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+
+        &:first-child {
+          background-color: $red;
+          color: $background;
+        }
+
+        &:last-child {
+          background-color: $comment;
+          color: $background;
+        }
+      }
+    }
+  }
+
+  &.show-delete-menu {
+    .card-content,
+    .signal-circle {
+      display: none;
+    }
+
+    .delete-menu {
+      display: flex;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+.add-instrument-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-medium; // Отступ снизу
+  padding: $spacing-small $spacing-medium; // Внутренние отступы
+  background-color: $green; // Цвет фона
+  color: $background; // Цвет текста
+  border: none; // Убираем границу
+  border-radius: 4px; // Закругление углов
+  font-size: $font-size-medium; // Размер шрифта
+  font-weight: bold; // Жирный текст
+  cursor: pointer; // Курсор указывает на кликабельность
+  transition: background-color 0.3s ease; // Плавный переход при наведении
+
+  &:hover {
+    background-color: darken($green, 10%); // Темнеет при наведении
+  }
+
+  svg {
+    margin-right: $spacing-small; // Отступ между иконкой и текстом
+    width: 20px;
+    height: 20px;
+    fill: $background; // Цвет иконки
+  }
+}
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $ansi-black;
+  color: $foreground;
+  border-radius: 8px;
+  padding: $spacing-large;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  width: 100%;
+  max-width: 400px;
+
+  h3 {
+    margin-bottom: $spacing-medium;
+    font-size: $font-size-large;
+    text-align: center;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: $spacing-small;
+
+    label {
+      margin-bottom: $spacing-tiny;
+      font-size: $font-size-small;
+      color: $comment;
+    }
+
+    input,
+    select {
+      padding: $spacing-tiny $spacing-small;
+      background-color: $background;
+      color: $foreground;
+      border: 1px solid $comment;
+      border-radius: 4px;
+      font-size: $font-size-medium;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: $green;
+        outline: none;
+      }
+    }
+  }
+
+  .toggle-advanced-search {
+    display: block;
+    width: 100%;
+    margin-top: $spacing-small;
+    padding: $spacing-tiny $spacing-small;
+    background-color: $comment;
+    color: $foreground;
+    border: none;
+    border-radius: 4px;
+    font-size: $font-size-small;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($comment, 10%);
+    }
+  }
+
+  .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: $spacing-small;
+
+    button {
+      flex: 1;
+      padding: $spacing-small $spacing-medium;
+      border: none;
+      border-radius: 4px;
+      font-size: $font-size-medium;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:first-child {
+        background-color: $red;
+        color: $background;
+
+        &:hover {
+          background-color: darken($red, 10%);
+        }
+      }
+
+      &:last-child {
+        background-color: $green;
+        color: $background;
+
+        &:hover {
+          background-color: darken($green, 10%);
+        }
       }
     }
   }

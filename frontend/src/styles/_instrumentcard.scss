@@ -1,0 +1,136 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+.instrument-card {
+  position: relative;
+  overflow: visible; // Исправляем обрезку содержимого
+  display: flex;
+  align-items: center;
+  background-color: $ansi-black;
+  color: $foreground;
+  border-radius: 8px;
+  padding: $spacing-small;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 50px;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+
+    .delete-button {
+      opacity: 1; // Важно: оставляем opacity 1 при наведении
+    }
+  }
+
+  .delete-button {
+    @include delete-button;
+    width: 22px;
+    height: 22px;
+    opacity: 0;
+    padding: 0;
+  }
+
+  .signal-circle {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    opacity: 1;
+
+    &.green {
+      @include signal-circle($green, led-glow-green);
+    }
+    &.yellow {
+      @include signal-circle($yellow, led-glow-yellow);
+    }
+    &.orange {
+      @include signal-circle($orange, led-glow-orange);
+    }
+    &.red {
+      @include signal-circle($red, led-glow-red);
+    }
+    &.black {
+      @include signal-circle($ansi-black, none);
+    }
+  }
+
+  .card-content {
+    display: flex;
+    align-items: center;
+    gap: $spacing-small;
+    flex: 1;
+
+    .card-cell {
+      flex: 1;
+      padding: 0 $spacing-small;
+      text-align: center;
+      color: $foreground;
+      font-size: 0.9rem;
+    }
+  }
+
+  .delete-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 42, 54, 0.9);
+    border-radius: 6px;
+    display: none; // Скрыто по умолчанию
+    flex-direction: row; // Располагаем элементы в строку
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    p {
+      margin: 0; // Убираем отступы
+      font-size: 1rem;
+      font-weight: bold;
+      color: $foreground;
+    }
+
+    .delete-menu-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem; // Отступ между текстом и кнопками
+
+      button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+
+        &:first-child {
+          background-color: $red;
+          color: $background;
+        }
+
+        &:last-child {
+          background-color: $comment;
+          color: $background;
+        }
+      }
+    }
+  }
+
+  &.show-delete-menu {
+    .card-content,
+    .signal-circle {
+      display: none;
+    }
+
+    .delete-menu {
+      display: flex;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}

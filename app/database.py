@@ -1,29 +1,39 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 from dotenv import load_dotenv
 import os
 
-# Загрузка переменных окружения
 load_dotenv()
 
-# Получение URL базы данных из переменной окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL is not set in the environment variables.")
+    raise ValueError("DATABASE_URL is not set")
 
-# Подключение к базе данных
-engine = create_engine(DATABASE_URL, echo=True, future=True)
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_engine(
+    DATABASE_URL,
+    echo=DEBUG,
+    poolclass=NullPool,  # Критично для --reload
+    future=True
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
 Base = declarative_base()
 
-# Dependency для работы с базой данных
 def get_db():
     db = SessionLocal()
     try:
         yield db
+    except Exception:
+        db.rollback()
+        raise
     finally:
         db.close()

@@ -3284,3 +3284,378 @@ FROM measuring_instruments
 WHERE %(param_1)s = measuring_instruments.node_id
 2025-03-07 23:46:49,110 - sqlalchemy.engine.Engine - INFO - [cached since 1.054e+04s ago] {'param_1': 2}
 2025-03-07 23:46:49,110 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 12:58:33,351 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-10 12:58:33,351 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 12:58:33,352 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-10 12:58:33,352 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 12:58:33,353 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-10 12:58:33,353 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 12:58:33,353 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 12:58:33,355 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-10 12:58:33,355 - sqlalchemy.engine.Engine - INFO - [generated in 0.00012s] {'table_name': 'nodes', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-10 12:58:33,357 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-10 12:58:33,357 - sqlalchemy.engine.Engine - INFO - [cached since 0.002345s ago] {'table_name': 'measuring_instruments', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-10 12:58:33,357 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-10 12:58:58,463 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 12:58:58,464 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes
+2025-03-10 12:58:58,464 - sqlalchemy.engine.Engine - INFO - [generated in 0.00009s] {}
+2025-03-10 12:58:58,465 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 12:58:58,465 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes
+2025-03-10 12:58:58,465 - sqlalchemy.engine.Engine - INFO - [cached since 0.001131s ago] {}
+2025-03-10 12:58:58,468 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 12:58:58,468 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 12:58:58,468 - sqlalchemy.engine.Engine - INFO - [generated in 0.00028s] {'param_1': 2}
+2025-03-10 12:58:58,468 - sqlalchemy.engine.Engine - INFO - [cached since 0.0003503s ago] {'param_1': 2}
+2025-03-10 12:58:58,469 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 12:58:58,469 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 12:59:00,438 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 12:59:00,439 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes 
+WHERE nodes.id = %(id_1)s 
+ LIMIT %(param_1)s
+2025-03-10 12:59:00,439 - sqlalchemy.engine.Engine - INFO - [generated in 0.00014s] {'id_1': 2, 'param_1': 1}
+2025-03-10 12:59:00,439 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-10 12:59:00,439 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-10 12:59:00,440 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 12:59:00,440 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 12:59:00,441 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes 
+WHERE nodes.id = %(id_1)s 
+ LIMIT %(param_1)s
+2025-03-10 12:59:00,441 - sqlalchemy.engine.Engine - INFO - [cached since 1.973s ago] {'param_1': 2}
+2025-03-10 12:59:00,441 - sqlalchemy.engine.Engine - INFO - [cached since 0.001727s ago] {'id_1': 2, 'param_1': 1}
+2025-03-10 12:59:00,442 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 12:59:00,442 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 12:59:00,442 - sqlalchemy.engine.Engine - INFO - [cached since 1.974s ago] {'param_1': 2}
+2025-03-10 12:59:00,442 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 12:59:00,442 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 12:59:00,442 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 12:59:00,443 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE measuring_instruments.node_id = %(node_id_1)s
+2025-03-10 12:59:00,443 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE measuring_instruments.node_id = %(node_id_1)s
+2025-03-10 12:59:00,443 - sqlalchemy.engine.Engine - INFO - [generated in 0.00025s] {'node_id_1': 2}
+2025-03-10 12:59:00,443 - sqlalchemy.engine.Engine - INFO - [cached since 0.0002994s ago] {'node_id_1': 2}
+2025-03-10 12:59:00,444 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 12:59:00,444 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 13:00:17,375 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=52768-13, mi_number=Z-33325356, year=2024
+2025-03-10 13:00:17,375 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '52768-13', 'mi_number': 'Z-33325356', 'year': 2024}
+2025-03-10 13:00:26,241 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=52768-13, mi_number=Z-33325356, year=2024
+2025-03-10 13:00:26,241 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '52768-13', 'mi_number': 'Z-33325356', 'year': 2024}
+2025-03-10 13:00:35,926 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=52768-13, mi_number=Z-33325356, year=2024
+2025-03-10 13:00:35,926 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '52768-13', 'mi_number': 'Z-33325356', 'year': 2024}
+2025-03-10 13:01:17,838 - app.routers.instruments - ERROR - Ошибка при запросе к API 'АРШИН'. Статус код: 504
+2025-03-10 13:01:17,838 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 504: Ошибка при запросе к API 'АРШИН'
+2025-03-10 13:01:26,651 - app.routers.instruments - ERROR - Ошибка при запросе к API 'АРШИН'. Статус код: 504
+2025-03-10 13:01:26,652 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 504: Ошибка при запросе к API 'АРШИН'
+2025-03-10 13:01:36,397 - app.routers.instruments - ERROR - Ошибка при запросе к API 'АРШИН'. Статус код: 504
+2025-03-10 13:01:36,397 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 504: Ошибка при запросе к API 'АРШИН'
+2025-03-10 13:06:06,426 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=14557-15, mi_number=3262, year=2024
+2025-03-10 13:06:06,426 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2024}
+2025-03-10 13:06:14,751 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=14557-15, mi_number=3262, year=2025
+2025-03-10 13:06:14,751 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2025}
+2025-03-10 13:06:24,897 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=14557-15, mi_number=3262, year=2023
+2025-03-10 13:06:24,897 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2023}
+2025-03-10 13:07:06,795 - app.routers.instruments - ERROR - Ошибка при запросе к API 'АРШИН'. Статус код: 504
+2025-03-10 13:07:06,795 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 504: Ошибка при запросе к API 'АРШИН'
+2025-03-10 13:07:15,091 - app.routers.instruments - ERROR - Ошибка при запросе к API 'АРШИН'. Статус код: 504
+2025-03-10 13:07:15,091 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 504: Ошибка при запросе к API 'АРШИН'
+2025-03-10 13:07:25,289 - app.routers.instruments - ERROR - Ошибка при запросе к API 'АРШИН'. Статус код: 504
+2025-03-10 13:07:25,289 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 504: Ошибка при запросе к API 'АРШИН'
+2025-03-10 13:29:43,354 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:29:43,354 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:29:43,355 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes
+2025-03-10 13:29:43,355 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes
+2025-03-10 13:29:43,355 - sqlalchemy.engine.Engine - INFO - [cached since 1845s ago] {}
+2025-03-10 13:29:43,355 - sqlalchemy.engine.Engine - INFO - [cached since 1845s ago] {}
+2025-03-10 13:29:43,356 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 13:29:43,356 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 13:29:43,356 - sqlalchemy.engine.Engine - INFO - [cached since 1845s ago] {'param_1': 2}
+2025-03-10 13:29:43,356 - sqlalchemy.engine.Engine - INFO - [cached since 1845s ago] {'param_1': 2}
+2025-03-10 13:29:43,356 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 13:29:43,356 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 13:30:48,443 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-10 13:30:48,443 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 13:30:48,443 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-10 13:30:48,443 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 13:30:48,443 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-10 13:30:48,443 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 13:30:48,444 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:30:48,445 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-10 13:30:48,445 - sqlalchemy.engine.Engine - INFO - [generated in 0.00011s] {'table_name': 'nodes', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-10 13:30:48,446 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-10 13:30:48,446 - sqlalchemy.engine.Engine - INFO - [cached since 0.0008065s ago] {'table_name': 'measuring_instruments', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-10 13:30:48,446 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-10 13:31:04,350 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:31:04,352 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes 
+WHERE nodes.id = %(id_1)s 
+ LIMIT %(param_1)s
+2025-03-10 13:31:04,352 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-10 13:31:04,352 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-10 13:31:04,352 - sqlalchemy.engine.Engine - INFO - [generated in 0.00018s] {'id_1': 2, 'param_1': 1}
+2025-03-10 13:31:04,352 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:31:04,352 - sqlalchemy.engine.Engine - INFO - SELECT nodes.id AS nodes_id, nodes.name AS nodes_name, nodes.description AS nodes_description 
+FROM nodes 
+WHERE nodes.id = %(id_1)s 
+ LIMIT %(param_1)s
+2025-03-10 13:31:04,352 - sqlalchemy.engine.Engine - INFO - [cached since 0.0008284s ago] {'id_1': 2, 'param_1': 1}
+2025-03-10 13:31:04,354 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 13:31:04,354 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE %(param_1)s = measuring_instruments.node_id
+2025-03-10 13:31:04,354 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:31:04,354 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:31:04,354 - sqlalchemy.engine.Engine - INFO - [generated in 0.00035s] {'param_1': 2}
+2025-03-10 13:31:04,355 - sqlalchemy.engine.Engine - INFO - [cached since 0.00038s ago] {'param_1': 2}
+2025-03-10 13:31:04,355 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE measuring_instruments.node_id = %(node_id_1)s
+2025-03-10 13:31:04,355 - sqlalchemy.engine.Engine - INFO - SELECT measuring_instruments.id AS measuring_instruments_id, measuring_instruments.node_id AS measuring_instruments_node_id, measuring_instruments.vri_id AS measuring_instruments_vri_id, measuring_instruments.org_title AS measuring_instruments_org_title, measuring_instruments.mit_number AS measuring_instruments_mit_number, measuring_instruments.mit_title AS measuring_instruments_mit_title, measuring_instruments.mit_notation AS measuring_instruments_mit_notation, measuring_instruments.mi_modification AS measuring_instruments_mi_modification, measuring_instruments.mi_number AS measuring_instruments_mi_number, measuring_instruments.verification_date AS measuring_instruments_verification_date, measuring_instruments.valid_date AS measuring_instruments_valid_date, measuring_instruments.result_docnum AS measuring_instruments_result_docnum 
+FROM measuring_instruments 
+WHERE measuring_instruments.node_id = %(node_id_1)s
+2025-03-10 13:31:04,355 - sqlalchemy.engine.Engine - INFO - [generated in 0.00029s] {'node_id_1': 2}
+2025-03-10 13:31:04,356 - sqlalchemy.engine.Engine - INFO - [cached since 0.0005663s ago] {'node_id_1': 2}
+2025-03-10 13:31:04,356 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 13:31:04,356 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 13:31:04,357 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 13:31:04,357 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-10 13:31:40,656 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-10 13:31:40,656 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 13:31:40,657 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-10 13:31:40,657 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 13:31:40,657 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-10 13:31:40,657 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-10 13:31:40,657 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-10 13:31:40,659 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-10 13:31:40,659 - sqlalchemy.engine.Engine - INFO - [generated in 0.00010s] {'table_name': 'nodes', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-10 13:31:40,659 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-10 13:31:40,660 - sqlalchemy.engine.Engine - INFO - [cached since 0.0008124s ago] {'table_name': 'measuring_instruments', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-10 13:31:40,660 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-11 13:01:15,966 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-11 13:01:15,966 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-11 13:01:15,967 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-11 13:01:15,967 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-11 13:01:15,968 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-11 13:01:15,968 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-11 13:01:15,968 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-11 13:01:15,970 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-11 13:01:15,970 - sqlalchemy.engine.Engine - INFO - [generated in 0.00010s] {'table_name': 'nodes', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-11 13:01:15,972 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+2025-03-11 13:01:15,972 - sqlalchemy.engine.Engine - INFO - [cached since 0.002133s ago] {'table_name': 'measuring_instruments', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+2025-03-11 13:01:15,972 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-11 13:26:08,251 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=1
+2025-03-11 13:26:28,807 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:27:00,246 - app.routers.instruments - INFO - Удаление средства измерения с ID=1 для узла с ID=2
+2025-03-11 13:27:08,266 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:37:58,617 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:37:58,618 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:38:10,109 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=14557-15, mi_number=3261, year=2024
+2025-03-11 13:38:10,109 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3261', 'year': 2024}
+2025-03-11 13:38:10,696 - app.routers.instruments - INFO - Создание нового средства измерений с mit_number=14557-15 и mi_number=3261
+2025-03-11 13:38:17,602 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:38:17,607 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:38:39,066 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=14557-15, mi_number=3262, year=2024
+2025-03-11 13:38:39,066 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2024}
+2025-03-11 13:38:40,480 - app.routers.instruments - INFO - Средства измерений не найдены.
+2025-03-11 13:38:56,075 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:38:56,076 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:07,837 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=14557-15, mi_number=3262, year=2024
+2025-03-11 13:39:07,838 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2024}
+2025-03-11 13:39:09,187 - app.routers.instruments - INFO - Средства измерений не найдены.
+2025-03-11 13:39:12,105 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:12,106 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:20,776 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=, mit_number=14557-15, mi_number=3262, year=2025
+2025-03-11 13:39:20,776 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2025}
+2025-03-11 13:39:21,062 - app.routers.instruments - INFO - Создание нового средства измерений с mit_number=14557-15 и mi_number=3262
+2025-03-11 13:39:23,382 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:23,382 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:37,762 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:37,767 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:40,132 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:39:40,133 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:40:07,323 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:40:07,324 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:40:11,837 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:40:11,838 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:49:01,937 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:49:01,938 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:53:13,324 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:53:17,161 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:53:17,163 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:59:18,061 - app.routers.instruments - INFO - Удаление средства измерения с ID=3 для узла с ID=2
+2025-03-11 13:59:21,756 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 13:59:21,757 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:04:00,402 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:04:00,403 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:12:19,640 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=26
+2025-03-11 14:12:19,640 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=26
+2025-03-11 14:12:21,512 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:12:21,513 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:13:31,620 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:13:31,620 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:23:08,329 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:23:08,329 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:23:18,013 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:23:18,013 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:23:20,409 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:23:20,409 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:28:56,626 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:28:56,626 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:29:10,022 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:29:10,023 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:32:42,570 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:32:42,570 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:38:34,832 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:38:34,833 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:42:52,128 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:42:52,128 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:42:59,485 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:42:59,485 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:50:46,744 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:50:46,744 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:56:53,546 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:56:53,546 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:59:02,785 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:59:02,785 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:59:13,352 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:59:13,353 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:59:17,284 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 14:59:17,285 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:03:13,454 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:03:13,454 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:12:48,133 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:12:48,133 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:17:29,385 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=None, mit_number=14557-15, mi_number=3262, year=2025
+2025-03-11 15:17:29,385 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2025}
+2025-03-11 15:17:30,053 - app.routers.instruments - INFO - Создание нового средства измерений с mit_number=14557-15 и mi_number=3262
+2025-03-11 15:17:39,924 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:17:39,926 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:18:02,235 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 15:18:02,235 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:01:53,383 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:01:53,383 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:03:04,871 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:03:04,871 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:03:06,043 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:03:06,043 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:03:11,029 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:03:11,029 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:04:07,434 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:04:07,434 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:04:15,685 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:04:15,686 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:04:33,442 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 16:04:33,443 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 19:34:33,804 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 19:34:33,804 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 20:05:38,919 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 20:05:38,919 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:40:12,757 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:40:12,757 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:40:48,741 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:40:48,741 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:41:11,959 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=None, mit_number=14557-15, mi_number=3262, year=2025
+2025-03-11 21:41:11,959 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2025}
+2025-03-11 21:41:12,347 - app.routers.instruments - INFO - Создание нового средства измерений с mit_number=14557-15 и mi_number=3262
+2025-03-11 21:41:14,611 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:41:14,612 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:41:31,844 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-11 21:41:31,845 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 09:30:43,750 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 09:30:43,750 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 09:51:27,028 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 09:51:27,029 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 09:51:29,786 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 09:51:29,786 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:05:46,357 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:05:46,357 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:32:10,154 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:32:10,154 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:32:19,684 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:32:19,684 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:37:54,859 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:37:58,983 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:37:58,983 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:38:01,016 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:38:01,017 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:38:20,437 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:44:33,521 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:44:33,524 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:57:48,902 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:57:48,904 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:57:56,159 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:57:59,003 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 13:57:59,004 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 14:04:26,323 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 14:04:26,323 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 14:04:28,621 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 14:04:28,622 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 14:04:35,960 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 14:04:35,960 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 14:04:37,592 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 14:04:37,593 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:18:44,224 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:24:07,907 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 17:24:07,907 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 17:24:18,284 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=27. Параметры поиска: search=None, mit_number=14557-15, mi_number=3262, year=2025
+2025-03-12 17:24:18,284 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2025}
+2025-03-12 17:24:18,632 - app.routers.instruments - WARNING - Попытка добавить уже существующий прибор с mit_number=14557-15 и mi_number=3262
+2025-03-12 17:24:18,632 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 409: Прибор уже существует в базе данных.
+2025-03-12 17:24:28,100 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=27. Параметры поиска: search=None, mit_number=14557-15, mi_number=3262, year=2024
+2025-03-12 17:24:28,101 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2024}
+2025-03-12 17:24:28,389 - app.routers.instruments - INFO - Средства измерений не найдены.
+2025-03-12 17:24:31,979 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 17:24:31,980 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 17:24:44,042 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=27. Параметры поиска: search=None, mit_number=14557-15, mi_number=3252, year=2024
+2025-03-12 17:24:44,042 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3252', 'year': 2024}
+2025-03-12 17:24:44,337 - app.routers.instruments - INFO - Создание нового средства измерений с mit_number=14557-15 и mi_number=3252
+2025-03-12 17:24:46,706 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 17:24:46,710 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-12 17:24:54,682 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:24:54,683 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:30:26,080 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:30:26,080 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:31:29,846 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:31:29,846 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:32:33,772 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:32:33,778 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:40:25,028 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:40:25,036 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-12 17:41:29,186 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2

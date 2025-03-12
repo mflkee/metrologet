@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import NodeCard from '../components/NodeCard';
 import AddNodeButton from '../components/AddNodeButton';
-import { fetchNodes, createNode, searchNodes, deleteNode } from '../api/apiClient';
+import { fetchNodes, createNode, searchNodes } from '../api/apiClient';
 import '../styles/App.scss';
 
 function HomePage() {
@@ -59,17 +59,6 @@ function HomePage() {
     }
   };
 
-  // Удаление узла
-  const handleDeleteNode = async (nodeId) => {
-    try {
-      await deleteNode(nodeId); // Удаляем узел через API
-      setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId)); // Обновляем список всех узлов
-      setFilteredNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId)); // Обновляем отфильтрованный список
-    } catch (error) {
-      console.error("Ошибка при удалении узла:", error);
-    }
-  };
-
   return (
     <div className="home-page">
       {/* Поисковая строка */}
@@ -81,11 +70,7 @@ function HomePage() {
           <p>Загрузка...</p>
         ) : filteredNodes.length > 0 ? (
           filteredNodes.map((node) => (
-            <NodeCard
-              key={node.id}
-              node={node}
-              onDelete={handleDeleteNode} // Передаем функцию удаления
-            />
+            <NodeCard key={node.id} node={node} onDelete={() => {}} />
           ))
         ) : (
           <p>Нет данных</p>

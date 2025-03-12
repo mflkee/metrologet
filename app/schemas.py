@@ -14,7 +14,7 @@ class NodeResponse(NodeBase):
     color: Literal["green", "yellow", "orange", "red", "black"]
 
     class Config:
-        orm_mode = True
+        from_attributes = True 
 
 class MeasuringInstrumentBase(BaseModel):
     vri_id: str
@@ -34,7 +34,25 @@ class MeasuringInstrumentCreate(MeasuringInstrumentBase):
 class MeasuringInstrumentResponse(MeasuringInstrumentBase):
     id: int
     node_id: int
+    group_id: Optional[int] = None  # новое поле для группы
     color: Literal["green", "yellow", "orange", "red", "black"]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+#===groups===#
+
+class GroupBase(BaseModel):
+    name: str
+
+class GroupCreate(GroupBase):
+    pass
+
+class GroupResponse(GroupBase):
+    id: int
+    node_id: int
+
+    model_config = {
+        "from_attributes": True
+    }

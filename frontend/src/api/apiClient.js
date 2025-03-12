@@ -7,7 +7,7 @@ const apiClient = axios.create({
   },
 });
 
-// Получение всех узлов
+// Узлы
 export const fetchNodes = async () => {
   try {
     const response = await apiClient.get('/nodes/');
@@ -17,7 +17,6 @@ export const fetchNodes = async () => {
   }
 };
 
-// Создание нового узла
 export const createNode = async (nodeData) => {
   try {
     const response = await apiClient.post('/nodes/', nodeData);
@@ -27,7 +26,6 @@ export const createNode = async (nodeData) => {
   }
 };
 
-// Удаление узла
 export const deleteNode = async (nodeId) => {
   try {
     const response = await apiClient.delete(`/nodes/${nodeId}`);
@@ -37,7 +35,6 @@ export const deleteNode = async (nodeId) => {
   }
 };
 
-// Поиск узлов
 export const searchNodes = async (query) => {
   try {
     const response = await apiClient.get(`/nodes/search/?query=${query}`);
@@ -47,27 +44,6 @@ export const searchNodes = async (query) => {
   }
 };
 
-export const fetchInstrumentsByNode = async (nodeId) => {
-  try {
-    const response = await apiClient.get(`/instruments/${nodeId}/`);
-    console.log("API Response:", response.data); // Логирование данных
-    return response.data;
-  } catch (error) {
-    throw new Error("Ошибка при получении СИ");
-  }
-};
-
-// Поиск и добавление СИ через API "АРШИН"
-export const searchAndAddInstrument = async (nodeId, searchParams) => {
-  try {
-    const response = await apiClient.get(`/instruments/${nodeId}/search_instruments/`, { params: searchParams });
-    return response.data;
-  } catch (error) {
-    throw new Error("Ошибка при добавлении СИ");
-  }
-};
-
-// В файле api/apiClient.js
 export const fetchNode = async (nodeId) => {
   try {
     const response = await apiClient.get(`/nodes/${nodeId}`);
@@ -77,12 +53,59 @@ export const fetchNode = async (nodeId) => {
   }
 };
 
-// Удаление СИ
-export const deleteInstrument = async (instrumentId) => {
+// Средства измерений
+export const fetchInstrumentsByNode = async (nodeId) => {
   try {
-    const response = await apiClient.delete(`/instruments/${instrumentId}`);
+    const response = await apiClient.get(`/instruments/${nodeId}/`);
+    console.log("API Response:", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении СИ");
+  }
+};
+
+export const searchAndAddInstrument = async (nodeId, searchParams) => {
+  try {
+    const response = await apiClient.get(`/instruments/${nodeId}/search_instruments/`, { params: searchParams });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при добавлении СИ");
+  }
+};
+
+export const deleteInstrument = async (instrumentId, nodeId) => {
+  try {
+    const response = await apiClient.delete(`/instruments/${instrumentId}/${nodeId}`);
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при удалении СИ");
+  }
+};
+
+// Группы
+export const fetchGroupsByNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/groups/${nodeId}/`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении групп");
+  }
+};
+
+export const createGroup = async (nodeId, groupName) => {
+  try {
+    const response = await apiClient.post(`/groups/${nodeId}/`, { name: groupName, description: "" });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при создании группы");
+  }
+};
+
+export const assignInstrumentToGroup = async (instrumentId, groupId) => {
+  try {
+    const response = await apiClient.put(`/instruments/assign/${instrumentId}/${groupId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при назначении СИ группе");
   }
 };
