@@ -8,41 +8,58 @@
     text-align: center;
     margin-bottom: $spacing-large;
     font-size: $font-size-large;
-    color: $foreground;
+    color: $comment;
+
   }
 
   button {
+    margin-right: $spacing-medium;
     margin-bottom: $spacing-medium;
     padding: $spacing-small $spacing-medium;
-    background-color: $green;
     border: none;
     border-radius: 4px;
     color: $background;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; // Плавное увеличение и изменение фона
 
     &:hover {
-      background-color: darken($green, 10%);
+      transform: scale(1.1); // Увеличиваем кнопку на 10% при наведении
     }
   }
 
   .header-row {
-    display: flex;
-    align-items: center;
     background-color: $ansi-black;
-    color: $foreground;
+    color: $comment;
     border-radius: 6px;
     padding: $spacing-small;
     margin-bottom: $spacing-small;
     font-weight: bold;
     cursor: default;
+      display: grid;
+    grid-template-columns: 
+      30px   // drag-handle (пустой)
+      minmax(50px, 1fr)   // ID
+      minmax(120px, 2fr)  // Название
+      minmax(80px, 1fr)   // Номер MIT
+      minmax(80px, 1fr)   // Номер MI
+      minmax(100px, 1fr)  // Дата поверки
+      minmax(100px, 1fr)  // Действителен до
+      22px; // пустое место для delete-button
+    gap: $spacing-small;
+    padding: $spacing-small;
+  }
 
-    .card-cell {
-      flex: 1;
-      padding: 0 $spacing-small;
-      text-align: center;
-      word-break: break-word;
-    }
+  .drag-handle-header {
+    width: 10px; // Такая же ширина, как у drag-handle в карточке
+    flex-shrink: 1;
+    margin-right: 0; // Отступ, как в карточке
+  }
+
+  .card-cell {
+    flex: 1;
+    padding: 0 $spacing-small;
+    text-align: center;
+    word-break: word-break;
   }
 
   .draggable-instruments {
@@ -74,11 +91,7 @@
     }
 
     .delete-button {
-      @include delete-button;
-      width: 22px;
-      height: 22px;
-      opacity: 0;
-      padding: 0;
+      @include delete-button(-6px);
     }
 
     .signal-circle {
@@ -191,8 +204,8 @@
   justify-content: center;
   margin-bottom: $spacing-medium; // Отступ снизу
   padding: $spacing-small $spacing-medium; // Внутренние отступы
-  background-color: $green; // Цвет фона
   color: $background; // Цвет текста
+  background-color: $green;
   border: none; // Убираем границу
   border-radius: 4px; // Закругление углов
   font-size: $font-size-medium; // Размер шрифта
@@ -292,6 +305,15 @@
       transition: background-color 0.3s ease;
 
       &:first-child {
+        background-color: $green;
+        color: $background;
+
+        &:hover {
+          background-color: darken($green, 10%);
+        }
+      }
+
+      &:last-child {
         background-color: $red;
         color: $background;
 
@@ -299,13 +321,106 @@
           background-color: darken($red, 10%);
         }
       }
+    }
+  }
+}
+.add-group-button {
+  @extend .add-instrument-button;
+  background-color: $orange;
+    &:hover{
+      background-color: darken($orange, 10%);
+  }
+}
 
-      &:last-child {
+.modal-group {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $ansi-black;
+  color: $foreground;
+  border-radius: 8px;
+  padding: $spacing-large;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  width: 100%;
+  max-width: 500px;
+  transition: all 0.3s ease;
+
+  h3 {
+    margin-bottom: $spacing-medium;
+    font-size: $font-size-large;
+    text-align: center;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: $spacing-medium;
+
+    label {
+      margin-bottom: $spacing-tiny;
+      font-size: $font-size-medium;
+      color: $foreground;
+    }
+
+    input,
+    textarea {
+      padding: $spacing-small;
+      background-color: $background;
+      color: $foreground;
+      border: 1px solid $comment;
+      border-radius: 4px;
+      font-size: $font-size-medium;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: $green;
+        outline: none;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+  }
+
+  .error-message {
+    color: $red;
+    font-size: $font-size-small;
+    margin-top: $spacing-tiny;
+  }
+
+  .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: $spacing-small;
+
+    button {
+      flex: 1;
+      padding: $spacing-small $spacing-medium;
+      border: none;
+      border-radius: 4px;
+      font-size: $font-size-medium;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:first-child {
         background-color: $green;
         color: $background;
 
         &:hover {
           background-color: darken($green, 10%);
+        }
+      }
+
+      &:last-child {
+        background-color: $red;
+        color: $background;
+
+        &:hover {
+          background-color: darken($red, 10%);
         }
       }
     }

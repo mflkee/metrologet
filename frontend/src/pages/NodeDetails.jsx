@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { fetchInstrumentsByNode, searchAndAddInstrument, fetchNode, deleteInstrument } from '../api/apiClient';
-import AddInstrumentModal from '../components/AddInstrumentModal';
-import InstrumentCard from '../components/InstrumentCard'; // Импортируем обновленный компонент
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { fetchInstrumentsByNode, searchAndAddInstrument, fetchNode, deleteInstrument, createGroup } from "../api/apiClient";
+import AddInstrumentModal from "../components/AddInstrumentModal";
+import InstrumentCard from "../components/InstrumentCard";
+import AddGroupModal from "../components/AddGroupModal";
 
 function NodeDetailsPage() {
   const { nodeId } = useParams();
   const [instruments, setInstruments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [nodeName, setNodeName] = useState('');
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [nodeName, setNodeName] = useState("");
 
-  // Загрузка данных узла
   useEffect(() => {
     const loadNode = async () => {
       try {
@@ -24,12 +25,10 @@ function NodeDetailsPage() {
     loadNode();
   }, [nodeId]);
 
-  // Загрузка средств измерения для узла
   useEffect(() => {
     const loadInstruments = async () => {
       try {
         const data = await fetchInstrumentsByNode(nodeId);
-        console.log("Fetched Instruments:", data); // Логирование данных
         setInstruments(data);
       } catch (error) {
         console.error("Ошибка при загрузке СИ:", error);
@@ -38,7 +37,6 @@ function NodeDetailsPage() {
     loadInstruments();
   }, [nodeId]);
 
-  // Обработчик добавления нового СИ
   const handleAddInstrument = async (searchParams) => {
     try {
       const newInstrument = await searchAndAddInstrument(nodeId, searchParams);
@@ -48,70 +46,71 @@ function NodeDetailsPage() {
     }
   };
 
-  // Обработчик удаления СИ
   const handleDeleteInstrument = async (instrumentId) => {
     try {
-      await deleteInstrument(instrumentId, nodeId); // Удаление через API
-      setInstruments((prev) => prev.filter((item) => item.id !== instrumentId)); // Обновление состояния
+      await deleteInstrument(instrumentId, nodeId);
+      setInstruments((prev) => prev.filter((item) => item.id !== instrumentId));
     } catch (error) {
       console.error("Ошибка при удалении СИ:", error);
     }
   };
 
+  const handleAddGroup = async (groupData) => {
+    try {
+      const newGroup = await createGroup(nodeId, groupData);
+      console.log("Группа создана:", newGroup);
+    } catch (error) {
+      console.error("Ошибка при создании группы:", error);
+    }
+  };
+
   return (
     <div className="node-details-page">
-      {/* Заголовок страницы */}
       <h1 className="node-title">{nodeName || "Загрузка..."}</h1>
 
-      {/* Кнопка добавления СИ */}
-    <button className="add-instrument-button" onClick={() => setIsModalOpen(true)}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-      </svg>
-      Добавить СИ
-    </button>
+      <button className="add-instrument-button" onClick={() => setIsModalOpen(true)}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+        </svg>
+        Добавить СИ
+      </button>
 
-      {/* Модальное окно добавления СИ */}
-      {isModalOpen && (
-        <AddInstrumentModal
-          onClose={() => setIsModalOpen(false)}
-          onAdd={handleAddInstrument}
-        />
-      )}
+      {isModalOpen && <AddInstrumentModal onClose={() => setIsModalOpen(false)} onAdd={handleAddInstrument} />}
 
-      {/* Статическая строка-заголовок */}
+      <button className="add-group-button" onClick={() => setIsGroupModalOpen(true)}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+        </svg>
+        Добавить группу
+      </button>
+
+      <AddGroupModal isOpen={isGroupModalOpen} onClose={() => setIsGroupModalOpen(false)} onAdd={handleAddGroup} />
+
       <div className="header-row">
+        <div className="drag-handle-header"></div>
         <div className="card-cell">ID</div>
         <div className="card-cell">Название</div>
         <div className="card-cell">Номер MIT</div>
         <div className="card-cell">Номер MI</div>
         <div className="card-cell">Дата поверки</div>
         <div className="card-cell">Действителен до</div>
+        <div></div> {/* Пустой элемент для выравнивания с delete-button */}
       </div>
 
       <DragDropContext onDragEnd={(result) => {}}>
         <Droppable droppableId="instruments">
           {(provided) => (
-            <div
-              className="draggable-instruments"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
+            <div className="draggable-instruments" ref={provided.innerRef} {...provided.droppableProps}>
               {instruments.length > 0 ? (
                 instruments.map((instrument, index) => (
-                  <Draggable
-                    key={instrument.id}
-                    draggableId={instrument.id.toString()}
-                    index={index}
-                  >
+                  <Draggable key={instrument.id} draggableId={instrument.id.toString()} index={index}>
                     {(provided) => (
                       <InstrumentCard
-                        key={instrument.id}
                         instrument={instrument}
-                        onDelete={handleDeleteInstrument} // Передаем функцию удаления
-                        ref={provided.innerRef}
+                        onDelete={handleDeleteInstrument}
+                        ref={provided.innerRef} // Передаем ref
                         {...provided.draggableProps}
-                        {...provided.dragHandleProps}
+                        dragHandleProps={provided.dragHandleProps}
                       />
                     )}
                   </Draggable>

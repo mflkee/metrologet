@@ -37,6 +37,14 @@ class MeasuringInstrumentResponse(MeasuringInstrumentBase):
     group_id: Optional[int] = None  # новое поле для группы
     color: Literal["green", "yellow", "orange", "red", "black"]
 
+    @property
+    def formatted_verification_date(self) -> str:
+        return self.verification_date.strftime("%d.%m.%Y") if self.verification_date else ""
+
+    @property
+    def formatted_valid_date(self) -> str:
+        return self.valid_date.strftime("%d.%m.%Y") if self.valid_date else ""
+
     class Config:
         from_attributes = True
 

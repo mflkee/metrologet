@@ -82,30 +82,12 @@ export const deleteInstrument = async (instrumentId, nodeId) => {
   }
 };
 
-// Группы
-export const fetchGroupsByNode = async (nodeId) => {
+// Функция для создания группы
+export const createGroup = async (nodeId, groupData) => {
   try {
-    const response = await apiClient.get(`/groups/${nodeId}/`);
-    return response.data;
-  } catch (error) {
-    throw new Error("Ошибка при получении групп");
-  }
-};
-
-export const createGroup = async (nodeId, groupName) => {
-  try {
-    const response = await apiClient.post(`/groups/${nodeId}/`, { name: groupName, description: "" });
+    const response = await apiClient.post(`/groups/${nodeId}/`, groupData);
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при создании группы");
-  }
-};
-
-export const assignInstrumentToGroup = async (instrumentId, groupId) => {
-  try {
-    const response = await apiClient.put(`/instruments/assign/${instrumentId}/${groupId}`);
-    return response.data;
-  } catch (error) {
-    throw new Error("Ошибка при назначении СИ группе");
   }
 };

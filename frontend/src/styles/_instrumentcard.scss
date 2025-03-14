@@ -13,6 +13,8 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   min-height: 50px;
+  gap: $spacing-small; // Отступы между колонками
+  grid-template-columns: auto 1fr; // Первая колонка — `drag-handle`, вторая — содержимое
 
   &:hover {
     transform: scale(1.02);
@@ -20,6 +22,18 @@
 
     .delete-button {
       opacity: 1; // Важно: оставляем opacity 1 при наведении
+    }
+  }
+
+  .drag-handle {
+    width: 30px; // Ширина должна совпадать с шириной .drag-handle
+    flex-shrink: 0; // Запрещаем сжатие элемента
+    margin-right: $spacing-small; // Отступ должен совпадать с отступом в карточке
+
+    svg {
+      width: 28px;
+      height: 28px;
+      fill: $comment; // Цвет иконки
     }
   }
 
@@ -57,18 +71,26 @@
     }
   }
 
-  .card-content {
-    display: flex;
+  .instrument-card-content {
+    display: grid;
+    grid-template-columns:
+      30px   // drag-handle
+      minmax(50px, 1fr)   // ID
+      minmax(120px, 2fr)  // Название
+      minmax(80px, 1fr)   // Номер MIT
+      minmax(80px, 1fr)   // Номер MI
+      minmax(100px, 1fr)  // Дата поверки
+      minmax(100px, 1fr)  // Действителен до
+      22px; // delete-button
     align-items: center;
     gap: $spacing-small;
-    flex: 1;
+    width: 100%;
 
-    .card-cell {
-      flex: 1;
-      padding: 0 $spacing-small;
-      text-align: center;
-      color: $foreground;
-      font-size: 0.9rem;
+     .card-cell {
+          padding: 0 $spacing-small;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
     }
   }
 

@@ -55,13 +55,13 @@
   100% { box-shadow: 0 0 2px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4); }
 }
 
-@mixin delete-button {
+@mixin delete-button($right-offset: 8px) {
   position: absolute;
   top: 8px;
-  right: 8px;
+  right: $right-offset; // Параметр для смещения вправо
   width: 20px;
   height: 20px;
-  border-radius: 50%; // Добавляем !important
+  border-radius: 50%;
   background-color: $red;
   color: $background;
   border: none;
@@ -69,18 +69,18 @@
   transition: opacity 0.3s ease;
   cursor: pointer;
   z-index: 2;
-  display: block; // Изменено с flex на block
+  display: block;
   font-family: Arial, sans-serif;
   font-size: 18px;
-  line-height: 20px; // Добавлено для выравнивания
+  line-height: 20px;
   text-align: center;
 
   &::before {
     content: '×';
     color: $ansi-black;
     display: block;
-    line-height: 1; // Исправляем выравнивание
-    transform: translateY(-1px); // Точная настройка позиции
+    line-height: 1;
+    transform: translateY(-1px);
   }
 
   &:hover {
