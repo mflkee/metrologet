@@ -3959,3 +3959,5 @@ WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relki
 2025-03-14 20:29:19,559 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
 2025-03-14 20:29:32,092 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
 2025-03-14 20:29:32,092 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-14 20:30:53,566 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-14 20:30:53,566 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
