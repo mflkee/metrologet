@@ -13,7 +13,7 @@ class Node(Base):
     description = Column(String)
 
     instruments = relationship("MeasuringInstrument", back_populates="node", cascade="all, delete-orphan")
-    groups = relationship("Group", back_populates="node", cascade="all, delete-orphan")  # Добавьте эту строку
+    groups = relationship("Group", back_populates="node", cascade="all, delete-orphan")
 
     @property
     def color(self) -> str:

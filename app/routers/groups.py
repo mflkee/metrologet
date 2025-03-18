@@ -50,7 +50,7 @@ def assign_instrument_to_group_api(
     if not instrument:
         raise HTTPException(status_code=404, detail="Instrument not found or not in the same node")
     
-    instrument.group_id = group_id
+    instrument.groups_id = group_id
     db.commit()
     db.refresh(instrument)
     return schemas.MeasuringInstrumentResponse.model_validate(instrument)

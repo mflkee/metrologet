@@ -1,8 +1,10 @@
+from sqlalchemy import func, label, over
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from app import models  # Явный импорт моделей
 from app.schemas import GroupCreate, MeasuringInstrumentCreate, NodeCreate
 from app import schemas
+from app.models import MeasuringInstrument
 
 # CRUD для узлов
 def create_node(db: Session, node: NodeCreate):
@@ -50,16 +52,43 @@ def get_nodes(db: Session):
     return db.query(models.Node).all()
 
 
-def get_instruments_by_node(db: Session, node_id: int):
-    return db.query(models.MeasuringInstrument).filter(models.MeasuringInstrument.node_id == node_id).all()
+import traceback
 
-def search_nodes(db: Session, query: str):
-    return db.query(models.Node).filter(
-        or_(
-            models.Node.name.ilike(f"%{query}%"),  # Поиск по названию
-            models.Node.description.ilike(f"%{query}%")  # Поиск по описанию
+def get_instruments_by_node(db: Session, node_id: int):
+    from sqlalchemy.sql import func, over, select
+
+    try:
+        stmt = (
+            select(
+                MeasuringInstrument,
+                over(
+                    func.row_number(),
+                    partition_by=MeasuringInstrument.group_id,
+                    order_by=MeasuringInstrument.id
+                ).label("index_within_group")
+            )
+            .where(MeasuringInstrument.node_id == node_id)
         )
-    ).all()
+
+        result = db.execute(stmt).all()
+        print("RAW RESULT:", result)  # Логируем результат запроса
+        
+        instruments = [
+            {
+                **row[0].__dict__,
+                "index_within_group": row[1],
+                "group_id": row[0].group_id  # Явно добавляем поле group_id
+            }
+            for row in result
+        ]
+
+        print("INSTRUMENTS:", instruments)  # Логируем готовые данные
+        return instruments
+
+    except Exception as e:
+        print("ERROR:", e)
+        traceback.print_exc()  # Выводим полный стек ошибки
+        return {"error": "Internal Server Error"}, 500
 
 
 #===groups===#
@@ -96,7 +125,7 @@ def add_instrument_to_group(db: Session, instrument_id: int, group_id: int):
     if instrument.node_id != group.node_id:
         return None
     
-    instrument.group_id = group_id  # ✅ Теперь линтер понимает, что это колонка
+    instrument.groups_id = group_id  # ✅ Теперь линтер понимает, что это колонка
     db.commit()
     db.refresh(instrument)
     return instrument
@@ -106,7 +135,7 @@ def remove_instrument_from_group(db: Session, instrument_id: int):
         models.MeasuringInstrument.id == instrument_id
     ).first()
     if instrument:
-        instrument.group_id = None  # ✅ Корректное присваивание
+        instrument.groups_id = None  # ✅ Корректное присваивание
         db.commit()
         db.refresh(instrument)
         return instrument

@@ -1,6 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 from typing import Optional, Literal
 from datetime import date
+import math
 
 class NodeBase(BaseModel):
     name: str
@@ -31,22 +32,44 @@ class MeasuringInstrumentBase(BaseModel):
 class MeasuringInstrumentCreate(MeasuringInstrumentBase):
     pass
 
-class MeasuringInstrumentResponse(MeasuringInstrumentBase):
+class MeasuringInstrumentResponse(BaseModel):
     id: int
-    node_id: int
-    group_id: Optional[int] = None  # новое поле для группы
-    color: Literal["green", "yellow", "orange", "red", "black"]
+    mit_title:str
+    mit_number: str
+    mi_number: str
+    valid_date: date
+    verification_date: Optional[date] = None
+    color: str  # Добавляем поле для цвета
+    index_within_group: int
+    group_id: Optional[int]  # Поле может быть None
 
-    @property
-    def formatted_verification_date(self) -> str:
-        return self.verification_date.strftime("%d.%m.%Y") if self.verification_date else ""
+    @model_validator(mode='before')
+    def calculate_color(cls, values):
+        valid_date = values.get('valid_date')
+        today = date.today()
 
-    @property
-    def formatted_valid_date(self) -> str:
-        return self.valid_date.strftime("%d.%m.%Y") if self.valid_date else ""
+        if valid_date and valid_date < today:
+            values['color'] = "black"
+        else:
+            delta_days = (valid_date - today).days if valid_date else 0
+            months_remaining = delta_days / 30.0
+            rounded_months = math.ceil(months_remaining)
+
+            if rounded_months >= 4:
+                values['color'] = "green"
+            elif rounded_months == 3:
+                values['color'] = "yellow"
+            elif rounded_months == 2:
+                values['color'] = "orange"
+            elif rounded_months == 1:
+                values['color'] = "red"
+            else:
+                values['color'] = "black"
+
+        return values
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 #===groups===#
