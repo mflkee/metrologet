@@ -110,33 +110,19 @@ fetchGroupsByNode(2);
 // apiClient.js
 export const assignInstrumentToGroup = async (instrumentId, groupId) => {
   try {
-    const response = await fetch(`/api/groups/assign/${instrumentId}/${groupId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
-    }
-    
-    return await response.json();
+    const response = await apiClient.put(`/groups/assign/${instrumentId}/${groupId}`);
+    return response.data;
   } catch (error) {
-    console.error("Ошибка привязки инструмента:", error);
-    throw error;
+    throw new Error(error.response?.data?.detail || "Ошибка привязки инструмента");
   }
 };
 
-export const updateGroupOrder = async (nodeId, orderedGroups) => {
+export const updateGroupOrder = async (nodeId, groupIds) => {
   try {
-    const response = await apiClient.put(`/groups/${nodeId}/order`, {
-      order: orderedGroups.map(g => g.id)
-    });
+    const response = await apiClient.put(`/groups/${nodeId}/order`, { group_ids: groupIds });
     return response.data;
   } catch (error) {
-    throw new Error("Ошибка обновления порядка групп");
+    throw new Error(error.response?.data?.detail || "Ошибка обновления порядка групп");
   }
 };
 
@@ -147,5 +133,14 @@ export const fetchInstrumentsForGroup = async (groupId) => {
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при загрузке инструментов группы");
+  }
+};
+
+export const removeInstrumentFromGroup = async (instrumentId) => {
+  try {
+    const response = await apiClient.put(`/groups/remove/${instrumentId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка удаления из группы");
   }
 };

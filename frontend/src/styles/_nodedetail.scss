@@ -427,116 +427,63 @@
   }
 }
 
-.groups-section {
-  margin-top: 32px;
-  padding: 16px;
-  background: $selection;
-  border-radius: 8px;
-  
-  // Добавить минимальную высоту для визуализации пустой зоны
-  min-height: 200px;
-}
-
-.groups-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  
-  // Фиксируем позиционирование для корректного DnD
-  position: relative;
-}
-
 .group-container {
-  background: darken($selection, 5%);
+  position: relative;  /* Сохраняем позиционирование контейнера */
+  margin-bottom: $spacing-large;
+  background-color: $ansi-black;
   border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  
-  // Добавляем анимацию для плавного перемещения
-  transition: transform 0.2s, box-shadow 0.2s;
-  
-  // Стили при перетаскивании
-  &.dragging {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-}
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-.group-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  padding: 8px;
-  background: rgba($foreground, 0.05);
-  border-radius: 4px;
-  
-  .group-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: $foreground;
-    margin: 0;
+  &:hover {
+    transform: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
-  .drag-handle {
-    cursor: grab;
-    padding: 8px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-    
+
+  .group-header {
+    background-color: $foreground;
+    color: $background;
+    display: flex;
+    align-items: center;
+    padding: $spacing-small;
+    border-radius: 8px 8px 0 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
     &:hover {
-      opacity: 1;
+      background-color: $comment;
+      color: $foreground;
     }
-    
-    svg {
-      fill: $foreground;
+
+    .group-title {
+      flex-grow: 1;
+      text-align: left;
+      padding-left: $spacing-medium;
+    }
+
+    .drag-handle {
+      cursor: move;
       width: 24px;
       height: 24px;
+      margin-right: $spacing-small;
     }
-    
-    &:active {
-      cursor: grabbing;
-    }
+  }
+
+  .group-content {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-small;
+  }
+
+  /* Стили для перетаскиваемой карточки */
+  .draggable {
+    position: absolute;
+    z-index: 100; /* Задаем высокий z-index для поверхностного отображения */
+    top: auto;  /* Убираем фиксированную позицию */
+    left: auto;
+    transform: translate3d(0, 0, 0); /* Используем transform для перемещения */
   }
 }
 
-.group-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px; // Отступ между карточками СИ
-  padding: 16px; // Добавляем отступы внутри контейнера для карточек
-  
-  // Стиль при перетаскивании в зону
-  &.drag-over {
-    background: rgba($green, 0.1);
-    outline: 2px dashed $green;
-  }
-}
-
-.instruments-section {
-  margin-top: 32px;
-  padding: 16px;
-  background: $selection;
-  border-radius: 8px;
-  
-  // Добавляем отступ снизу для визуального разделения
-  margin-bottom: 40px;
-}
-
-// Добавляем стили для состояния перетаскивания
-.draggable-instruments {
-  > * {
-    transition: transform 0.2s;
-    
-    &.dragging {
-      transform: rotate(3deg);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-  }
-}
-
-.header-row {
-  // Добавляем фиксированную высоту для стабильного позиционирования
-  height: 40px;
-  align-items: center;
-}

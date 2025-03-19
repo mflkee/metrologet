@@ -50,10 +50,21 @@ def assign_instrument_to_group_api(
     if not instrument:
         raise HTTPException(status_code=404, detail="Instrument not found or not in the same node")
     
-    instrument.groups_id = group_id
+    instrument.group_id = group_id
     db.commit()
     db.refresh(instrument)
-    return schemas.MeasuringInstrumentResponse.model_validate(instrument)
+
+    return schemas.MeasuringInstrumentResponse(
+        id=instrument.id,
+        mit_title=instrument.mit_title,
+        mit_number=instrument.mit_number,
+        mi_number=instrument.mi_number,
+        valid_date=instrument.valid_date,
+        verification_date=instrument.verification_date,
+        color=instrument.color,
+        index_within_group=0,  # Замените на реальное значение
+        group_id=instrument.group_id
+    )
 
 # Удаление СИ из группы
 @router.put("/remove/{instrument_id}", response_model=schemas.MeasuringInstrumentResponse)
@@ -65,3 +76,16 @@ def remove_instrument_from_group_api(
     if not instrument:
         raise HTTPException(status_code=404, detail="Instrument not found")
     return schemas.MeasuringInstrumentResponse.model_validate(instrument)
+
+# В FastAPI роутере
+@router.put("/{node_id}/order")
+def update_groups_order(
+    node_id: int, 
+    order_data: schemas.GroupOrderUpdate,
+    db: Session = Depends(get_db)
+):
+    try:
+        crud.update_groups_order(db, node_id, order_data.group_ids)
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

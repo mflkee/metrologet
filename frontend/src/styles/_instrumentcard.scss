@@ -15,6 +15,13 @@
   min-height: 50px;
   gap: $spacing-small; // Отступы между колонками
   grid-template-columns: auto 1fr; // Первая колонка — `drag-handle`, вторая — содержимое
+  z-index: auto;
+  pointer-events: all !important; // ← Принудительно включить
+
+  .signal-circle, .delete-button {
+    pointer-events: auto;
+  }
+
 
   &:hover {
     transform: scale(1.02);
@@ -26,16 +33,32 @@
   }
 
   .drag-handle {
-    width: 30px; // Ширина должна совпадать с шириной .drag-handle
-    flex-shrink: 0; // Запрещаем сжатие элемента
-    margin-right: $spacing-small; // Отступ должен совпадать с отступом в карточке
+    z-index: 2;
+    cursor: grab;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
 
     svg {
-      width: 28px;
-      height: 28px;
-      fill: $comment; // Цвет иконки
+      pointer-events: none;
+      width: 24px;
+      height: 24px;
+      fill: $comment;
+      transition: fill 0.2s ease;
+    }
+
+    &:hover svg {
+      fill: $foreground;
     }
   }
+
 
   .delete-button {
     @include delete-button;
@@ -72,6 +95,17 @@
   }
 
   .instrument-card-content {
+
+    &:hover {
+      .delete-button {
+        opacity: 1 !important; // Добавить !important для приоритета
+      }
+      
+      .signal-circle {
+        transform: scale(1.1);
+      }
+    }
+
     display: grid;
     grid-template-columns:
       30px   // drag-handle
@@ -86,11 +120,11 @@
     gap: $spacing-small;
     width: 100%;
 
-     .card-cell {
-          padding: 0 $spacing-small;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+    .card-cell {
+      padding: 0 $spacing-small;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

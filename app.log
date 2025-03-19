@@ -4183,3 +4183,273 @@ WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relki
 2025-03-18 22:53:39,040 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
 2025-03-18 22:55:08,845 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
 2025-03-18 22:55:08,846 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:29:28,522 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:31:09,171 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:31:09,175 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:32:00,219 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=None, mit_number=14557-15, mi_number=3252, year=2024
+2025-03-19 14:32:00,219 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3252', 'year': 2024}
+2025-03-19 14:32:00,638 - app.routers.instruments - WARNING - Попытка добавить уже существующий прибор с mit_number=14557-15 и mi_number=3252
+2025-03-19 14:32:00,638 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 409: Прибор уже существует в базе данных.
+2025-03-19 14:32:34,181 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=None, mit_number=14557-15, mi_number=3252, year=2025
+2025-03-19 14:32:34,181 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3252', 'year': 2025}
+2025-03-19 14:32:34,567 - app.routers.instruments - INFO - Средства измерений не найдены.
+2025-03-19 14:33:02,372 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:33:12,357 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:33:12,367 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:33:58,685 - app.routers.instruments - INFO - Удаление средства измерения с ID=2 для узла с ID=2
+2025-03-19 14:34:11,747 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=None, mit_number=14557-15, mi_number=3261, year=2025
+2025-03-19 14:34:11,747 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3261', 'year': 2025}
+2025-03-19 14:34:12,181 - app.routers.instruments - INFO - Средства измерений не найдены.
+2025-03-19 14:34:17,474 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 14:34:17,474 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:03:34,907 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=None, mit_number=14557-15, mi_number=3261, year=2024
+2025-03-19 15:03:34,907 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3261', 'year': 2024}
+2025-03-19 15:03:35,341 - app.routers.instruments - INFO - Создание нового средства измерений с mit_number=14557-15 и mi_number=3261
+2025-03-19 15:03:44,355 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:03:44,358 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:03:59,047 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=2. Параметры поиска: search=None, mit_number=14557-15, mi_number=3252, year=2024
+2025-03-19 15:03:59,047 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3252', 'year': 2024}
+2025-03-19 15:03:59,545 - app.routers.instruments - WARNING - Попытка добавить уже существующий прибор с mit_number=14557-15 и mi_number=3252
+2025-03-19 15:03:59,545 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 409: Прибор уже существует в базе данных.
+2025-03-19 15:04:02,496 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:04:02,496 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:45:18,883 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:45:18,884 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:45:42,994 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:45:42,997 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:46:12,891 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=28. Параметры поиска: search=None, mit_number=14557-15, mi_number=3261, year=2025
+2025-03-19 15:46:12,891 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3261', 'year': 2025}
+2025-03-19 15:46:13,373 - app.routers.instruments - INFO - Средства измерений не найдены.
+2025-03-19 15:46:16,062 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:46:16,065 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:46:23,239 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=28. Параметры поиска: search=None, mit_number=14557-15, mi_number=3262, year=2025
+2025-03-19 15:46:23,239 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2025}
+2025-03-19 15:46:23,547 - app.routers.instruments - WARNING - Попытка добавить уже существующий прибор с mit_number=14557-15 и mi_number=3262
+2025-03-19 15:46:23,548 - app.routers.instruments - ERROR - Произошла ошибка при выполнении запроса к API 'АРШИН': 409: Прибор уже существует в базе данных.
+2025-03-19 15:46:26,215 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:46:26,217 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:46:37,874 - app.routers.instruments - INFO - Начат поиск и добавление средства измерений для узла с ID=28. Параметры поиска: search=None, mit_number=14557-15, mi_number=3262, year=2024
+2025-03-19 15:46:37,874 - app.routers.instruments - INFO - Выполняется GET-запрос к API 'АРШИН' с параметрами: {'mit_number': '14557-15', 'mi_number': '3262', 'year': 2024}
+2025-03-19 15:46:38,218 - app.routers.instruments - INFO - Средства измерений не найдены.
+2025-03-19 15:46:40,312 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:46:40,312 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=28
+2025-03-19 15:47:19,161 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:47:19,162 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:52:56,792 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 15:52:56,798 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:03:09,226 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-19 16:03:09,226 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-19 16:08:50,291 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:08:50,293 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:23:05,588 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:23:05,596 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:27:35,681 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:27:35,683 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:29:26,229 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:29:26,238 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:40:23,662 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:40:23,665 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:43:24,264 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:43:24,264 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:50:35,520 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 16:50:35,520 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:00:52,638 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:00:52,639 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:22:05,587 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:22:05,587 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:38:59,771 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:38:59,774 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:39:57,112 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:39:57,116 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:13,508 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:13,509 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:35,120 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:35,121 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:37,257 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:37,264 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:56,742 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:41:56,742 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:42:50,434 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:42:50,436 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:44:22,086 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:44:22,087 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:45:24,928 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:45:24,928 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:45:27,305 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:45:27,308 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:47:41,122 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:47:41,124 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:50:32,876 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:50:32,876 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:54:35,050 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:54:35,052 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:55:13,493 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 17:55:13,498 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:19:03,760 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:19:03,763 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:24:15,843 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:24:15,848 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:24:42,471 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:24:42,472 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:27:20,178 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:27:20,186 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:30:22,361 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:30:22,367 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:30:27,487 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:30:27,488 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:34:31,943 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:34:31,949 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:41:34,867 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:41:34,867 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:56:09,815 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 18:56:09,817 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:19:38,953 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:19:38,955 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:20:01,007 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:20:01,011 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:28:21,249 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:28:21,249 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:32:45,032 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:32:45,032 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:35:46,141 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:35:46,150 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:37:12,328 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:37:12,329 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:37:25,897 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 19:37:25,897 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 20:08:24,883 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 20:08:24,883 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 20:34:53,949 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 20:34:53,950 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:30:19,603 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:30:19,604 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:30:36,829 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:30:36,829 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:31:08,022 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:31:08,022 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:33:22,299 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:33:22,299 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:33:28,127 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:33:28,127 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:35:08,232 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:35:08,233 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:36:26,173 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:36:26,177 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:37:50,594 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:37:50,594 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:37:57,771 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:37:57,771 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:38:06,772 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:38:06,772 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:38:14,735 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:38:14,735 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:44:40,237 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:44:40,239 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:44:48,644 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:44:48,646 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:48:52,082 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:48:52,083 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:49:04,131 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:49:04,133 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:57:59,863 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:57:59,865 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:59:44,831 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 21:59:44,831 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:03:52,009 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:03:52,009 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:03:54,867 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:03:54,869 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:03:59,275 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:03:59,277 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:04:03,043 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:04:03,043 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:04:06,604 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:04:06,607 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:06:51,588 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:06:51,588 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:08:48,253 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:08:48,254 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:17:20,154 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:17:20,159 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:23:43,365 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:23:43,368 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:23:55,591 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-19 22:23:55,593 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-19 22:24:16,146 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:24:16,148 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:24:20,335 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:24:20,338 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:28:52,116 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:28:52,123 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:31:59,081 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:31:59,081 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:34:15,617 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:34:15,618 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:36:19,322 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:36:19,323 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:37:11,343 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:37:11,343 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:37:25,182 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:37:25,183 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:44:31,139 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:44:31,139 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:46:04,427 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:46:04,434 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:48:51,343 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:48:51,343 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:59:23,230 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-19 22:59:23,231 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=27
+2025-03-19 22:59:27,626 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 22:59:27,626 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:16:43,022 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:16:43,024 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:19:07,734 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:19:07,737 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:19:54,222 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:19:54,223 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:20:00,804 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:20:00,807 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:28:20,117 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:28:20,118 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:35,239 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:35,250 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:37,461 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:37,464 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:41,948 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:41,955 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:43,617 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:29:43,619 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:30:23,420 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:30:23,426 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:31:49,818 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:31:49,819 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:31:56,326 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:31:56,326 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:32:15,628 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:32:15,629 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:32:22,221 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:32:22,221 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:32:41,519 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:32:41,520 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:35:31,275 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:35:31,275 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:35:47,785 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:35:47,786 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:37:10,303 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:37:10,303 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:38:10,293 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:38:10,293 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:38:51,057 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:38:51,057 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:10,417 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:10,418 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:19,762 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:19,762 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:24,967 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:24,968 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:29,759 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:29,761 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:37,071 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:37,077 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:47,858 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2
+2025-03-19 23:39:47,859 - app.routers.instruments - INFO - Получение средств измерений для узла с ID=2

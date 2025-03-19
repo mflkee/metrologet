@@ -1,5 +1,5 @@
+from typing import List, Optional, Literal
 from pydantic import BaseModel, model_validator
-from typing import Optional, Literal
 from datetime import date
 import math
 
@@ -34,45 +34,44 @@ class MeasuringInstrumentCreate(MeasuringInstrumentBase):
 
 class MeasuringInstrumentResponse(BaseModel):
     id: int
-    mit_title:str
+    mit_title: str
     mit_number: str
     mi_number: str
     valid_date: date
     verification_date: Optional[date] = None
-    color: str  # Добавляем поле для цвета
+    color: str
     index_within_group: int
-    group_id: Optional[int]  # Поле может быть None
+    group_id: Optional[int]
 
-    @model_validator(mode='before')
-    def calculate_color(cls, values):
-        valid_date = values.get('valid_date')
-        today = date.today()
+@model_validator(mode='before')
+def calculate_color(cls, values):
+    # Получаем объект MeasuringInstrument, а не словарь
+    valid_date = values.valid_date if hasattr(values, 'valid_date') else None
+    today = date.today()
 
-        if valid_date and valid_date < today:
-            values['color'] = "black"
+    if valid_date and valid_date < today:
+        values.color = "black"
+    else:
+        delta_days = (valid_date - today).days if valid_date else 0
+        months_remaining = delta_days / 30.0
+        rounded_months = math.ceil(months_remaining)
+
+        # Устанавливаем цвет напрямую в объект
+        if rounded_months >= 4:
+            values.color = "green"
+        elif rounded_months == 3:
+            values.color = "yellow"
+        elif rounded_months == 2:
+            values.color = "orange"
+        elif rounded_months == 1:
+            values.color = "red"
         else:
-            delta_days = (valid_date - today).days if valid_date else 0
-            months_remaining = delta_days / 30.0
-            rounded_months = math.ceil(months_remaining)
+            values.color = "black"
+    
+    return values
 
-            if rounded_months >= 4:
-                values['color'] = "green"
-            elif rounded_months == 3:
-                values['color'] = "yellow"
-            elif rounded_months == 2:
-                values['color'] = "orange"
-            elif rounded_months == 1:
-                values['color'] = "red"
-            else:
-                values['color'] = "black"
-
-        return values
-
-    class Config:
-        orm_mode = True
-
-
-#===groups===#
+class Config:
+    from_attributes = True
 
 class GroupBase(BaseModel):
     name: str
@@ -87,3 +86,6 @@ class GroupResponse(GroupBase):
     model_config = {
         "from_attributes": True
     }
+
+class GroupOrderUpdate(BaseModel):
+    group_id: List[int]

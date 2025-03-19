@@ -1,43 +1,61 @@
-// components/GroupCard.jsx
 import React from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import InstrumentCard from "./InstrumentCard";
 
-const GroupCard = ({ group, dragHandleProps }) => {
+const GroupCard = ({ group, index }) => {
   return (
-    <div className="group-container">
-      <div className="group-header" {...dragHandleProps}>
-        <h3>{group.name}</h3>
-      </div>
-      
-      <Droppable droppableId={`group-${group.id}`}>
-        {(provided) => (
-          <div
-            className="group-content"
-            ref={provided.innerRef}
-            {...provided.droppableProps}
+    <Draggable draggableId={`group-${group.id}`} index={index}>
+      {(provided) => (
+        <div
+          className="group-container"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <Droppable 
+            droppableId={`group-${group.id}`} 
+            type="INSTRUMENT" // Должно совпадать с другими
           >
-            {group.instruments?.map((instrument, index) => (
-              <Draggable
-                key={instrument.id}
-                draggableId={`instrument-${instrument.id}`}
-                index={index}
+            {(provided) => (
+              <div
+                className="group-content"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                {...provided.dragHandleProps}
               >
-                {(provided) => (
-                  <InstrumentCard
-                    instrument={instrument}
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  />
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </div>
+                <div className="group-header" {...provided.dragHandleProps}>
+                  <h3 className="group-title">{group.name}</h3>
+                </div>
+                  {group.instruments?.map((instrument, index) => (
+                    <Draggable
+                      key={instrument.id}
+                      draggableId={`instrument-${instrument.id}`}
+                      index={index}
+                    >
+                      {(provided, snapshot) => {
+                        console.log('Draggable props:', provided.dragHandleProps);
+                        return (
+                          <InstrumentCard
+                            {...provided.draggableProps}
+                            dragHandleProps={provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            instrument={instrument}
+                            onDelete={handleDeleteInstrument}
+                            style={{
+                              ...provided.draggableProps.style,
+                              opacity: snapshot.isDragging ? 0.5 : 1
+                            }}
+                          />
+                        )}
+                      }
+                    </Draggable>
+                  ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
+      )}
+    </Draggable>
   );
 };
 

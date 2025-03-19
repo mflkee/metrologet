@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from typing import Optional
 from sqlalchemy.orm import relationship
 import math
 from .database import Base
@@ -54,7 +55,7 @@ class MeasuringInstrument(Base):
     mi_number = Column(String)
     verification_date = Column(Date)
     valid_date = Column(Date)
-    result_docnum = Column(String)
+    result_docnum = Column(String, nullable=True)
 
     node = relationship("Node", back_populates="instruments")
     group = relationship("Group", back_populates="instruments")

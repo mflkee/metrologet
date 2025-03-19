@@ -1,10 +1,10 @@
+from typing import List  # ← Добавить эту строку
 from sqlalchemy import func, label, over
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
-from app import models  # Явный импорт моделей
-from app.schemas import GroupCreate, MeasuringInstrumentCreate, NodeCreate
+from app import models
+from app.schemas import MeasuringInstrumentCreate, NodeCreate
 from app import schemas
-from app.models import MeasuringInstrument
+from app.models import MeasuringInstrument, Group
 
 # CRUD для узлов
 def create_node(db: Session, node: NodeCreate):
@@ -51,6 +51,9 @@ def delete_measuring_instrument(db: Session, instrument_id: int, node_id: int):
 def get_nodes(db: Session):
     return db.query(models.Node).all()
 
+def search_nodes(db: Session, query: str):
+    # Поиск узлов по имени, используя ILIKE для регистронезависимого поиска
+    return db.query(models.Node).filter(models.Node.name.ilike(f"%{query}%")).all()
 
 import traceback
 
@@ -75,9 +78,15 @@ def get_instruments_by_node(db: Session, node_id: int):
         
         instruments = [
             {
-                **row[0].__dict__,
+                "id": row[0].id,
+                "mit_title": row[0].mit_title,
+                "mit_number": row[0].mit_number,
+                "mi_number": row[0].mi_number,
+                "valid_date": row[0].valid_date,
+                "verification_date": row[0].verification_date,
+                "color": row[0].color,  # Добавляем цвет
                 "index_within_group": row[1],
-                "group_id": row[0].group_id  # Явно добавляем поле group_id
+                "group_id": row[0].group_id
             }
             for row in result
         ]
@@ -125,7 +134,7 @@ def add_instrument_to_group(db: Session, instrument_id: int, group_id: int):
     if instrument.node_id != group.node_id:
         return None
     
-    instrument.groups_id = group_id  # ✅ Теперь линтер понимает, что это колонка
+    instrument.group_id = group_id  # ✅ Теперь линтер понимает, что это колонка
     db.commit()
     db.refresh(instrument)
     return instrument
@@ -135,8 +144,13 @@ def remove_instrument_from_group(db: Session, instrument_id: int):
         models.MeasuringInstrument.id == instrument_id
     ).first()
     if instrument:
-        instrument.groups_id = None  # ✅ Корректное присваивание
+        instrument.group_id = None
         db.commit()
         db.refresh(instrument)
         return instrument
     return None
+
+def update_groups_order(db: Session, node_id: int, group_ids: list[int]):
+    for index, group_id in enumerate(group_ids):
+        db.query(Group).filter(Group.id == group_id).update({"order": index})
+    db.commit()
