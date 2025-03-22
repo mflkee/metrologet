@@ -8,7 +8,7 @@ from app.routers.groups import router as groups
 # Создание таблиц в базе данных
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(redirect_slashes=False)  # Отключаем автоматический редирект
 
 app.include_router(nodes)
 app.include_router(instruments)

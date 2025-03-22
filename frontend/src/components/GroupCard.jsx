@@ -31,22 +31,15 @@ const GroupCard = ({ group, index }) => {
                       draggableId={`instrument-${instrument.id}`}
                       index={index}
                     >
-                      {(provided, snapshot) => {
-                        console.log('Draggable props:', provided.dragHandleProps);
-                        return (
-                          <InstrumentCard
-                            {...provided.draggableProps}
-                            dragHandleProps={provided.dragHandleProps}
-                            ref={provided.innerRef}
-                            instrument={instrument}
-                            onDelete={handleDeleteInstrument}
-                            style={{
-                              ...provided.draggableProps.style,
-                              opacity: snapshot.isDragging ? 0.5 : 1
-                            }}
-                          />
-                        )}
-                      }
+                      {(providedInstrument) => (
+                        <InstrumentCard
+                          instrument={instrument}
+                          onDelete={handleDeleteInstrument} // Убедитесь что этот пропс передается
+                          ref={providedInstrument.innerRef}
+                          {...providedInstrument.draggableProps}
+                          dragHandleProps={providedInstrument.dragHandleProps} // Явная передача
+                        />
+                      )}
                     </Draggable>
                   ))}
                 {provided.placeholder}

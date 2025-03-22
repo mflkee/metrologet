@@ -1,24 +1,24 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import ForeignKey, UniqueConstraint, String, Integer, Date,Column
 from typing import Optional
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 import math
 from .database import Base
 from datetime import date
-
+from typing import Literal
 
 class Node(Base):
     __tablename__ = "nodes"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    description = Column(String)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String, index=True)
+    description: Mapped[str] = mapped_column(String)
 
     instruments = relationship("MeasuringInstrument", back_populates="node", cascade="all, delete-orphan")
     groups = relationship("Group", back_populates="node", cascade="all, delete-orphan")
 
     @property
     def color(self) -> str:
-        """ Возвращает цвет узла на основе самого критичного прибора """
+        """Возвращает цвет узла на основе самого критичного прибора"""
         if not self.instruments:
             return "green"
 
@@ -43,27 +43,32 @@ class Node(Base):
 
 class MeasuringInstrument(Base):
     __tablename__ = "measuring_instruments"
-    id = Column(Integer, primary_key=True, index=True)
-    node_id = Column(Integer, ForeignKey("nodes.id"))
-    group_id = Column(Integer, ForeignKey("groups.id"), nullable=True)
-    vri_id = Column(String, index=True)
-    org_title = Column(String)
-    mit_number = Column(String)
-    mit_title = Column(String)
-    mit_notation = Column(String)
-    mi_modification = Column(String)
-    mi_number = Column(String)
-    verification_date = Column(Date)
-    valid_date = Column(Date)
-    result_docnum = Column(String, nullable=True)
+    __table_args__ = (
+        UniqueConstraint('mit_number', 'mi_number', name='uix_mit_mi'),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    node_id: Mapped[int] = mapped_column(Integer, ForeignKey("nodes.id"))
+    group_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("groups.id"), nullable=True)
+    vri_id: Mapped[str] = mapped_column(String, index=True)
+    org_title: Mapped[str] = mapped_column(String)
+    mit_number: Mapped[str] = mapped_column(String)
+    mit_title: Mapped[str] = mapped_column(String)
+    mit_notation: Mapped[str] = mapped_column(String)
+    mi_modification: Mapped[Optional[str]] = mapped_column(String)
+    mi_number: Mapped[str] = mapped_column(String)
+    verification_date: Mapped[Optional[date]] = mapped_column(Date)
+    valid_date: Mapped[Optional[date]] = mapped_column(Date)
+    result_docnum: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    index_within_group = Column(Integer, nullable=True)  # Добавление атрибута
 
     node = relationship("Node", back_populates="instruments")
     group = relationship("Group", back_populates="instruments")
+
     @property
-    def color(self) -> str:
-        """Возвращает цвет прибора на основе даты поверки"""
+    def color(self) -> Literal["green", "yellow", "orange", "red", "black"]:
         today = date.today()
-        if self.valid_date < today:
+        if self.valid_date is None or self.valid_date < today:
             return "black"
 
         delta_days = (self.valid_date - today).days
@@ -81,15 +86,17 @@ class MeasuringInstrument(Base):
         else:
             return "black"
 
-
-#===groups===#
-
 class Group(Base):
     __tablename__ = "groups"
-    id = Column(Integer, primary_key=True, index=True)
-    node_id = Column(Integer, ForeignKey("nodes.id"))
-    name = Column(String, index=True)
-    
-    # Связь с приборами
-    instruments = relationship("MeasuringInstrument", back_populates="group")  # Добавьте эту строку
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    node_id: Mapped[int] = mapped_column(Integer, ForeignKey("nodes.id"))
+    name: Mapped[str] = mapped_column(String, index=True)
+    order: Mapped[int] = mapped_column(Integer, default=0)
+
+    instruments = relationship("MeasuringInstrument", back_populates="group")
     node = relationship("Node", back_populates="groups")
+
+    @property
+    def instrument_ids(self) -> list[int]:
+        return [instrument.id for instrument in self.instruments]

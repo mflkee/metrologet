@@ -1,20 +1,12 @@
-// App.scss - Главный файл стилей приложения
+// src/styles/App.scss
+@use './variables' as *;
+@use './mixins' as *;
 
-// 1. Импорт базовых настроек
-@use 'variables';
-@use 'mixins';
-@use 'base';
+@use './components/Spinner';
+@use './pages/NodeDetails';
 
-// 2. Импорт компонентов
-@use 'layout';
-@use 'components';
-@use 'search';
-@use 'nodedetail';
-@use 'instrumentcard';
-
-
-// 3. Глобальные стили (только при необходимости)
-//    Старайтесь избегать глобальных стилей, используйте компонентный подход
-
-// 4. Кастомные медиа-запросы (если нужны)
-// @media (max-width: variables.$breakpoint-mobile) { ... }
+@import './base';
+@import './layout';
+@import './search';
+@import './components/InstrumentCard';
+@import './pages/HomePage';

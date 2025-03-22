@@ -1,5 +1,5 @@
-@use './variables' as *;
-@use './mixins' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
 .node-details-page {
   padding: $spacing-large;
@@ -8,7 +8,7 @@
     text-align: center;
     margin-bottom: $spacing-large;
     font-size: $font-size-large;
-    color: $comment;
+    color: $cyan;
 
   }
 
@@ -441,49 +441,102 @@
   }
 
   .group-header {
-    background-color: $foreground;
-    color: $background;
-    display: flex;
+    position: relative;
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    background-color: $ansi-black;
+    color: $orange;
     align-items: center;
     padding: $spacing-small;
     border-radius: 8px 8px 0 0;
     font-size: 1.1rem;
     font-weight: bold;
-    cursor: pointer;
+    cursor: default; // Убираем курсор с заголовка
     transition: background-color 0.3s ease, color 0.3s ease;
+    padding-right: 40px; // Место для кнопки удаления
+
 
     &:hover {
-      background-color: $comment;
-      color: $foreground;
+      background-color: darken($ansi-black, 10%);
+      color: darken($orange, 10%);
     }
 
-    .group-title {
+    h3 {
       flex-grow: 1;
-      text-align: left;
-      padding-left: $spacing-medium;
+      text-align: center;
+      margin: 0;
+    }
+
+    .delete-group-button-wrapper {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+      // Переопределяем стили миксина только для этой кнопки
+    .delete-group-button {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background-color: $red;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      padding: 0;
+      transition: background-color 0.3s ease;
+    }
+
+
+    &:hover .delete-group-button-wrapper {
+      opacity: 1;
+
     }
 
     .drag-handle {
-      cursor: move;
+      cursor: grab; // Применяем курсор только к полоскам
       width: 24px;
       height: 24px;
       margin-right: $spacing-small;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        fillСИ;
+      }
     }
   }
 
   .group-content {
     display: flex;
     flex-direction: column;
-    padding: $spacing-small;
+    padding: 20px;
+    gap: $spacing-small;
+    background-color: $selection; /* Добавляем цвет фона */
+    border-radius: 0 0 8px 8px; // Закругление углов (только нижних)
   }
 
   /* Стили для перетаскиваемой карточки */
   .draggable {
     position: absolute;
-    z-index: 100; /* Задаем высокий z-index для поверхностного отображения */
-    top: auto;  /* Убираем фиксированную позицию */
+    z-index: 10; /* Задаем высокий z-index для поверхностного отображения */
+    top: auto; /* Убираем фиксированную позицию */
     left: auto;
     transform: translate3d(0, 0, 0); /* Используем transform для перемещения */
+    transition: transform 0.2s ease-in-out, top 0.2s ease-in-out, left 0.2s ease-in-out; /* Плавная анимация */
+    pointer-events: none; /* Отключаем взаимодействие с элементом во время перетаскивания */
   }
+
+  /* Стили для карточки в конечной позиции */
+  .draggable.in-place {
+    transition: transform 0.5s ease, top 0.5s ease, left 0.5s ease; /* Плавное возвращение на место */
+  }
+
+  .instrument-wrapper.in-place {
+  transition: transform 0.5s ease-out;
+  transform: scale(1.05); /* Пример эффекта: увеличиваем на 5% */
+}
 }
 

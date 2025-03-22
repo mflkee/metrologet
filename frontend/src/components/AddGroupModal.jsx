@@ -12,10 +12,7 @@ const AddGroupModal = ({ isOpen, onClose, onAdd }) => {
       setError("Название группы не может быть пустым");
       return;
     }
-
-    // Прослеживаем, что передаем в родительский компонент
-    console.log("Передаем данные в родительский компонент:", { name: groupName });
-
+    // Передаем данные в родительский компонент
     onAdd({ name: groupName });
     setGroupName("");
     setError(""); // Сбросить ошибку после успешного добавления

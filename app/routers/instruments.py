@@ -1,25 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .. import crud, schemas
-from ..database import get_db
-from datetime import datetime, date
-import requests
-from app.models import MeasuringInstrument
+from app import crud, schemas
+from app.database import get_db
 import logging
-
-# Настройка логгера
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("app.log"),  # Логи будут записываться в файл app.log
-        logging.StreamHandler()         # Логи также будут выводиться в консоль
-    ]
-)
+from datetime import date
 
 logger = logging.getLogger(__name__)
 
-# Создаем роутер для средств измерений
 router = APIRouter(prefix="/instruments", tags=["instruments"])
 
 @router.post("/{node_id}/", response_model=schemas.MeasuringInstrumentResponse)
@@ -65,7 +52,6 @@ def search_and_add_instrument(
     Поиск и добавление средства измерений через API "АРШИН".
     """
     logger.info(f"Начат поиск и добавление средства измерений для узла с ID={node_id}. Параметры поиска: search={search}, mit_number={mit_number}, mi_number={mi_number}, year={year}")
-    
     base_url = "https://fgis.gost.ru/fundmetrology/eapi/vri"
     params = {}
     if search:
@@ -76,9 +62,10 @@ def search_and_add_instrument(
         params["mi_number"] = mi_number
     if year:
         params["year"] = year
-    
+
     try:
         logger.info(f"Выполняется GET-запрос к API 'АРШИН' с параметрами: {params}")
+        import requests
         response = requests.get(base_url, params=params)
         
         if response.status_code == 200:
@@ -89,6 +76,7 @@ def search_and_add_instrument(
                 instrument_data = items[0]
                 
                 # Проверка существования прибора
+                from app.models import MeasuringInstrument
                 existing_instrument = db.query(MeasuringInstrument).filter(
                     MeasuringInstrument.mit_number == instrument_data.get("mit_number"),
                     MeasuringInstrument.mi_number == instrument_data.get("mi_number")
@@ -97,11 +85,22 @@ def search_and_add_instrument(
                 if existing_instrument:
                     logger.warning(f"Попытка добавить уже существующий прибор с mit_number={instrument_data.get('mit_number')} и mi_number={instrument_data.get('mi_number')}")
                     raise HTTPException(
-                        status_code=409,  # Conflict
+                        status_code=409,
                         detail="Прибор уже существует в базе данных."
                     )
                 
-                # Парсинг дат
+                from datetime import datetime
+                def parse_date(date_str: str | None) -> date | None:
+                    if date_str:
+                        try:
+                            return datetime.strptime(date_str, "%Y-%m-%d").date()
+                        except ValueError:
+                            try:
+                                return datetime.strptime(date_str, "%d.%m.%Y").date()
+                            except ValueError:
+                                raise ValueError(f"Invalid date format: {date_str}. Expected format: YYYY-MM-DD or DD.MM.YYYY")
+                    return None
+
                 verification_date = parse_date(instrument_data.get("verification_date"))
                 valid_date = parse_date(instrument_data.get("valid_date"))
                 
@@ -136,19 +135,13 @@ def search_and_add_instrument(
         logger.error(f"Произошла ошибка при выполнении запроса к API 'АРШИН': {str(e)}")
         raise HTTPException(status_code=500, detail=f"Произошла ошибка: {str(e)}")
 
-def parse_date(date_str: str | None) -> date | None:
+@router.put("/order", response_model=dict)
+def update_instruments_order(
+    order_update: schemas.InstrumentOrderUpdate,
+    db: Session = Depends(get_db)
+):
     """
-    Парсинг дат в формате YYYY-MM-DD или DD.MM.YYYY.
+    Обновление порядка средств измерений в базе данных.
     """
-    if date_str:
-        try:
-            # Try parsing the date in the YYYY-MM-DD format
-            return datetime.strptime(date_str, "%Y-%m-%d").date()
-        except ValueError:
-            try:
-                # If the first format fails, try parsing in the DD.MM.YYYY format
-                return datetime.strptime(date_str, "%d.%m.%Y").date()
-            except ValueError:
-                # If both formats fail, raise an error
-                raise ValueError(f"Invalid date format: {date_str}. Expected format: YYYY-MM-DD or DD.MM.YYYY")
-    return None
+    crud.update_instruments_order(db, order_update.instrument_ids)
+    return {"status": "success"}

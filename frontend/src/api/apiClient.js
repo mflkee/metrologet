@@ -57,7 +57,6 @@ export const fetchNode = async (nodeId) => {
 export const fetchInstrumentsByNode = async (nodeId) => {
   try {
     const response = await apiClient.get(`/instruments/${nodeId}/`);
-    console.log("API Response:", response.data);
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при получении СИ");
@@ -82,7 +81,7 @@ export const deleteInstrument = async (instrumentId, nodeId) => {
   }
 };
 
-// Функция для создания группы
+// Группы
 export const createGroup = async (nodeId, groupData) => {
   try {
     const response = await apiClient.post(`/groups/${nodeId}/`, groupData);
@@ -92,22 +91,15 @@ export const createGroup = async (nodeId, groupData) => {
   }
 };
 
-// Функция для получения групп
 export const fetchGroupsByNode = async (nodeId) => {
   try {
     const response = await apiClient.get(`/groups/${nodeId}/`);
-    console.log("API Response:", response.data);
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при загрузке групп");
   }
 };
 
-// Вызов функции с нужным node_id
-fetchGroupsByNode(2);
-
-
-// apiClient.js
 export const assignInstrumentToGroup = async (instrumentId, groupId) => {
   try {
     const response = await apiClient.put(`/groups/assign/${instrumentId}/${groupId}`);
@@ -119,14 +111,26 @@ export const assignInstrumentToGroup = async (instrumentId, groupId) => {
 
 export const updateGroupOrder = async (nodeId, groupIds) => {
   try {
-    const response = await apiClient.put(`/groups/${nodeId}/order`, { group_ids: groupIds });
+    const response = await apiClient.put(`/groups/${nodeId}/order`, { 
+      group_ids: groupIds 
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.detail || "Ошибка обновления порядка групп");
   }
 };
 
-// apiClient.js
+export const updateInstrumentOrder = async (instrumentIds) => {
+  try {
+    const response = await apiClient.put('/instruments/order', {
+      instrument_ids: instrumentIds
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка обновления порядка СИ");
+  }
+};
+
 export const fetchInstrumentsForGroup = async (groupId) => {
   try {
     const response = await apiClient.get(`/groups/${groupId}/instruments`);
@@ -144,3 +148,13 @@ export const removeInstrumentFromGroup = async (instrumentId) => {
     throw new Error(error.response?.data?.detail || "Ошибка удаления из группы");
   }
 };
+
+export const deleteGroup = async (groupId) => {
+  try {
+    const response = await apiClient.delete(`/groups/${groupId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка удаления группы");
+  }
+};
+
