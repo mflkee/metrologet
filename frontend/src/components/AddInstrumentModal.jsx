@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-
 function AddInstrumentModal({ onClose, onAdd }) {
   const [searchParams, setSearchParams] = useState({
+    search: '',           // Свободный поиск * *
     mit_number: '',       // Регистрационный номер типа СИ
     mi_number: '',        // Заводской номер
     year: '',             // Год поверки
@@ -27,13 +27,25 @@ function AddInstrumentModal({ onClose, onAdd }) {
     <div className="modal">
       <h3>Добавить средство измерений</h3>
       <form onSubmit={handleSubmit}>
+
+        <div className="form-field">
+          <label>Поиск</label>
+          <input
+            type="text"
+            name="search"
+            placeholder="FVM"
+            value={searchParams.search}
+            onChange={handleChange}
+          />
+        </div>
+
         {/* Основные поля */}
         <div className="form-field">
           <label>Регистрационный номер типа СИ</label>
           <input
             type="text"
             name="mit_number"
-            placeholder="Пример: СИ-1234"
+            placeholder="62129-15"
             value={searchParams.mit_number}
             onChange={handleChange}
           />
@@ -44,7 +56,7 @@ function AddInstrumentModal({ onClose, onAdd }) {
           <input
             type="text"
             name="mi_number"
-            placeholder="Пример: 987654"
+            placeholder="87771776"
             value={searchParams.mi_number}
             onChange={handleChange}
           />
@@ -55,9 +67,9 @@ function AddInstrumentModal({ onClose, onAdd }) {
           <input
             type="number"
             name="year"
-            min="2000"
+            min="1950"
             max={new Date().getFullYear()}
-            placeholder="Пример: 2023"
+            placeholder="2025"
             value={searchParams.year}
             onChange={handleChange}
           />
@@ -79,7 +91,7 @@ function AddInstrumentModal({ onClose, onAdd }) {
               <input
                 type="text"
                 name="result_docnum"
-                placeholder="Пример: 456-789"
+                placeholder="С-ВЯ/27-06-2024/350617442"
                 value={searchParams.result_docnum}
                 onChange={handleChange}
               />
