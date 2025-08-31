@@ -1,0 +1,4070 @@
+ИСХОДНЫЙ КОД ПРОЕКТА
+Путь к проекту: /home/mflkee/metrologet
+Дата генерации: 2025-08-30 23:55:00
+================================================================================
+
+ПРЕОБЛАДАЮЩИЙ ЯЗЫК: JavaScript
+РАСПРЕДЕЛЕНИЕ ЯЗЫКОВ:
+  JavaScript: 21 файлов
+  Python: 15 файлов
+  HTML: 2 файлов
+  Shell: 1 файлов
+  CSS: 1 файлов
+
+================================================================================
+
+
+==================== README.md ====================
+
+============================================================
+
+==================== bd.sh ====================
+#!/bin/bash
+
+# 1. Устанавливаем PostgreSQL (если не установлен)
+sudo pacman -S --needed postgresql
+
+# 2. Инициализируем кластер БД (если ещё не сделано)
+sudo -u postgres initdb -D /var/lib/postgres/data
+
+# 3. Запускаем службу PostgreSQL
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# 4. Создаем пользователя и базу данных
+sudo -u postgres psql << EOF
+CREATE USER postgres WITH PASSWORD '7405';
+CREATE DATABASE monitoring OWNER postgres;
+GRANT ALL PRIVILEGES ON DATABASE monitoring TO postgres;
+EOF
+
+echo "База данных 'monitoring' и пользователь 'postgres' успешно созданы!"
+
+# 5. Проверяем подключение
+echo "Проверка подключения..."
+psql -h localhost -U postgres -d monitoring -c "SELECT 'Connected!' AS status;"
+
+# 6. Создаем таблицы через SQLAlchemy
+echo "Создаем таблицы..."
+python -c "from app.database import Base, engine; Base.metadata.create_all(bind=engine)"
+
+echo "Все готово! Теперь можно запускать приложение."
+
+============================================================
+
+==================== main.py ====================
+def main():
+    print("Hello from metrologet!")
+
+
+if __name__ == "__main__":
+    main()
+
+============================================================
+
+==================== requirements.txt ====================
+fastapi
+sqlalchemy
+requests
+uvicorn
+python-dotenv
+psycopg2
+
+============================================================
+
+==================== project_source_code.txt ====================
+
+============================================================
+
+==================== alembic/env.py ====================
+from logging.config import fileConfig
+
+from sqlalchemy import engine_from_config
+from sqlalchemy import pool
+
+from alembic import context
+
+import os
+import sys
+from logging.config import fileConfig
+
+from sqlalchemy import engine_from_config
+from sqlalchemy import pool
+
+from dotenv import load_dotenv
+from app.models import Base  # Импорт ваших моделей
+load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Добавьте путь к проекту в PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
+config = context.config
+
+# Interpret the config file for Python logging.
+# This line sets up loggers basically.
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+target_metadata = Base.metadata
+
+# other values from the config, defined by the needs of env.py,
+# can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
+# ... etc.
+
+
+def run_migrations_offline() -> None:
+    """Run migrations in 'offline' mode.
+
+    This configures the context with just a URL
+    and not an Engine, though an Engine is acceptable
+    here as well.  By skipping the Engine creation
+    we don't even need a DBAPI to be available.
+
+    Calls to context.execute() here emit the given string to the
+    script output.
+
+    """
+    url = config.get_main_option("sqlalchemy.url")
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+    )
+
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+def run_migrations_online() -> None:
+    """Run migrations in 'online' mode.
+
+    In this scenario we need to create an Engine
+    and associate a connection with the context.
+
+    """
+    connectable = engine_from_config(
+        {"sqlalchemy.url": DATABASE_URL},  # Используем переменную из .env
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection, target_metadata=Base.metadata
+        )
+
+        with context.begin_transaction():
+            context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
+
+============================================================
+
+==================== alembic/versions/037f21b707b5_new_models.py ====================
+"""new models
+
+Revision ID: 037f21b707b5
+Revises: b0d08833131e
+Create Date: 2025-04-11 17:38:34.799962
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision: str = '037f21b707b5'
+down_revision: Union[str, None] = 'b0d08833131e'
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    pass
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    pass
+    # ### end Alembic commands ###
+
+============================================================
+
+==================== alembic/versions/8ba69486bb06_add_order_field_to_groups.py ====================
+"""Add order field to groups
+
+Revision ID: 8ba69486bb06
+Revises: 
+Create Date: 2025-03-22 13:17:27.316425
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision: str = '8ba69486bb06'
+down_revision: Union[str, None] = None
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index('ix_group_id', table_name='group')
+    op.drop_index('ix_group_name', table_name='group')
+    op.drop_table('group')
+    op.add_column('groups', sa.Column('order', sa.Integer(), nullable=True))
+    op.alter_column('groups', 'node_id',
+               existing_type=sa.INTEGER(),
+               nullable=True)
+    op.alter_column('groups', 'name',
+               existing_type=sa.VARCHAR(length=255),
+               nullable=True)
+    op.create_index(op.f('ix_groups_id'), 'groups', ['id'], unique=False)
+    op.create_index(op.f('ix_groups_name'), 'groups', ['name'], unique=False)
+    op.drop_constraint('groups_node_id_fkey', 'groups', type_='foreignkey')
+    op.create_foreign_key(None, 'groups', 'nodes', ['node_id'], ['id'])
+    op.create_index(op.f('ix_measuring_instruments_id'), 'measuring_instruments', ['id'], unique=False)
+    op.create_index(op.f('ix_measuring_instruments_vri_id'), 'measuring_instruments', ['vri_id'], unique=False)
+    op.create_unique_constraint('uix_mit_mi', 'measuring_instruments', ['mit_number', 'mi_number'])
+    op.drop_constraint('measuring_instruments_group_id_fkey', 'measuring_instruments', type_='foreignkey')
+    op.drop_constraint('measuring_instruments_node_id_fkey', 'measuring_instruments', type_='foreignkey')
+    op.create_foreign_key(None, 'measuring_instruments', 'groups', ['group_id'], ['id'])
+    op.create_foreign_key(None, 'measuring_instruments', 'nodes', ['node_id'], ['id'])
+    op.drop_column('measuring_instruments', 'index_within_group')
+    op.alter_column('nodes', 'name',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('nodes', 'description',
+               existing_type=sa.TEXT(),
+               type_=sa.String(),
+               existing_nullable=True)
+    op.create_index(op.f('ix_nodes_id'), 'nodes', ['id'], unique=False)
+    op.create_index(op.f('ix_nodes_name'), 'nodes', ['name'], unique=False)
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_nodes_name'), table_name='nodes')
+    op.drop_index(op.f('ix_nodes_id'), table_name='nodes')
+    op.alter_column('nodes', 'description',
+               existing_type=sa.String(),
+               type_=sa.TEXT(),
+               existing_nullable=True)
+    op.alter_column('nodes', 'name',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.add_column('measuring_instruments', sa.Column('index_within_group', sa.INTEGER(), server_default=sa.text('0'), autoincrement=False, nullable=True))
+    op.drop_constraint(None, 'measuring_instruments', type_='foreignkey')
+    op.drop_constraint(None, 'measuring_instruments', type_='foreignkey')
+    op.create_foreign_key('measuring_instruments_node_id_fkey', 'measuring_instruments', 'nodes', ['node_id'], ['id'], ondelete='CASCADE')
+    op.create_foreign_key('measuring_instruments_group_id_fkey', 'measuring_instruments', 'groups', ['group_id'], ['id'], ondelete='SET NULL')
+    op.drop_constraint('uix_mit_mi', 'measuring_instruments', type_='unique')
+    op.drop_index(op.f('ix_measuring_instruments_vri_id'), table_name='measuring_instruments')
+    op.drop_index(op.f('ix_measuring_instruments_id'), table_name='measuring_instruments')
+    op.drop_constraint(None, 'groups', type_='foreignkey')
+    op.create_foreign_key('groups_node_id_fkey', 'groups', 'nodes', ['node_id'], ['id'], ondelete='CASCADE')
+    op.drop_index(op.f('ix_groups_name'), table_name='groups')
+    op.drop_index(op.f('ix_groups_id'), table_name='groups')
+    op.alter_column('groups', 'name',
+               existing_type=sa.VARCHAR(length=255),
+               nullable=False)
+    op.alter_column('groups', 'node_id',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+    op.drop_column('groups', 'order')
+    op.create_table('group',
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('node_id', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('name', sa.VARCHAR(), autoincrement=False, nullable=True),
+    sa.ForeignKeyConstraint(['node_id'], ['nodes.id'], name='group_node_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='group_pkey')
+    )
+    op.create_index('ix_group_name', 'group', ['name'], unique=False)
+    op.create_index('ix_group_id', 'group', ['id'], unique=False)
+    # ### end Alembic commands ###
+
+============================================================
+
+==================== alembic/versions/b0d08833131e_add_index_within_group_to_.py ====================
+"""Add index_within_group to MeasuringInstrument
+
+Revision ID: b0d08833131e
+Revises: 8ba69486bb06
+Create Date: 2025-03-22 19:37:15.283369
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision: str = 'b0d08833131e'
+down_revision: Union[str, None] = '8ba69486bb06'
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.alter_column('groups', 'node_id',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+    op.alter_column('groups', 'name',
+               existing_type=sa.VARCHAR(length=255),
+               nullable=False)
+    op.alter_column('groups', 'order',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+    op.add_column('measuring_instruments', sa.Column('index_within_group', sa.Integer(), nullable=True))
+    op.alter_column('measuring_instruments', 'node_id',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+    op.alter_column('measuring_instruments', 'vri_id',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.alter_column('measuring_instruments', 'org_title',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.alter_column('measuring_instruments', 'mit_number',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.alter_column('measuring_instruments', 'mit_title',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.alter_column('measuring_instruments', 'mit_notation',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.alter_column('measuring_instruments', 'mi_number',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.alter_column('nodes', 'name',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    op.alter_column('nodes', 'description',
+               existing_type=sa.VARCHAR(),
+               nullable=False)
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.alter_column('nodes', 'description',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('nodes', 'name',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('measuring_instruments', 'mi_number',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('measuring_instruments', 'mit_notation',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('measuring_instruments', 'mit_title',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('measuring_instruments', 'mit_number',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('measuring_instruments', 'org_title',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('measuring_instruments', 'vri_id',
+               existing_type=sa.VARCHAR(),
+               nullable=True)
+    op.alter_column('measuring_instruments', 'node_id',
+               existing_type=sa.INTEGER(),
+               nullable=True)
+    op.drop_column('measuring_instruments', 'index_within_group')
+    op.alter_column('groups', 'order',
+               existing_type=sa.INTEGER(),
+               nullable=True)
+    op.alter_column('groups', 'name',
+               existing_type=sa.VARCHAR(length=255),
+               nullable=True)
+    op.alter_column('groups', 'node_id',
+               existing_type=sa.INTEGER(),
+               nullable=True)
+    # ### end Alembic commands ###
+
+============================================================
+
+==================== app/__init__.py ====================
+
+============================================================
+
+==================== app/crud.py ====================
+from sqlalchemy.sql import func, select
+from sqlalchemy.orm import Session
+from app import models
+from app.schemas import MeasuringInstrumentCreate, NodeCreate
+from app import schemas
+from app.models import MeasuringInstrument, Group
+from fastapi import HTTPException
+
+# CRUD для узлов
+def create_node(db: Session, node: NodeCreate):
+    db_node = models.Node(name=node.name, description=node.description)
+    db.add(db_node)
+    db.commit()
+    db.refresh(db_node)
+    return db_node
+
+def get_node_by_id(db: Session, node_id: int):
+    return db.query(models.Node).filter(models.Node.id == node_id).first()
+
+# CRUD для средств измерений
+def create_measuring_instrument(db: Session, instrument: MeasuringInstrumentCreate, node_id: int):
+    # Проверка на существующий прибор
+    existing = db.query(MeasuringInstrument).filter(
+        MeasuringInstrument.mit_number == instrument.mit_number,
+        MeasuringInstrument.mi_number == instrument.mi_number
+    ).first()
+    
+    if existing:
+        raise HTTPException(
+            status_code=409,
+            detail="Instrument with this MIT and MI numbers already exists"
+        )
+    
+    db_instrument = models.MeasuringInstrument(**instrument.model_dump(), node_id=node_id)
+    db.add(db_instrument)
+    db.commit()
+    db.refresh(db_instrument)
+    return db_instrument
+
+def delete_node(db: Session, node_id: int):
+    node = db.query(models.Node).filter(models.Node.id == node_id).first()
+    if node:
+        db.delete(node)
+        db.commit()
+        return node
+    
+    return None
+
+def delete_measuring_instrument(db: Session, instrument_id: int, node_id: int):
+    # Находим СИ по его ID и проверяем, что оно принадлежит указанному узлу
+    instrument = db.query(models.MeasuringInstrument).filter(
+        models.MeasuringInstrument.id == instrument_id,
+        models.MeasuringInstrument.node_id == node_id
+    ).first()
+
+    if instrument:
+        db.delete(instrument)
+        db.commit()
+        return instrument  # Возвращаем удаленный объект для подтверждения
+
+    return None  # Если СИ не найдено, возвращаем None
+
+def get_nodes(db: Session):
+    return db.query(models.Node).all()
+
+def search_nodes(db: Session, query: str):
+    # Поиск узлов по имени, используя ILIKE для регистронезависимого поиска
+    return db.query(models.Node).filter(models.Node.name.ilike(f"%{query}%")).all()
+
+import traceback
+
+def get_instruments_by_node(db: Session, node_id: int):
+    try:
+        stmt = (
+            select(
+                MeasuringInstrument,
+                MeasuringInstrument.index_within_group  # Используем сохранённое значение
+            )
+            .join(Group, Group.id == MeasuringInstrument.group_id, isouter=True)
+            .where(MeasuringInstrument.node_id == node_id)
+            .order_by(Group.order, MeasuringInstrument.group_id, MeasuringInstrument.index_within_group)
+        )
+
+        result = db.execute(stmt).all()
+        print("RAW RESULT:", result)
+        
+        instruments = [
+            {
+                "id": row[0].id,
+                "mit_title": row[0].mit_title,
+                "mit_number": row[0].mit_number,
+                "mi_number": row[0].mi_number,
+                "valid_date": row[0].valid_date,
+                "verification_date": row[0].verification_date,
+                "color": row[0].color,
+                "index_within_group": row[0].index_within_group,
+                "group_id": row[0].group_id
+            }
+            for row in result
+        ]
+
+        print("INSTRUMENTS:", instruments)
+        return instruments
+
+    except Exception as e:
+        print("ERROR:", e)
+        traceback.print_exc()
+        # Вместо возврата кортежа выбрасываем HTTPException
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
+#===groups===#
+# === ГРУППЫ ===
+def create_group(db: Session, group: schemas.GroupCreate, node_id: int):
+    db_group = models.Group(name=group.name, node_id=node_id)
+    db.add(db_group)
+    db.commit()
+    db.refresh(db_group)
+    return db_group
+
+def get_groups_by_node(db: Session, node_id: int):
+    return db.query(models.Group).filter(models.Group.node_id == node_id).all()
+
+def delete_group(db: Session, group_id: int):
+    group = db.query(models.Group).filter(models.Group.id == group_id).first()
+    if group:
+        db.delete(group)
+        db.commit()
+        return group
+    return None
+
+def add_instrument_to_group(db: Session, instrument_id: int, group_id: int):
+    # Получаем прибор и группу
+    instrument = db.query(models.MeasuringInstrument).filter(
+        models.MeasuringInstrument.id == instrument_id
+    ).first()
+    group = db.query(models.Group).filter(models.Group.id == group_id).first()
+    
+    if not instrument or not group:
+        return None
+    
+    # Проверяем, что группа и прибор принадлежат одному узлу
+    if instrument.node_id != group.node_id:
+        return None
+    
+    instrument.group_id = group_id
+    db.commit()
+    db.refresh(instrument)
+    return instrument
+
+def remove_instrument_from_group(db: Session, instrument_id: int):
+    instrument = db.query(models.MeasuringInstrument).filter(
+        models.MeasuringInstrument.id == instrument_id
+    ).first()
+    if instrument:
+        instrument.group_id = None
+        db.commit()
+        db.refresh(instrument)
+        # Если нужно, можно здесь установить index_within_group в 0 или другой индекс,
+        # либо выполнить повторный запрос для получения обновлённого значения.
+        return instrument
+    return None
+
+def update_groups_order(db: Session, node_id: int, group_ids: list[int]):
+    # Проверяем принадлежность групп узлу
+    groups = db.query(Group).filter(Group.id.in_(group_ids)).all()
+    for group in groups:
+        if group.node_id != node_id:
+            raise ValueError(f"Группа {group.id} не принадлежит узлу {node_id}")
+    
+    # Обновляем порядок
+    for index, group_id in enumerate(group_ids):
+        db.query(Group).filter(Group.id == group_id).update({"order": index})
+    db.commit()
+
+
+def get_instruments_count_in_group(db: Session, group_id: int) -> int:
+    return db.query(func.count(MeasuringInstrument.id)).filter(
+        MeasuringInstrument.group_id == group_id
+    ).scalar()
+
+def update_instruments_order(db: Session, instrument_ids: list[int]):
+    print("Получен новый порядок:", instrument_ids)
+    for index, instrument_id in enumerate(instrument_ids):
+        db.query(MeasuringInstrument).filter(MeasuringInstrument.id == instrument_id).update(
+            {"index_within_group": index + 1}, synchronize_session="fetch"
+        )
+    db.commit()
+
+============================================================
+
+==================== app/database.py ====================
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL is not set")
+
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
+engine = create_engine(
+    DATABASE_URL,
+    echo=DEBUG,
+    poolclass=NullPool,  # Критично для --reload
+    future=True
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
+
+============================================================
+
+==================== app/main.py ====================
+from fastapi import FastAPI
+from app.database import Base, engine
+from app.routers.nodes import router as nodes
+from app.routers.instruments import router as instruments
+from fastapi.middleware.cors import CORSMiddleware
+from app.routers.groups import router as groups
+
+# Создание таблиц в базе данных
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(redirect_slashes=False)  # Отключаем автоматический редирект
+
+app.include_router(nodes)
+app.include_router(instruments)
+app.include_router(groups)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+============================================================
+
+==================== app/models.py ====================
+from sqlalchemy import ForeignKey, UniqueConstraint, String, Integer, Date,Column
+from typing import Optional
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+import math
+from .database import Base
+from datetime import date
+from typing import Literal
+
+class Node(Base):
+    __tablename__ = "nodes"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String, index=True)
+    description: Mapped[str] = mapped_column(String)
+
+    instruments = relationship("MeasuringInstrument", back_populates="node", cascade="all, delete-orphan")
+    groups = relationship("Group", back_populates="node", cascade="all, delete-orphan")
+
+    @property
+    def color(self) -> str:
+        """Возвращает цвет узла на основе самого критичного прибора"""
+        if not self.instruments:
+            return "green"
+
+        color_severity = {
+            "green": 5,
+            "yellow": 4,
+            "orange": 3,
+            "red": 2,
+            "black": 1
+        }
+        
+        worst_color = "green"
+        worst_severity = 5
+        
+        for instrument in self.instruments:
+            instrument_color = instrument.color
+            if color_severity[instrument_color] < worst_severity:
+                worst_severity = color_severity[instrument_color]
+                worst_color = instrument_color
+
+        return worst_color
+
+class MeasuringInstrument(Base):
+    __tablename__ = "measuring_instruments"
+    __table_args__ = (
+        UniqueConstraint('mit_number', 'mi_number', name='uix_mit_mi'),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    node_id: Mapped[int] = mapped_column(Integer, ForeignKey("nodes.id"))
+    group_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("groups.id"), nullable=True)
+    vri_id: Mapped[str] = mapped_column(String, index=True)
+    org_title: Mapped[str] = mapped_column(String)
+    mit_number: Mapped[str] = mapped_column(String)
+    mit_title: Mapped[str] = mapped_column(String)
+    mit_notation: Mapped[str] = mapped_column(String)
+    mi_modification: Mapped[Optional[str]] = mapped_column(String)
+    mi_number: Mapped[str] = mapped_column(String)
+    verification_date: Mapped[Optional[date]] = mapped_column(Date)
+    valid_date: Mapped[Optional[date]] = mapped_column(Date)
+    result_docnum: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    index_within_group = Column(Integer, nullable=True)  # Добавление атрибута
+
+    node = relationship("Node", back_populates="instruments")
+    group = relationship("Group", back_populates="instruments")
+
+    @property
+    def color(self) -> Literal["green", "yellow", "orange", "red", "black"]:
+        today = date.today()
+        if self.valid_date is None or self.valid_date < today:
+            return "black"
+
+        delta_days = (self.valid_date - today).days
+        months_remaining = delta_days / 30.0
+        rounded_months = math.ceil(months_remaining)
+
+        if rounded_months >= 4:
+            return "green"
+        elif rounded_months == 3:
+            return "yellow"
+        elif rounded_months == 2:
+            return "orange"
+        elif rounded_months == 1:
+            return "red"
+        else:
+            return "black"
+
+class Group(Base):
+    __tablename__ = "groups"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    node_id: Mapped[int] = mapped_column(Integer, ForeignKey("nodes.id"))
+    name: Mapped[str] = mapped_column(String, index=True)
+    order: Mapped[int] = mapped_column(Integer, default=0)
+
+    instruments = relationship("MeasuringInstrument", back_populates="group")
+    node = relationship("Node", back_populates="groups")
+
+    @property
+    def instrument_ids(self) -> list[int]:
+        return [instrument.id for instrument in self.instruments]
+
+============================================================
+
+==================== app/schemas.py ====================
+from typing import List, Optional, Literal
+from datetime import date
+from pydantic import BaseModel
+
+class NodeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class NodeCreate(NodeBase):
+    pass
+
+class NodeResponse(NodeBase):
+    id: int
+    color: Literal["green", "yellow", "orange", "red", "black"]
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class MeasuringInstrumentBase(BaseModel):
+    vri_id: str
+    org_title: str
+    mit_number: str
+    mit_title: str
+    mit_notation: str
+    mi_modification: Optional[str] = None
+    mi_number: str
+    valid_date: Optional[date] = None
+    verification_date: Optional[date] = None
+    result_docnum: str
+
+
+class MeasuringInstrumentCreate(MeasuringInstrumentBase):
+
+    pass
+
+class MeasuringInstrumentResponse(BaseModel):
+    id: int
+    mit_title: str
+    mit_number: str
+    mi_number: str
+    valid_date: Optional[date] = None
+    verification_date: Optional[date] = None
+    color: Literal["green", "yellow", "orange", "red", "black"]
+    index_within_group: Optional[int] = None
+    group_id: Optional[int] = None
+
+    model_config = {
+        "from_attributes": True
+    }
+class InstrumentSearchResult(BaseModel):
+    vri_id: str
+    mit_title: str
+    mit_number: str
+    mi_number: str
+    verification_date: Optional[date]
+    valid_date: Optional[date]
+    result_docnum: Optional[str]
+
+
+class GroupBase(BaseModel):
+    name: str
+
+class GroupCreate(GroupBase):
+    pass
+
+class GroupResponse(GroupBase):
+    id: int
+    node_id: int
+    instrument_ids: List[int]  # Или List[MeasuringInstrumentResponse], если нужна полная информация
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class InstrumentOrderUpdate(BaseModel):
+    instrument_ids: List[int]
+
+class GroupOrderUpdate(BaseModel):
+    group_ids: List[int]
+
+
+============================================================
+
+==================== app/routers/__init__.py ====================
+
+============================================================
+
+==================== app/routers/groups.py ====================
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app import crud, schemas
+from app.database import get_db
+from typing import List
+import logging
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter(prefix="/groups", tags=["groups"])
+
+# Создание группы
+@router.post("/{node_id}/", response_model=schemas.GroupResponse)
+def create_new_group(node_id: int, group: schemas.GroupCreate, db: Session = Depends(get_db)):
+    node = crud.get_node_by_id(db, node_id)
+    if not node:
+        raise HTTPException(status_code=404, detail="Node not found")
+    return crud.create_group(db, group, node_id)
+
+# Получение групп
+@router.get("/{node_id}/", response_model=List[schemas.GroupResponse])
+def get_all_groups(node_id: int, db: Session = Depends(get_db)):
+    groups = crud.get_groups_by_node(db, node_id)
+    return [schemas.GroupResponse.model_validate(group) for group in groups]
+
+# Удаление группы
+@router.delete("/{group_id}")
+def delete_group_api(group_id: int, db: Session = Depends(get_db)):
+    deleted_group = crud.delete_group(db, group_id)
+    if not deleted_group:
+        raise HTTPException(status_code=404, detail="Group not found")
+    return {"message": "Group deleted successfully"}
+
+# Удаление СИ из группы
+@router.put("/remove/{instrument_id}", response_model=schemas.MeasuringInstrumentResponse)
+def remove_instrument_from_group_api(instrument_id: int, db: Session = Depends(get_db)):
+    return crud.remove_instrument_from_group(db, instrument_id)
+
+# Привязка СИ к группе
+@router.put("/assign/{instrument_id}/{group_id}", response_model=schemas.MeasuringInstrumentResponse)
+def assign_instrument_to_group_api(instrument_id: int, group_id: int, db: Session = Depends(get_db)):
+    return crud.add_instrument_to_group(db, instrument_id, group_id)
+
+# Обновление порядка групп
+@router.put("/{node_id}/order", response_model=dict)
+def update_group_order_api(node_id: int, order_update: schemas.GroupOrderUpdate, db: Session = Depends(get_db)):
+    crud.update_groups_order(db, node_id, order_update.group_ids)
+    return {"status": "success"}
+
+============================================================
+
+==================== app/routers/instruments.py ====================
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app import crud, schemas
+from app.database import get_db
+import logging
+from typing import Optional
+from datetime import datetime, date
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter(prefix="/instruments", tags=["instruments"])
+
+@router.post("/{node_id}/", response_model=schemas.MeasuringInstrumentResponse)
+def create_instrument(node_id: int, instrument: schemas.MeasuringInstrumentCreate, db: Session = Depends(get_db)):
+    """
+    Создание нового средства измерения для узла.
+    """
+    logger.info(f"Создание нового средства измерения для узла с ID={node_id}")
+    return crud.create_measuring_instrument(db, instrument, node_id)
+
+@router.get("/{node_id}/", response_model=list[schemas.MeasuringInstrumentResponse])
+def read_instruments_for_node(node_id: int, db: Session = Depends(get_db)):
+    """
+    Получение всех средств измерений для узла.
+    """
+    logger.info(f"Получение средств измерений для узла с ID={node_id}")
+    instruments = crud.get_instruments_by_node(db, node_id)
+    if not instruments:
+        raise HTTPException(status_code=404, detail="Instruments not found for this node")
+    return instruments
+
+@router.delete("/{instrument_id}/{node_id}")
+def delete_instrument(instrument_id: int, node_id: int, db: Session = Depends(get_db)):
+    """
+    Удаление средства измерения.
+    """
+    logger.info(f"Удаление средства измерения с ID={instrument_id} для узла с ID={node_id}")
+    deleted_instrument = crud.delete_measuring_instrument(db, instrument_id, node_id)
+    if not deleted_instrument:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    return {"message": "Instrument deleted successfully"}
+
+from fastapi import Query
+
+
+@router.get("/{node_id}/search_instruments/")
+def search_and_add_instrument(
+    node_id: int,
+    db: Session = Depends(get_db),
+    search: Optional[str] = Query(None),
+    mit_number: Optional[str] = Query(None),
+    mi_number: Optional[str] = Query(None),
+    year: Optional[str] = Query(None),  # Принимаем строку, чтобы избежать ошибки валидации пустой строки
+    result_docnum: Optional[str] = Query(None),
+    verification_date: Optional[str] = Query(None),  # Оставляем строкой
+    valid_date: Optional[str] = Query(None)            # Оставляем строкой
+):
+    """
+    Поиск прибора в API 'АРШИН' с последующим добавлением в базу данных,
+    если найден ровно один прибор.
+    """
+
+    # Функция для преобразования строки в дату
+    def convert_to_date(date_str: Optional[str]) -> Optional[date]:
+        if date_str and date_str.strip():
+            for fmt in ("%Y-%m-%d", "%d.%m.%Y"):
+                try:
+                    return datetime.strptime(date_str, fmt).date()
+                except ValueError:
+                    continue
+            raise HTTPException(status_code=422, detail=f"Неверный формат даты: {date_str}")
+        return None
+
+    # Преобразуем даты, если заданы
+    verification_date_obj = convert_to_date(verification_date)
+    valid_date_obj = convert_to_date(valid_date)
+
+    # Преобразуем год из строки в число, если значение задано
+    year_int = None
+    if year and year.strip():
+        try:
+            year_int = int(year)
+        except ValueError:
+            raise HTTPException(status_code=422, detail=f"Неверный формат года: {year}")
+
+    # Формируем словарь параметров без пустых значений
+    params = {}
+    if search and search.strip():
+        params["search"] = f"*{search.strip()}*"
+    if mit_number and mit_number.strip():
+        params["mit_number"] = mit_number.strip()
+    if mi_number and mi_number.strip():
+        params["mi_number"] = mi_number.strip()
+    if year_int is not None:
+        params["year"] = year_int
+    if result_docnum and result_docnum.strip():
+        params["result_docnum"] = result_docnum.strip()
+    if verification_date_obj:
+        params["verification_date"] = verification_date_obj.isoformat()
+    if valid_date_obj:
+        params["valid_date"] = valid_date_obj.isoformat()
+
+    logger.info(f"Запрос к API 'АРШИН' с параметрами: {params}")
+
+    base_url = "https://fgis.gost.ru/fundmetrology/eapi/vri"
+    try:
+        import requests
+        response = requests.get(base_url, params=params)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("result", {}).get("items", [])
+            if len(items) == 1:
+                instrument_data = items[0]
+                from app.models import MeasuringInstrument
+                # Проверяем, существует ли уже прибор с такими mit_number и mi_number
+                existing_instrument = db.query(MeasuringInstrument).filter(
+                    MeasuringInstrument.mit_number == instrument_data.get("mit_number"),
+                    MeasuringInstrument.mi_number == instrument_data.get("mi_number")
+                ).first()
+                if existing_instrument:
+                    logger.warning(
+                        f"Прибор с mit_number={instrument_data.get('mit_number')} и mi_number={instrument_data.get('mi_number')} уже существует."
+                    )
+                    raise HTTPException(
+                        status_code=409,
+                        detail="Прибор уже существует в базе данных."
+                    )
+
+                # Функция для преобразования даты из данных API
+                def parse_date(date_str: Optional[str]) -> Optional[date]:
+                    if date_str:
+                        for fmt in ("%Y-%m-%d", "%d.%m.%Y"):
+                            try:
+                                return datetime.strptime(date_str, fmt).date()
+                            except ValueError:
+                                continue
+                        raise HTTPException(status_code=422, detail=f"Неверный формат даты: {date_str}")
+                    return None
+
+                verification_date_parsed = parse_date(instrument_data.get("verification_date"))
+                valid_date_parsed = parse_date(instrument_data.get("valid_date"))
+
+                instrument_create = schemas.MeasuringInstrumentCreate(
+                    vri_id=instrument_data.get("vri_id"),
+                    org_title=instrument_data.get("org_title"),
+                    mit_number=instrument_data.get("mit_number"),
+                    mit_title=instrument_data.get("mit_title"),
+                    mit_notation=instrument_data.get("mit_notation"),
+                    mi_modification=instrument_data.get("mi_modification"),
+                    mi_number=instrument_data.get("mi_number"),
+                    verification_date=verification_date_parsed,
+                    valid_date=valid_date_parsed,
+                    result_docnum=instrument_data.get("result_docnum")
+                )
+                logger.info(
+                    f"Создание прибора с mit_number={instrument_data.get('mit_number')} и mi_number={instrument_data.get('mi_number')}"
+                )
+                return crud.create_measuring_instrument(db, instrument_create, node_id)
+            elif len(items) > 1:
+                logger.info("Найдено несколько приборов. Возвращается список для выбора.")
+                return {
+                    "message": "Найдено несколько средств измерений. Пожалуйста, выберите одно.",
+                    "items": items
+                }
+            else:
+                logger.info("Приборы не найдены.")
+                return {"message": "Средства измерений не найдены."}
+        else:
+            logger.error(f"Ошибка API 'АРШИН'. Статус: {response.status_code}")
+            raise HTTPException(status_code=response.status_code, detail="Ошибка при запросе к API 'АРШИН'")
+    except Exception as e:
+        logger.error(f"Ошибка при выполнении запроса к API 'АРШИН': {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Произошла ошибка: {str(e)}")
+
+@router.put("/order", response_model=dict)
+def update_instruments_order(
+    order_update: schemas.InstrumentOrderUpdate,
+    db: Session = Depends(get_db)
+):
+    """
+    Обновление порядка средств измерений в базе данных.
+    """
+    crud.update_instruments_order(db, order_update.instrument_ids)
+    return {"status": "success"}
+
+============================================================
+
+==================== app/routers/nodes.py ====================
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from .. import crud, schemas
+from .. database import get_db
+
+# Создаем роутер для nodes
+router = APIRouter(prefix="/nodes", tags=["nodes"])
+
+# Маршрут для создания узла
+@router.post("/", response_model=schemas.NodeResponse)
+def create_node(node: schemas.NodeCreate, db: Session = Depends(get_db)):
+    return crud.create_node(db, node)
+
+# Маршрут для получения всех узлов
+@router.get("/", response_model=list[schemas.NodeResponse])
+def read_nodes(db: Session = Depends(get_db)):
+    return crud.get_nodes(db)
+
+# В файле app/routers/nodes.py
+@router.get("/{node_id}", response_model=schemas.NodeResponse)
+def read_node(node_id: int, db: Session = Depends(get_db)):
+    node = crud.get_node_by_id(db, node_id)
+    if not node:
+        raise HTTPException(status_code=404, detail="Node not found")
+    return node
+
+# маршрут для поиска и фильтрации узлов
+# В файле app/routers/nodes.py
+@router.get("/search/", response_model=list[schemas.NodeResponse])
+def search_nodes(
+    query: str = Query(..., min_length=1),  # Обязательный параметр
+    db: Session = Depends(get_db)
+):
+    nodes = crud.search_nodes(db, query)
+    return nodes
+
+# Маршрут для получения всех средств измерений для конкретного узла
+@router.get("/{node_id}/instruments/", response_model=list[schemas.MeasuringInstrumentResponse])
+def read_instruments_for_node(node_id: int, db: Session = Depends(get_db)):
+    instruments = crud.get_instruments_by_node(db, node_id)
+    if not instruments:
+        raise HTTPException(status_code=404, detail="Instruments not found for this node")
+    return instruments
+
+# Маршрут для удаления узла
+@router.delete("/{node_id}", response_model=schemas.NodeResponse)
+def delete_node(node_id: int, db: Session = Depends(get_db)):
+    deleted_node = crud.delete_node(db, node_id)
+    if not deleted_node:
+        raise HTTPException(status_code=404, detail="Node not found")
+    return deleted_node
+
+============================================================
+
+==================== frontend/README.md ====================
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+============================================================
+
+==================== frontend/package-lock.json ====================
+[Файл слишком большой для включения (674263 символов)]
+============================================================
+
+==================== frontend/package.json ====================
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@hello-pangea/dnd": "^18.0.1",
+    "axios": "^1.8.1",
+    "core-js": "^3.23.3",
+    "eslint": "^8.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0",
+    "react-scripts": "^5.0.1",
+    "sass": "^1.85.1",
+    "uuid": "^7.0.0",
+    "web-vitals": "^4.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "eslint-webpack-plugin": "^3.0.0"
+  }
+}
+
+============================================================
+
+==================== frontend/public/index.html ====================
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+
+============================================================
+
+==================== frontend/public/manifest.json ====================
+{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+
+============================================================
+
+==================== frontend/public/robots.txt ====================
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+
+============================================================
+
+==================== frontend/src/App.js ====================
+import React from 'react';
+import AppRoutes from './routes';
+import './styles/App.scss';
+
+function App() {
+  return (
+    <div className="App">
+      {/* Фоновая секция */}
+      <header className="header">
+          <h1 className="title">metrologet.mkair</h1>
+      </header>
+      <AppRoutes />
+    </div>
+  );
+}
+
+export default App;
+
+============================================================
+
+==================== frontend/src/App.test.js ====================
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+
+============================================================
+
+==================== frontend/src/code.txt ====================
+
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Получение всех узлов
+export const fetchNodes = async () => {
+  try {
+    const response = await apiClient.get('/nodes/');
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении узлов");
+  }
+};
+
+// Создание нового узла
+export const createNode = async (nodeData) => {
+  try {
+    const response = await apiClient.post('/nodes/', nodeData);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при создании узла");
+  }
+};
+
+// Удаление узла
+export const deleteNode = async (nodeId) => {
+  try {
+    const response = await apiClient.delete(`/nodes/${nodeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при удалении узла");
+  }
+};
+
+// Поиск узлов
+export const searchNodes = async (query) => {
+  try {
+    const response = await apiClient.get(`/nodes/search/?query=${query}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при поиске узлов");
+  }
+};
+
+// Получение всех СИ для узла
+export const fetchInstrumentsByNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/nodes/${nodeId}/instruments/`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении СИ");
+  }
+};
+
+// Поиск и добавление СИ через API "АРШИН"
+export const searchAndAddInstrument = async (nodeId, searchParams) => {
+  try {
+    const response = await apiClient.get(`/instruments/${nodeId}/search_instruments/`, { params: searchParams });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при добавлении СИ");
+  }
+};
+
+// В файле api/apiClient.js
+export const fetchNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/nodes/${nodeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении данных узла");
+  }
+};
+import React from 'react';
+import AppRoutes from './routes';
+import './styles/App.scss';
+
+function App() {
+  return (
+    <div className="App">
+      {/* Фоновая секция */}
+      <header className="header">
+          <h1 className="title">metrologet.mkair</h1>
+      </header>
+      <AppRoutes />
+    </div>
+  );
+}
+
+export default App;
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+import React, { useState } from 'react';
+
+function AddInstrumentModal({ onClose, onAdd }) {
+  const [searchParams, setSearchParams] = useState({
+    search: '',
+    mit_number: '',
+    mi_number: '',
+    year: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await onAdd(searchParams);
+    onClose();
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Добавить средство измерений</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="search"
+            placeholder="Поиск..."
+            value={searchParams.search}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="mit_number"
+            placeholder="Номер MIT"
+            value={searchParams.mit_number}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="mi_number"
+            placeholder="Номер MI"
+            value={searchParams.mi_number}
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="year"
+            placeholder="Год"
+            value={searchParams.year}
+            onChange={handleChange}
+          />
+          <button type="submit">Добавить</button>
+          <button type="button" onClick={onClose}>
+            Отмена
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default AddInstrumentModal;
+import React, { useState, useRef } from 'react';
+
+function AddNodeButton({ onAdd }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const nameInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
+
+  const handleSubmit = () => {
+    if (name.trim() === '') return;
+    onAdd({ name, description });
+    setIsExpanded(false);
+    setName('');
+    setDescription('');
+  };
+
+  const handleKeyDown = (e, field) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (field === 'name' && descriptionInputRef.current) {
+        descriptionInputRef.current.focus(); // Перевод фокуса на описание
+      } else if (field === 'description') {
+        handleSubmit(); // Добавляем узел
+      }
+    }
+  };
+
+  return (
+    <div
+      className="add-node-button"
+      onMouseEnter={() => {
+        setIsExpanded(true);
+        setTimeout(() => nameInputRef.current?.focus(), 100); // Фокус на название
+      }}
+      onMouseLeave={() => setIsExpanded(false)}
+    >
+      {!isExpanded && <div className="plus-icon">+</div>}
+      {isExpanded && (
+        <div className="add-node-form">
+          <input
+            type="text"
+            placeholder="Название объекта"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, 'name')}
+            ref={nameInputRef} // Фокусируется автоматически
+          />
+          <input
+            type="text"
+            placeholder="Описание"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, 'description')}
+            ref={descriptionInputRef}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AddNodeButton;
+import React from 'react';
+
+function DeleteNodeMenu({ onClose, onDelete }) {
+  return (
+    <div className="delete-menu">
+      <p>Удалить узел?</p>
+      <div className="delete-menu-buttons">
+        <button onClick={onDelete}>Да</button>
+        <button onClick={onClose}>Нет</button>
+      </div>
+    </div>
+  );
+}
+
+export default DeleteNodeMenu;
+import React from 'react';
+
+function InstrumentTable({ instruments }) {
+  return (
+    <div className="instrument-table">
+      {/* Заголовки колонок */}
+      <div className="table-header">
+        <div className="header-cell">ID</div>
+        <div className="header-cell">Название</div>
+        <div className="header-cell">Номер MIT</div>
+        <div className="header-cell">Номер MI</div>
+        <div className="header-cell">Дата поверки</div>
+        <div className="header-cell">Действителен до</div>
+      </div>
+
+      {/* Карточки средств измерений */}
+      <div className="card-container">
+        {instruments.length > 0 ? (
+          instruments.map((instrument) => (
+            <div key={instrument.id} className="instrument-card">
+              <div className="card-cell">{instrument.id}</div>
+              <div className="card-cell">{instrument.mit_title}</div>
+              <div className="card-cell">{instrument.mit_number}</div>
+              <div className="card-cell">{instrument.mi_number}</div>
+              <div className="card-cell">{instrument.verification_date}</div>
+              <div className="card-cell">{instrument.valid_date}</div>
+            </div>
+          ))
+        ) : (
+          <div className="no-data">Нет данных</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default InstrumentTable;
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DeleteNodeMenu from './DeleteNodeMenu';
+
+function NodeCard({ node, onDelete }) {
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (!showDeleteMenu) navigate(`/node/${node.id}`);
+  };
+
+  return (
+    <div className="card" onClick={handleCardClick}>
+      {/* Контент карточки */}
+      {!showDeleteMenu && (
+        <>
+          <div className="card-header">{node.name}</div>
+          <div className="card-body">{node.description || "Описание отсутствует"}</div>
+          <button
+            className="delete-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteMenu(true);
+            }}
+            aria-label={`Удалить узел ${node.name}`}
+          >
+            ×
+          </button>
+        </>
+      )}
+
+      {/* Меню подтверждения удаления */}
+      {showDeleteMenu && (
+        <div className="delete-menu-container">
+          <DeleteNodeMenu
+            onClose={() => setShowDeleteMenu(false)}
+            onDelete={() => {
+              onDelete(node.id);
+              setShowDeleteMenu(false);
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default NodeCard;
+import React, { useState } from 'react';
+
+function SearchBar({ onSearch }) {
+  const [query, setQuery] = useState("");
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    onSearch(value);
+  };
+
+  return (
+    <div className="search-container">
+      <input
+        type="text"
+        placeholder="Поиск..."
+        value={query}
+        onChange={handleChange}
+        className="search-bar"
+      />
+    </div>
+  );
+}
+
+export default SearchBar;
+export default SearchBar;
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.scss';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3"><g fill="#61DAFB"><path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/><circle cx="420.9" cy="296.5" r="45.7"/><path d="M520.5 78.1z"/></g></svg>import React, { useEffect, useState } from 'react';
+import {
+  fetchNodes,
+  createNode,
+  deleteNode,
+  searchNodes,
+} from '../api/apiClient';
+import NodeCard from '../components/NodeCard';
+import AddNodeButton from '../components/AddNodeButton';
+import SearchBar from '../components/SearchBar';
+import '../styles/App.scss'; // Глобальные стили
+
+function HomePage() {
+  const [nodes, setNodes] = useState([]); // Все узлы
+  const [filteredNodes, setFilteredNodes] = useState([]); // Отфильтрованные узлы
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Загрузка узлов при монтировании
+  useEffect(() => {
+    const loadNodes = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchNodes();
+        setNodes(data);
+        setFilteredNodes(data);
+      } catch (error) {
+        console.error("Ошибка при загрузке узлов:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadNodes();
+  }, []);
+
+  // Обработчик поиска
+  const handleSearch = async (query) => {
+    setIsLoading(true);
+    try {
+      if (!query) {
+        setFilteredNodes(nodes);
+      } else {
+        const data = await searchNodes(query);
+        setFilteredNodes(data);
+      }
+    } catch (error) {
+      console.error("Ошибка при поиске:", error);
+      setFilteredNodes([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Добавление нового узла
+  const handleAddNode = async (nodeData) => {
+    try {
+      setIsLoading(true);
+      const newNode = await createNode(nodeData);
+      setNodes([...nodes, newNode]);
+      setFilteredNodes([...filteredNodes, newNode]);
+    } catch (error) {
+      console.error("Ошибка при добавлении узла:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Удаление узла
+  const handleDeleteNode = async (nodeId) => {
+    try {
+      setIsLoading(true);
+      await deleteNode(nodeId);
+      setNodes(nodes.filter((node) => node.id !== nodeId));
+      setFilteredNodes(filteredNodes.filter((node) => node.id !== nodeId));
+    } catch (error) {
+      console.error("Ошибка при удалении узла:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="home-page">
+      <SearchBar onSearch={handleSearch} />
+      <div className="card-container">
+        {isLoading ? (
+          <p>Загрузка...</p>
+        ) : filteredNodes.length > 0 ? (
+          filteredNodes.map((node) => (
+            <NodeCard key={node.id} node={node} onDelete={handleDeleteNode} />
+          ))
+        ) : (
+          <div className="no-data">Нет данных</div>
+        )}
+        <AddNodeButton onAdd={handleAddNode} />
+      </div>
+    </div>
+  );
+}
+
+export default HomePage;
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import {
+  fetchInstrumentsByNode,
+  searchAndAddInstrument,
+  fetchNode,
+} from '../api/apiClient';
+import AddInstrumentModal from '../components/AddInstrumentModal';
+
+function NodeDetailsPage() {
+  const { nodeId } = useParams();
+  const [instruments, setInstruments] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nodeName, setNodeName] = useState('');
+
+  // Загрузка данных узла
+  useEffect(() => {
+    const loadNode = async () => {
+      try {
+        const nodeData = await fetchNode(nodeId);
+        setNodeName(nodeData.name);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных узла:", error);
+      }
+    };
+    loadNode();
+  }, [nodeId]);
+
+  // Загрузка средств измерения для узла
+  useEffect(() => {
+    const loadInstruments = async () => {
+      try {
+        const data = await fetchInstrumentsByNode(nodeId);
+        setInstruments(data);
+      } catch (error) {
+        console.error("Ошибка при загрузке СИ:", error);
+      }
+    };
+    loadInstruments();
+  }, [nodeId]);
+
+  // Обработчик добавления нового СИ
+  const handleAddInstrument = async (searchParams) => {
+    try {
+      const newInstrument = await searchAndAddInstrument(nodeId, searchParams);
+      setInstruments([...instruments, newInstrument]);
+    } catch (error) {
+      console.error("Ошибка при добавлении СИ:", error);
+    }
+  };
+
+  // Обработка завершения перетаскивания карточки
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reordered = Array.from(instruments);
+    const [removed] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, removed);
+    setInstruments(reordered);
+
+    // Здесь можно добавить вызов API для обновления порядка карточек в БД
+    // updateInstrumentOrder(reordered);
+  };
+
+  return (
+    <div className="node-details-page">
+      <h1 className="node-title">{nodeName || "Загрузка..."}</h1>
+      <button onClick={() => setIsModalOpen(true)}>Добавить СИ</button>
+      {isModalOpen && (
+        <AddInstrumentModal
+          onClose={() => setIsModalOpen(false)}
+          onAdd={handleAddInstrument}
+        />
+      )}
+
+      {/* Статическая строка-заголовок */}
+      <div className="header-row">
+        <div className="card-cell">ID</div>
+        <div className="card-cell">Название</div>
+        <div className="card-cell">Номер MIT</div>
+        <div className="card-cell">Номер MI</div>
+        <div className="card-cell">Дата поверки</div>
+        <div className="card-cell">Действителен до</div>
+      </div>
+
+      {/* Интерактивные карточки с информацией о СИ */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="instruments">
+          {(provided) => (
+            <div
+              className="draggable-instruments"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {instruments.map((instrument, index) => (
+                <Draggable
+                  key={instrument.id}
+                  draggableId={instrument.id.toString()}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      className="instrument-card"
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <div className="card-cell">{instrument.id}</div>
+                      <div className="card-cell">{instrument.mit_title}</div>
+                      <div className="card-cell">{instrument.mit_number}</div>
+                      <div className="card-cell">{instrument.mi_number}</div>
+                      <div className="card-cell">{instrument.verification_date}</div>
+                      <div className="card-cell">{instrument.valid_date}</div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </div>
+  );
+}
+
+export default NodeDetailsPage;
+import React from 'react';
+
+function NotFound() {
+  return (
+    <div>
+      <h1>404 - Страница не найдена</h1>
+      <p>К сожалению, запрашиваемая страница не существует.</p>
+    </div>
+  );
+}
+
+export default NotFound;
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import NodeDetails from './pages/NodeDetails';
+import NotFound from './pages/NotFound';
+
+function AppRoutes() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/node/:nodeId" element={<NodeDetails />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default AppRoutes;
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+// App.scss
+@use 'variables';
+@use 'mixins';
+@use 'base';
+@use 'layout';
+@use 'components';
+@use 'search';
+@use 'nodedetail';
+// _base.scss
+
+@use './variables' as *; // Путь от src/styles/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $background;
+  color: $foreground;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+a {
+  color: $cyan;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+::selection {
+  background-color: $selection;
+}
+// Правильные импорты
+@use './variables' as *;
+@use './mixins' as *; // Теперь миксины доступны без префикса
+
+.card {
+  position: relative;
+  text-align: center;
+  background-color: $foreground;
+  color: $background;
+  border-radius: 6px;
+  padding: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 220px;
+  border: 1px solid transparent; // изначально прозрачная окантовка
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  overflow: hidden;
+  min-height: 10px;
+
+  &:hover {
+    transform: scale(1.12); // увеличение карточки
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-body {
+    font-size: 0.9rem;
+    font-weight: normal;
+  }
+  
+  // Кнопка удаления (крестик) – появляется при наведении
+  .delete-button {
+    position: absolute;
+
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: $red;
+    color: $background;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+  
+  &:hover .delete-button {
+    opacity: 1;
+  }
+  
+  // Контейнер для меню удаления внутри карточки
+  .delete-menu-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 42, 54, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  
+  .delete-menu {
+  background-color: $foreground;
+  padding: 1.5rem;
+  border-radius: 6px;
+  width: 100%;  // Делаем его на всю карточку
+  height: 100%;
+  box-shadow: none; // Убираем доп. тень, т.к. уже есть у родителя
+
+    p {
+      text-align: center;
+      /* margin-bottom: 1rem; */
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    
+    .delete-menu-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      
+      button {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.05);
+        }
+        
+        &:first-child {
+          background-color: $red;  // Кнопка "Да"
+          color: $foreground;
+        }
+        
+        &:last-child {
+          background-color: $comment; // Кнопка "Нет"
+          color: $foreground;
+        }
+      }
+    }
+  }
+}
+
+.add-node-button {
+  background-color: $green; // зеленый фон
+  width: 40px;             // начальная узкая ширина (1/3 карточки)
+  height: 102px;            
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;  // черный бортик
+  border-radius: 6px; cursor: pointer;
+  overflow: hidden;
+  transition: width 0.3s ease, padding 0.3s ease;
+  justify-self: start; // выравнивание по левому краю (в grid-контейнере)
+
+  .plus-icon {
+    pointer-events: none;  // отключаем реакции на курсор
+    display: block;
+    font-size: 2rem;
+    line-height: 1;
+    color: black;
+    caret-color: transparent;  /* Убирает текстовый курсор */
+  }
+  
+  .add-node-form {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+    display: flex;
+
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      background-color: #fff; /* Белый фон */
+      font-size: 1rem;
+      color: #000; /* Текст черного цвета */
+      border: 2px solid #000; /* Черная граница */
+      border-radius: 8px; /* Закругленные углы */
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #000; /* Черная граница остается при фокусе */
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Легкая тень */
+    }
+  }
+  
+  &:hover {
+    width: 220px;       // расширяется до полноценной карточки
+    padding: 1rem;
+    
+    .plus-icon {
+      display: none;
+    }
+  }
+}
+
+.instrument-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  th, td {
+    padding: 0.75rem;
+    border: 1px solid $comment;
+    text-align: left;
+  }
+
+  th {
+    background-color: $background;
+    color: $foreground;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: lighten($background, 10%);
+  }
+}
+
+@use './variables' as *; // Путь от src/styles/
+
+.header {
+  background-color: $background;
+  padding: 1rem;
+  text-align: center;
+  caret-color: transparent;  /* Убирает текстовый курсор */
+
+
+
+  .title {
+    color: $foreground;
+    font-size: 3rem;
+    margin: 0;
+
+  }
+}
+
+.home-page {
+  padding: 1rem;
+
+  // Контейнер карточек с 5 колонками, центрирование и фиксированная ширина
+  
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-items: center;
+    align-items: stretch;       // заставляет содержимое растягиваться по высоте
+    grid-auto-rows: 100px;       // фиксированная высота для каждой строки
+    margin-top: 1rem;
+  }
+}
+
+.node-details-page {
+  padding: 1rem;
+  
+  h1.node-title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}
+// _mixins.scss
+
+@mixin card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+@use './variables' as *;
+
+.node-details-page {
+  padding: 1rem;
+
+  .node-title {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: $foreground;
+  }
+
+  button {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: $green;
+    border: none;
+    border-radius: 4px;
+    color: $background;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($green, 10%);
+    }
+  }
+
+  // Статическая заголовочная карточка (не интерактивная)
+  .header-row {
+    display: flex;
+    align-items: center;
+    background-color: $foreground;
+    color: $background;
+    border: 1px solid $comment;
+    border-radius: 6px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    cursor: default; // Без анимации при наведении
+  }
+
+  // Контейнер для интерактивных карточек СИ
+  .draggable-instruments {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .instrument-card {
+      display: flex;
+      align-items: center;
+      background-color: $foreground;
+      color: $background;
+      border: 1px solid $comment;
+      border-radius: 6px;
+      padding: 0.5rem;
+      transition: transform 0.2s ease;
+      cursor: grab;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+
+      .card-cell {
+        flex: 1;
+        padding: 0 0.5rem;
+        word-break: break-word;
+      }
+    }
+  }
+}
+@use './variables' as *; // Путь от src/styles/
+
+.search-container {
+  position: relative;
+  width: 50px;               // изначально маленький круг
+  height: 50px;
+  border: 3px solid #000;    // черный бортик
+  border-radius: 50%;        // круглая форма
+  background-color: $orange;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: width 0.4s ease, border-radius 0.4s ease;
+  margin: 10px auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+
+  // При наведении, фокусе или когда в поле ввода есть текст
+  &:hover,
+  &:focus-within,
+  &:has(.search-bar:not(:placeholder-shown)) {
+    width: 200px;            // фиксированная ширина
+    border-radius: 20px;      // превращается в прямоугольник с закругленными углами
+  }
+
+  &::before {
+    content: '\1F50D';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    background-color: $orange;
+    border-radius: 50%;
+    color: $background;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+}
+
+.search-bar {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #000;
+  font-size: 16px;
+  padding: 0 10px;
+  margin-left: 50px;         // смещаем поле ввода вправо от значка
+  width: calc(100% - 50px);
+  display: inline-block;
+
+  &::placeholder {
+    color: $comment;
+  }
+}
+// Dracula color palette
+$background: #282A36;
+$foreground: #F8F8F2;
+$selection: #44475A;
+$comment:   #6272A4;
+$red:       #FF5555;
+$orange:    #FFB86C;
+$yellow:    #F1FA8C;
+$green:     #50FA7B;
+$purple:    #BD93F9;
+$cyan:      #8BE9FD;
+$pink:      #FF79C6;
+
+// ANSI color palette
+$ansi-black:          #21222C;
+$ansi-red:            #FF5555;
+$ansi-green:          #50FA7B;
+$ansi-yellow:         #F1FA8C;
+$ansi-blue:           #BD93F9;
+$ansi-magenta:        #FF79C6;
+$ansi-cyan:           #8BE9FD;
+$ansi-white:          #F8F8F2;
+$ansi-bright-black:   #6272A4;
+$ansi-bright-red:     #FF6E6E;
+$ansi-bright-green:   #69FF94;
+$ansi-bright-yellow:  #FFFFA5;
+$ansi-bright-blue:    #D6ACFF;
+$ansi-bright-magenta: #FF92DF;
+$ansi-bright-cyan:    #A4FFFF;
+$ansi-bright-white:   #FFFFFF;
+
+============================================================
+
+==================== frontend/src/index.js ====================
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.scss';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+============================================================
+
+==================== frontend/src/reportWebVitals.js ====================
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+
+============================================================
+
+==================== frontend/src/routes.js ====================
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import NodeDetails from './pages/NodeDetails';
+import NotFound from './pages/NotFound';
+
+function AppRoutes() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/node/:nodeId" element={<NodeDetails />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default AppRoutes;
+
+============================================================
+
+==================== frontend/src/setupTests.js ====================
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+
+============================================================
+
+==================== frontend/src/api/apiClient.js ====================
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Узлы
+export const fetchNodes = async () => {
+  try {
+    const response = await apiClient.get('/nodes/');
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении узлов");
+  }
+};
+
+export const createNode = async (nodeData) => {
+  try {
+    const response = await apiClient.post('/nodes/', nodeData);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при создании узла");
+  }
+};
+
+export const deleteNode = async (nodeId) => {
+  try {
+    const response = await apiClient.delete(`/nodes/${nodeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при удалении узла");
+  }
+};
+
+export const searchNodes = async (query) => {
+  try {
+    const response = await apiClient.get(`/nodes/search/?query=${query}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при поиске узлов");
+  }
+};
+
+export const fetchNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/nodes/${nodeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении данных узла");
+  }
+};
+
+// Средства измерений
+export const fetchInstrumentsByNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/instruments/${nodeId}/`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при получении СИ");
+  }
+};
+
+export const searchAndAddInstrument = async (nodeId, searchParams) => {
+  try {
+    const response = await apiClient.get(`/instruments/${nodeId}/search_instruments/`, { params: searchParams });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при добавлении СИ");
+  }
+};
+
+export const deleteInstrument = async (instrumentId, nodeId) => {
+  try {
+    const response = await apiClient.delete(`/instruments/${instrumentId}/${nodeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при удалении СИ");
+  }
+};
+
+// Группы
+export const createGroup = async (nodeId, groupData) => {
+  try {
+    const response = await apiClient.post(`/groups/${nodeId}/`, groupData);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при создании группы");
+  }
+};
+
+export const fetchGroupsByNode = async (nodeId) => {
+  try {
+    const response = await apiClient.get(`/groups/${nodeId}/`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при загрузке групп");
+  }
+};
+
+export const assignInstrumentToGroup = async (instrumentId, groupId) => {
+  try {
+    const response = await apiClient.put(`/groups/assign/${instrumentId}/${groupId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка привязки инструмента");
+  }
+};
+
+export const updateGroupOrder = async (nodeId, groupIds) => {
+  try {
+    const response = await apiClient.put(`/groups/${nodeId}/order`, { 
+      group_ids: groupIds 
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка обновления порядка групп");
+  }
+};
+
+export const updateInstrumentOrder = async (instrumentIds) => {
+  try {
+    const response = await apiClient.put('/instruments/order', {
+      instrument_ids: instrumentIds
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка обновления порядка СИ");
+  }
+};
+
+export const fetchInstrumentsForGroup = async (groupId) => {
+  try {
+    const response = await apiClient.get(`/groups/${groupId}/instruments`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при загрузке инструментов группы");
+  }
+};
+
+export const removeInstrumentFromGroup = async (instrumentId) => {
+  try {
+    const response = await apiClient.put(`/groups/remove/${instrumentId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка удаления из группы");
+  }
+};
+
+export const deleteGroup = async (groupId) => {
+  try {
+    const response = await apiClient.delete(`/groups/${groupId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Ошибка удаления группы");
+  }
+};
+
+
+============================================================
+
+==================== frontend/src/components/AddGroupModal.jsx ====================
+import React, { useState } from "react";
+
+const AddGroupModal = ({ isOpen, onClose, onAdd }) => {
+  const [groupName, setGroupName] = useState("");
+  const [error, setError] = useState("");
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (groupName.trim() === "") {
+      setError("Название группы не может быть пустым");
+      return;
+    }
+    // Передаем данные в родительский компонент
+    onAdd({ name: groupName });
+    setGroupName("");
+    setError(""); // Сбросить ошибку после успешного добавления
+    onClose();
+  };
+
+  return (
+    <>
+      <div className="modal-overlay active" onClick={onClose}></div>
+      <div className="modal-group active"> {/* изменили класс здесь */}
+        <h3>Добавить группу</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-field">
+            <label>Название группы</label>
+            <input
+              type="text"
+              placeholder="Введите название группы"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+            />
+          </div>
+          {error && <p className="error-message">{error}</p>}
+          <div className="form-buttons">
+            <button type="submit" className="add-button">
+              Добавить
+            </button>
+            <button type="button" onClick={onClose} className="cancel-button">
+              Закрыть
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default AddGroupModal;
+
+============================================================
+
+==================== frontend/src/components/AddInstrumentModal.jsx ====================
+import React, { useState } from 'react';
+function AddInstrumentModal({ onClose, onAdd }) {
+  const [searchParams, setSearchParams] = useState({
+    search: '',           // Свободный поиск * *
+    mit_number: '',       // Регистрационный номер типа СИ
+    mi_number: '',        // Заводской номер
+    year: '',             // Год поверки
+    result_docnum: '',    // Номер свидетельства о поверке
+    verification_date: '',// Дата поверки
+    valid_date: ''        // Действителен до
+  });
+
+  const [isAdvancedSearchVisible, setIsAdvancedSearchVisible] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await onAdd(searchParams);
+    onClose();
+  };
+
+  return (
+    <div className="modal">
+      <h3>Добавить средство измерений</h3>
+      <form onSubmit={handleSubmit}>
+
+        <div className="form-field">
+          <label>Поиск</label>
+          <input
+            type="text"
+            name="search"
+            placeholder="FVM"
+            value={searchParams.search}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Основные поля */}
+        <div className="form-field">
+          <label>Регистрационный номер типа СИ</label>
+          <input
+            type="text"
+            name="mit_number"
+            placeholder="62129-15"
+            value={searchParams.mit_number}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-field">
+          <label>Заводской номер</label>
+          <input
+            type="text"
+            name="mi_number"
+            placeholder="87771776"
+            value={searchParams.mi_number}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-field">
+          <label>Год поверки</label>
+          <input
+            type="number"
+            name="year"
+            min="1950"
+            max={new Date().getFullYear()}
+            placeholder="2025"
+            value={searchParams.year}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Кнопка расширенного поиска */}
+        <button
+          type="button"
+          className="toggle-advanced-search"
+          onClick={() => setIsAdvancedSearchVisible(prev => !prev)}
+        >
+          {isAdvancedSearchVisible ? 'Свернуть' : 'Расширенный поиск'}
+        </button>
+
+        {isAdvancedSearchVisible && (
+          <div className="advanced-search">
+            <div className="form-field">
+              <label>Номер свидетельства о поверке</label>
+              <input
+                type="text"
+                name="result_docnum"
+                placeholder="С-ВЯ/27-06-2024/350617442"
+                value={searchParams.result_docnum}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-field">
+              <label>Дата поверки</label>
+              <input
+                type="date"
+                name="verification_date"
+                value={searchParams.verification_date}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-field">
+              <label>Действителен до</label>
+              <input
+                type="date"
+                name="valid_date"
+                value={searchParams.valid_date}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="form-buttons">
+          <button type="submit" className="primary">Поиск</button>
+          <button type="button" onClick={onClose}>Отмена</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default AddInstrumentModal;
+
+============================================================
+
+==================== frontend/src/components/AddNodeButton.jsx ====================
+import React, { useState, useRef } from 'react';
+
+function AddNodeButton({ onAdd }) {
+  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние модального окна
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+
+  // Создаем рефы для полей ввода
+  const nameInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
+
+  // Обработчик отправки формы
+  const handleSubmit = () => {
+    if (name.trim() === '') return; // Проверяем, что название не пустое
+    onAdd({ name, description }); // Вызываем функцию добавления узла
+    setIsModalOpen(false); // Закрываем модальное окно
+    setName('');
+    setDescription('');
+  };
+
+  // Обработчик закрытия модального окна
+  const handleClose = () => {
+    setIsModalOpen(false);
+    setName('');
+    setDescription('');
+  };
+
+  // Обработчик открытия модального окна
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    // Устанавливаем фокус на поле ввода "Название" после открытия модального окна
+    setTimeout(() => {
+      if (nameInputRef.current) {
+        nameInputRef.current.focus();
+      }
+    }, 0);
+  };
+
+  // Обработчик нажатия клавиш в поле "Название"
+  const handleNameKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Предотвращаем стандартное поведение (например, отправку формы)
+      if (descriptionInputRef.current) {
+        descriptionInputRef.current.focus(); // Перемещаем фокус на поле "Описание"
+      }
+    }
+  };
+
+  // Обработчик нажатия клавиш в поле "Описание"
+  const handleDescriptionKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Предотвращаем стандартное поведение
+      handleSubmit(); // Добавляем карточку
+    }
+  };
+
+  return (
+    <>
+      {/* Кнопка с плюсом */}
+      <div className="add-node-button" onClick={handleOpenModal}>
+        <span className="plus-icon">+</span>
+      </div>
+
+      {/* Модальное окно */}
+      {isModalOpen && (
+        <div className={`modal-overlay active`}>
+          <div className="modal-content">
+            <input
+              type="text"
+              placeholder="Название"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              ref={nameInputRef} // Привязываем реф к полю ввода "Название"
+              onKeyDown={handleNameKeyDown} // Обработчик нажатий клавиш
+            />
+            <input
+              type="text"
+              placeholder="Описание"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              ref={descriptionInputRef} // Привязываем реф к полю ввода "Описание"
+              onKeyDown={handleDescriptionKeyDown} // Обработчик нажатий клавиш
+            />
+            <div className="modal-buttons">
+              <button onClick={handleSubmit}>Да</button>
+              <button onClick={handleClose}>Нет</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default AddNodeButton;
+
+============================================================
+
+==================== frontend/src/components/DeleteInstrumentMenu.jsx ====================
+import React from 'react';
+
+function DeleteInstrumentMenu({ onClose, onDelete }) {
+  return (
+    <div className="delete-menu">
+      <p>Удалить средство измерения?</p>
+      <div className="delete-menu-buttons">
+        <button className="delete-button" onClick={onDelete}>Да</button>
+        <button className="cancel-button" onClick={onClose}>Нет</button>
+      </div>
+    </div>
+  );
+}
+
+export default DeleteInstrumentMenu;
+
+============================================================
+
+==================== frontend/src/components/DeleteNodeMenu.jsx ====================
+import React from 'react';
+
+function DeleteNodeMenu({ onClose, onDelete }) {
+  return (
+    <div className="delete-menu">
+      <p>Удалить узел?</p>
+      <div className="delete-menu-buttons">
+        <button className="delete-button" onClick={onDelete}>Да</button>
+        <button className="cancel-button" onClick={onClose}>Нет</button>
+      </div>
+    </div>
+  );
+}
+
+export default DeleteNodeMenu;
+
+============================================================
+
+==================== frontend/src/components/GroupCard.jsx ====================
+import React from "react";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
+import InstrumentCard from "./InstrumentCard";
+
+const GroupCard = ({ group, index }) => {
+  return (
+    <Draggable draggableId={`group-${group.id}`} index={index}>
+      {(provided) => (
+        <div
+          className="group-container"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <Droppable 
+            droppableId={`group-${group.id}`} 
+            type="INSTRUMENT" // Должно совпадать с другими
+          >
+            {(provided) => (
+              <div
+                className="group-content"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                {...provided.dragHandleProps}
+              >
+                <div className="group-header" {...provided.dragHandleProps}>
+                  <h3 className="group-title">{group.name}</h3>
+                </div>
+                  {group.instruments?.map((instrument, index) => (
+                    <Draggable
+                      key={instrument.id}
+                      draggableId={`instrument-${instrument.id}`}
+                      index={index}
+                    >
+                      {(providedInstrument) => (
+                        <InstrumentCard
+                          instrument={instrument}
+                          onDelete={handleDeleteInstrument} // Убедитесь что этот пропс передается
+                          ref={providedInstrument.innerRef}
+                          {...providedInstrument.draggableProps}
+                          dragHandleProps={providedInstrument.dragHandleProps} // Явная передача
+                        />
+                      )}
+                    </Draggable>
+                  ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
+      )}
+    </Draggable>
+  );
+};
+
+export default GroupCard;
+
+============================================================
+
+==================== frontend/src/components/InstrumentCard.jsx ====================
+import React, { useState, forwardRef } from "react";
+
+const InstrumentCard = forwardRef(
+  ({ instrument, onDelete, draggableProps, dragHandleProps }, ref) => {
+    const [showDeleteMenu, setShowDeleteMenu] = useState(false);
+
+    const formatDate = (dateString) => {
+      if (!dateString) return "";
+      return new Date(dateString).toLocaleDateString("ru-RU");
+    };
+
+    return (
+      <div
+        className={`instrument-card ${showDeleteMenu ? "show-delete-menu" : ""}`}
+        ref={ref}
+        {...draggableProps}
+      >
+        <div className="instrument-card-content">
+          {/* Элемент для перетаскивания — только на иконке */}
+          <div className="drag-handle" {...dragHandleProps}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+              <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2z" />
+            </svg>
+          </div>
+
+          {/* Остальной контент карточки */}
+          <div className="card-cell">{instrument.id}</div>
+          <div className="card-cell">{instrument.mit_title || "Название отсутствует"}</div>
+          <div className="card-cell">{instrument.mit_number}</div>
+          <div className="card-cell">{instrument.mi_number}</div>
+          <div className="card-cell">{formatDate(instrument.verification_date)}</div>
+          <div className="card-cell">{formatDate(instrument.valid_date)}</div>
+          <div className={`signal-circle ${instrument.color}`}></div>
+          <button
+            className="delete-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteMenu(true);
+            }}
+            aria-label={`Удалить СИ ${instrument.id}`}
+          ></button>
+        </div>
+
+        {/* Меню удаления */}
+        {showDeleteMenu && (
+          <div className="delete-menu">
+            <p>Удалить средство измерения?</p>
+            <div className="delete-menu-buttons">
+              <button
+                onClick={() => {
+                  onDelete(instrument.id);
+                  setShowDeleteMenu(false);
+                }}
+              >
+                Да
+              </button>
+              <button onClick={() => setShowDeleteMenu(false)}>Нет</button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+);
+
+export default InstrumentCard;
+
+============================================================
+
+==================== frontend/src/components/NodeCard.jsx ====================
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function NodeCard({ node, onDelete }) {
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false); // Состояние меню удаления
+  const navigate = useNavigate(); // Для навигации
+
+  // Обработчик клика по карточке
+  const handleCardClick = () => {
+    if (!showDeleteMenu) navigate(`/node/${node.id}`); // Переход к деталям узла
+  };
+
+  return (
+    <div
+      className={`card ${showDeleteMenu ? 'show-delete-menu' : ''}`} // Добавляем класс при открытии меню
+      onClick={handleCardClick} // Обработчик клика
+    >
+      {/* Основное содержимое карточки */}
+      <div>
+        <div className="card-title">{node.name}</div> {/* Название узла */}
+        <div className="card-description">{node.description || "Описание отсутствует"}</div> {/* Описание узла */}
+
+        {/* Сигнальный кружок (индикатор состояния) */}
+        <div className={`signal-circle ${node.color}`}></div>
+
+        {/* Кнопка удаления */}
+        <button
+          className="delete-button"
+          onClick={(e) => {
+            e.stopPropagation(); // Предотвращаем всплытие события
+            setShowDeleteMenu(true); // Показываем меню подтверждения удаления
+          }}
+          aria-label={`Удалить узел ${node.name}`}
+        >
+        </button>
+      </div>
+
+      {/* Меню подтверждения удаления */}
+      {showDeleteMenu && (
+        <div className="delete-menu">
+          <p>Удалить узел?</p> {/* Вопрос подтверждения */}
+          <div className="delete-menu-buttons">
+            {/* Кнопка "Да" */}
+            <button
+              onClick={() => {
+                onDelete(node.id); // Удаляем узел через пропс onDelete
+                setShowDeleteMenu(false); // Скрываем меню
+              }}
+            >
+              Да
+            </button>
+            {/* Кнопка "Нет" */}
+            <button onClick={() => setShowDeleteMenu(false)}>Нет</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default NodeCard;
+
+============================================================
+
+==================== frontend/src/components/SearchBar.jsx ====================
+import React, { useState } from 'react';
+
+function SearchBar({ onSearch }) {
+  const [query, setQuery] = useState('');
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    onSearch(value); // Передаем значение в родительский компонент
+  };
+
+  return (
+    <div className="search-container">
+      <input
+        type="text"
+        className="search-bar"
+        placeholder="Поиск..."
+        value={query}
+        onChange={handleChange}
+      />
+    </div>
+  );
+}
+
+export default SearchBar;
+
+============================================================
+
+==================== frontend/src/components/index.jsx ====================
+// components/index.js
+export { default as AddInstrumentModal } from './AddInstrumentModal';
+export { default as AddNodeButton } from './AddNodeButton';
+export { default as DeleteNodeMenu } from './DeleteNodeMenu';
+export { default as InstrumentTable } from './InstrumentTable';
+export { default as NodeCard } from './NodeCard';
+export { default as SearchBar } from './SearchBar';
+
+============================================================
+
+==================== frontend/src/pages/HomePage.jsx ====================
+import React, { useEffect, useState } from 'react';
+import SearchBar from '../components/SearchBar';
+import NodeCard from '../components/NodeCard';
+import AddNodeButton from '../components/AddNodeButton';
+import { fetchNodes, createNode, searchNodes, deleteNode } from '../api/apiClient';
+import '../styles/App.scss';
+
+function HomePage() {
+  const [nodes, setNodes] = useState([]); // Все узлы
+  const [filteredNodes, setFilteredNodes] = useState([]); // Отфильтрованные узлы
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Загрузка узлов при монтировании
+  useEffect(() => {
+    const loadNodes = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchNodes();
+        setNodes(data);
+        setFilteredNodes(data);
+      } catch (error) {
+        console.error("Ошибка при загрузке узлов:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadNodes();
+  }, []);
+
+  // Обработчик поиска
+  const handleSearch = async (query) => {
+    setIsLoading(true);
+    try {
+      if (!query) {
+        setFilteredNodes(nodes);
+      } else {
+        const data = await searchNodes(query);
+        setFilteredNodes(data);
+      }
+    } catch (error) {
+      console.error("Ошибка при поиске:", error);
+      setFilteredNodes([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Добавление нового узла
+  const handleAddNode = async (nodeData) => {
+    try {
+      setIsLoading(true);
+      const newNode = await createNode(nodeData); // Создаем новый узел через API
+      setNodes([...nodes, newNode]); // Добавляем новый узел в список
+      setFilteredNodes([...filteredNodes, newNode]); // Обновляем отфильтрованный список
+    } catch (error) {
+      console.error("Ошибка при добавлении узла:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Удаление узла
+  const handleDeleteNode = async (nodeId) => {
+    try {
+      setIsLoading(true);
+      await deleteNode(nodeId); // Отправляем запрос на удаление узла
+      // Фильтруем список, удаляя узел
+      setNodes(nodes.filter((node) => node.id !== nodeId));
+      setFilteredNodes(filteredNodes.filter((node) => node.id !== nodeId));
+    } catch (error) {
+      console.error("Ошибка при удалении узла:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="home-page">
+      {/* Поисковая строка */}
+      <SearchBar onSearch={handleSearch} />
+
+      {/* Контейнер карточек */}
+      <div className="card-container">
+        {isLoading ? (
+          <p>Загрузка...</p>
+        ) : filteredNodes.length > 0 ? (
+          filteredNodes.map((node) => (
+            <NodeCard key={node.id} node={node} onDelete={() => handleDeleteNode(node.id)} />
+          ))
+        ) : (
+          <p>Нет данных</p>
+        )}
+        {/* Кнопка добавления узла */}
+        <AddNodeButton onAdd={handleAddNode} />
+      </div>
+    </div>
+  );
+}
+
+export default HomePage;
+
+============================================================
+
+==================== frontend/src/pages/NodeDetails.jsx ====================
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import _ from "lodash";
+import {
+  fetchInstrumentsByNode,
+  searchAndAddInstrument,
+  fetchNode,
+  deleteInstrument,
+  createGroup,
+  fetchGroupsByNode,
+  updateGroupOrder,
+  updateInstrumentOrder,
+  removeInstrumentFromGroup,
+  assignInstrumentToGroup,
+  deleteGroup
+} from "../api/apiClient";
+import AddInstrumentModal from "../components/AddInstrumentModal";
+import InstrumentCard from "../components/InstrumentCard";
+import AddGroupModal from "../components/AddGroupModal";
+import '../styles/pages/NodeDetails.scss'; // Правильный путь
+
+function NodeDetailsPage() {
+  const { nodeId } = useParams();
+  const [instruments, setInstruments] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [nodeName, setNodeName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false); // Добавлено недостающее состояние
+
+  const refreshData = useCallback(async () => {
+    try {
+      const [nodeData, instrumentsData, groupsData] = await Promise.all([
+        fetchNode(nodeId),
+        fetchInstrumentsByNode(nodeId),
+        fetchGroupsByNode(nodeId),
+      ]);
+      
+      const instrumentsMap = instrumentsData.reduce((acc, i) => {
+        acc[i.id] = i;
+        return acc;
+      }, {});
+
+      setNodeName(nodeData.name);
+      setInstruments(instrumentsData);
+      setGroups(
+        groupsData.map((group) => ({
+          ...group,
+          instruments: group.instrument_ids
+            .map((id) => instrumentsMap[id])
+            .filter(Boolean),
+        }))
+      );
+    } catch (error) {
+      console.error("Ошибка обновления данных:", error);
+    }
+  }, [nodeId]);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
+
+  const standaloneInstruments = instruments.filter(
+    (instrument) =>
+      !groups.some((group) =>
+        group.instruments.some((gi) => gi.id === instrument.id)
+      )
+  );
+
+  const debouncedUpdateInstrumentOrder = useCallback(
+    _.debounce(async (ids) => {
+      await updateInstrumentOrder(ids);
+    }, 500),
+    []
+  );
+
+  const handleAddInstrument = async (searchParams) => {
+    try {
+      await searchAndAddInstrument(nodeId, searchParams);
+      refreshData();
+    } catch (error) {
+      console.error("Ошибка при добавлении СИ:", error);
+    }
+  };
+
+  const handleDeleteInstrument = async (instrumentId) => {
+    try {
+      await deleteInstrument(instrumentId, nodeId);
+      refreshData();
+    } catch (error) {
+      console.error("Ошибка при удалении СИ:", error);
+    }
+  };
+
+  const handleAddGroup = async (groupData) => {
+    try {
+      await createGroup(nodeId, groupData);
+      refreshData();
+    } catch (error) {
+      console.error("Ошибка при создании группы:", error);
+    }
+  };
+
+  const handleDeleteGroup = async (groupId) => {
+    if (!window.confirm("Вы уверены, что хотите удалить группу?")) return;
+    
+    try {
+      await deleteGroup(groupId);
+      // Оптимизированное обновление состояния
+      setGroups(prev => prev.filter(g => g.id !== groupId));
+    } catch (error) {
+      console.error("Ошибка удаления:", error);
+      alert("Не удалось удалить группу: " + error.message);
+    }
+  };
+
+  const handleDragEnd = async (result) => {
+    const { source, destination, type } = result;
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    setIsUpdating(true);
+
+    try {
+      if (type === "GROUP") {
+        // Обработка перетаскивания групп
+        const newGroups = [...groups];
+        const [movedGroup] = newGroups.splice(source.index, 1);
+        newGroups.splice(destination.index, 0, movedGroup);
+        setGroups(newGroups);
+        await updateGroupOrder(nodeId, newGroups.map(g => g.id));
+        
+      } else if (type === "INSTRUMENT") {
+        let sourceGroupId, destGroupId, newInstruments;
+
+        if (source.droppableId === "instruments" && destination.droppableId === "instruments") {
+          
+          // Перемещение между свободными СИ
+          const newStandalone = [...standaloneInstruments];
+          const [movedInstrument] = newStandalone.splice(source.index, 1);
+          newStandalone.splice(destination.index, 0, movedInstrument);
+          
+          setInstruments(prev => [
+            ...newStandalone,
+            ...prev.filter(i => newStandalone.some(ni => ni.id === i.id))
+          ]);
+          
+          debouncedUpdateInstrumentOrder(newStandalone.map(i => i.id));
+
+        } else if (
+          source.droppableId === "instruments" && 
+          destination.droppableId.startsWith("group-content-")
+        ) {
+          
+          // Из свободных в группу
+          destGroupId = parseInt(destination.droppableId.replace("group-content-", ""));
+          const movedInstrument = standaloneInstruments[source.index];
+          await assignInstrumentToGroup(movedInstrument.id, destGroupId);
+          refreshData();
+
+        } else if (
+          source.droppableId.startsWith("group-content-") && 
+          destination.droppableId === "instruments"
+        ) {
+          
+          // Из группы в свободные
+          sourceGroupId = parseInt(source.droppableId.replace("group-content-", ""));
+          const sourceGroup = groups.find(g => g.id === sourceGroupId);
+          const movedInstrument = sourceGroup.instruments[source.index];
+          await removeInstrumentFromGroup(movedInstrument.id);
+          refreshData();
+
+        } else if (
+          source.droppableId.startsWith("group-content-") && 
+          destination.droppableId.startsWith("group-content-")
+        ) {
+          
+          // Перемещение между группами или внутри группы
+          sourceGroupId = parseInt(source.droppableId.replace("group-content-", ""));
+          destGroupId = parseInt(destination.droppableId.replace("group-content-", ""));
+          const sourceGroup = groups.find(g => g.id === sourceGroupId);
+          const movedInstrument = sourceGroup.instruments[source.index];
+
+          if (sourceGroupId === destGroupId) {
+            // Перемещение внутри группы
+            newInstruments = [...sourceGroup.instruments];
+            const [removed] = newInstruments.splice(source.index, 1);
+            newInstruments.splice(destination.index, 0, removed);
+
+            // Обновляем локальное состояние
+            const updatedGroups = groups.map(group => 
+              group.id === sourceGroupId 
+                ? { ...group, instruments: newInstruments } 
+                : group
+            );
+            
+            setGroups(updatedGroups);
+            await updateInstrumentOrder(newInstruments.map(i => i.id));
+
+          } else {
+            // Перемещение между группами
+            await assignInstrumentToGroup(movedInstrument.id, destGroupId);
+            refreshData();
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Ошибка в handleDragEnd:", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+return (
+  <div className="node-details-page">
+    <h1 className="node-title">{nodeName || "Загрузка..."}</h1>
+
+    <div className="controls-container">
+      <button
+        className="add-instrument-button"
+        onClick={() => setIsModalOpen(true)}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+        </svg>
+        Добавить СИ
+      </button>
+
+      <button
+        className="add-group-button"
+        onClick={() => setIsGroupModalOpen(true)}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+        </svg>
+        Добавить группу
+      </button>
+    </div>
+
+    {isModalOpen && (
+      <AddInstrumentModal
+        onClose={() => setIsModalOpen(false)}
+        onAdd={handleAddInstrument}
+      />
+    )}
+
+    <AddGroupModal
+      isOpen={isGroupModalOpen}
+      onClose={() => setIsGroupModalOpen(false)}
+      onAdd={handleAddGroup}
+    />
+
+    <DragDropContext 
+      onDragEnd={handleDragEnd}
+      onDragStart={() => setIsUpdating(true)}
+    >
+
+      <div className="groups-section">
+        <h2>Группы</h2>
+        <Droppable droppableId="groups" type="GROUP" direction="vertical">
+          {(provided) => (
+            <div
+              className="groups-list"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {groups.map((group, index) => (
+                <Draggable
+                  key={group.id}
+                  draggableId={`group-${group.id}`}
+                  index={index}
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={`group-wrapper ${
+                        snapshot.isDragging ? 'draggable-dragging' : ''
+                      }`}
+                      style={{
+                        ...provided.draggableProps.style,
+                        width: snapshot.isDragging 
+                          ? document.querySelector('.group-wrapper')?.offsetWidth 
+                          : 'auto',
+                      }}
+                    >
+                      <Droppable
+                        droppableId={`group-content-${group.id}`}
+                        type="INSTRUMENT"
+                      >
+                        {(providedInner, snapshotInner) => (
+                          <div
+                            className={`group-container ${
+                              snapshotInner.isDraggingOver ? 'draggable-placeholder' : ''
+                            }`}
+                            ref={providedInner.innerRef}
+                            {...providedInner.droppableProps}
+                          >
+                            <div className="group-header">
+                              <div className="drag-handle" {...provided.dragHandleProps}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                  <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                                </svg>
+                              </div>
+                              <h3>{group.name}</h3>
+                              {/* Кнопка должна быть ВНУТРИ group-header */}
+                              <div className="delete-group-button-wrapper">
+                                <button className="delete-group-button" onClick={() => handleDeleteGroup(group.id)}>
+                                  ×
+                                </button>
+                              </div>
+                            </div>
+                            <div className="group-content">
+                              <div className="header-row">
+                                <div className="drag-handle-header"></div>
+                                <div className="card-cell">ID</div>
+                                <div className="card-cell">Название</div>
+                                <div className="card-cell">Номер MIT</div>
+                                <div className="card-cell">Номер MI</div>
+                                <div className="card-cell">Дата поверки</div>
+                                <div className="card-cell">Действителен до</div>
+                              </div>
+                              {group.instruments.map((instrument, index) => (
+                                <Draggable
+                                  key={instrument.id}
+                                  draggableId={`instrument-${instrument.id}`}
+                                  index={index}
+                                >
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      className={`instrument-wrapper ${
+                                        snapshot.isDragging ? 'draggable-dragging' : ''
+                                      }`}
+                                      style={{
+                                        ...provided.draggableProps.style,
+                                        width: snapshot.isDragging 
+                                          ? document.querySelector('.instrument-wrapper')?.offsetWidth 
+                                          : 'auto',
+                                      }}
+                                    >
+                                      <InstrumentCard
+                                        instrument={instrument}
+                                        dragHandleProps={provided.dragHandleProps}
+                                      />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {providedInner.placeholder}
+                            </div>
+                          </div>
+                        )}
+                      </Droppable>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </div>
+
+      <div className="instruments-section">
+        <h2>СИ</h2>
+        <div className="header-row">
+          <div className="drag-handle-header"></div>
+          <div className="card-cell">ID</div>
+          <div className="card-cell">Название</div>
+          <div className="card-cell">Номер MIT</div>
+          <div className="card-cell">Номер MI</div>
+          <div className="card-cell">Дата поверки</div>
+          <div className="card-cell">Действителен до</div>
+        </div>
+        <Droppable droppableId="instruments" type="INSTRUMENT">
+          {(provided, snapshot) => (
+            <div
+              className={`draggable-instruments ${
+                snapshot.isDraggingOver ? 'draggable-placeholder' : ''
+              }`}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {standaloneInstruments.map((instrument, index) => (
+                <Draggable
+                  key={instrument.id}
+                  draggableId={`instrument-${instrument.id}`}
+                  index={index}
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={`instrument-wrapper ${
+                        snapshot.isDragging ? 'draggable-dragging' : ''
+                      }`}
+                      style={{
+                        ...provided.draggableProps.style,
+                        width: snapshot.isDragging 
+                          ? document.querySelector('.instrument-wrapper')?.offsetWidth 
+                          : 'auto',
+                      }}
+                    >
+                      <InstrumentCard
+                        instrument={instrument}
+                        onDelete={handleDeleteInstrument}
+                        dragHandleProps={provided.dragHandleProps}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </div>
+    </DragDropContext>
+  </div>
+);
+}
+export default NodeDetailsPage;
+
+============================================================
+
+==================== frontend/src/pages/NotFound.jsx ====================
+import React from 'react';
+
+function NotFound() {
+  return (
+    <div>
+      <h1>404 - Страница не найдена</h1>
+      <p>К сожалению, запрашиваемая страница не существует.</p>
+    </div>
+  );
+}
+
+export default NotFound;
+
+============================================================
+
+==================== frontend/build/manifest.json ====================
+{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+
+============================================================
+
+==================== frontend/build/robots.txt ====================
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+
+============================================================
+
+==================== frontend/build/index.html ====================
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Web site created using create-react-app"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>React App</title><script defer="defer" src="/static/js/main.e5e77763.js"></script><link href="/static/css/main.2c2fd341.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+============================================================
+
+==================== frontend/build/asset-manifest.json ====================
+{
+  "files": {
+    "main.css": "/static/css/main.2c2fd341.css",
+    "main.js": "/static/js/main.e5e77763.js",
+    "index.html": "/index.html",
+    "main.2c2fd341.css.map": "/static/css/main.2c2fd341.css.map",
+    "main.e5e77763.js.map": "/static/js/main.e5e77763.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2c2fd341.css",
+    "static/js/main.e5e77763.js"
+  ]
+}
+============================================================
+
+==================== frontend/build/static/css/main.2c2fd341.css ====================
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0}code{font-family:source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace}.spinner{animation:spin 1s linear infinite;border:3px solid #f8f8f2;border-radius:50%;border-top-color:#ffb86c;display:inline-block;height:40px;width:40px}@keyframes spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}*{box-sizing:border-box;margin:0;padding:0}body{background-color:#282a36;color:#f8f8f2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:1rem;line-height:1.6}a{color:#8be9fd;text-decoration:none}a:hover{text-decoration:underline}::selection{background-color:#44475a}.header{background-color:#282a36;padding:2rem;text-align:center}.header .title{color:#f8f8f2;font-size:3rem;margin:0}.home-page{padding:2rem}.home-page .card-container{align-items:stretch;display:flex;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));justify-items:center;margin:0 auto;max-width:1200px}.node-details-page h1.node-title{margin-bottom:2rem;text-align:center}.search-container{align-items:center;background-color:#21222c;border:2px solid #000;border-radius:50%;box-shadow:0 2px 5px #0000004d;display:flex;height:50px;justify-content:center;margin:10px auto;overflow:hidden;position:relative;transition:width .4s ease,border-radius .4s ease;width:50px}.search-container:focus-within,.search-container:hover{border-radius:20px;width:200px}.search-container:before{color:#282a36;content:"🔍";font-size:1.5rem;left:10px;pointer-events:none;position:absolute;z-index:2}.search-bar{background:#0000;border:none;color:#f8f8f2;font-size:16px;margin-left:50px;opacity:0;outline:none;padding:0 10px;transition:opacity .3s ease;width:calc(100% - 60px)}.search-bar:focus{opacity:1}.search-bar::placeholder{color:#6272a4}.instrument-card{align-items:center;background-color:#21222c;border-radius:8px;box-shadow:0 4px 6px #0003;color:#f8f8f2;display:flex;gap:.5rem;grid-template-columns:auto 1fr;min-height:50px;overflow:visible;padding:.5rem;pointer-events:all!important;position:relative;transition:transform .3s ease,box-shadow .3s ease;z-index:auto}.instrument-card .delete-button,.instrument-card .signal-circle{pointer-events:auto}.instrument-card:hover{box-shadow:0 8px 12px #0000004d;transform:scale(1.02)}.instrument-card:hover .delete-button{opacity:1}.instrument-card .drag-handle{cursor:grab;opacity:.7;transition:opacity .2s;z-index:2}.instrument-card .drag-handle:hover{opacity:1}.instrument-card .drag-handle:active{cursor:grabbing}.instrument-card .drag-handle svg{fill:#6272a4;height:24px;pointer-events:none;transition:fill .2s ease;width:24px}.instrument-card .drag-handle:hover svg{fill:#f8f8f2}.instrument-card .delete-button{background-color:#f55;border:none;border-radius:50%;color:#282a36;cursor:pointer;display:block;font-family:Arial,sans-serif;font-size:18px;height:20px;height:22px;line-height:20px;opacity:0;padding:0;position:absolute;right:8px;text-align:center;top:8px;transition:opacity .3s ease;width:20px;width:22px;z-index:2}.instrument-card .delete-button:before{color:#21222c;content:"×";display:block;line-height:1;transform:translateY(-1px)}.instrument-card .delete-button:hover{background-color:#ff0909;opacity:1}.instrument-card .signal-circle{border-radius:50%;bottom:5px;height:12px;opacity:1;position:absolute;right:5px;width:12px}.instrument-card .signal-circle.green{animation:led-glow-green 1.8s ease-in-out infinite alternate;background-color:#50fa7b;border-radius:50%;box-shadow:0 0 6px #50fa7bcc,0 0 12px #50fa7b99,0 0 18px #50fa7b66;display:inline-block;height:10px;right:14px;width:10px}.instrument-card .signal-circle.yellow{animation:led-glow-yellow 1.8s ease-in-out infinite alternate;background-color:#f1fa8c;border-radius:50%;box-shadow:0 0 6px #f1fa8ccc,0 0 12px #f1fa8c99,0 0 18px #f1fa8c66;display:inline-block;height:10px;right:14px;width:10px}.instrument-card .signal-circle.orange{animation:led-glow-orange 1.8s ease-in-out infinite alternate;background-color:#ffb86c;border-radius:50%;box-shadow:0 0 6px #ffb86ccc,0 0 12px #ffb86c99,0 0 18px #ffb86c66;display:inline-block;height:10px;right:14px;width:10px}.instrument-card .signal-circle.red{animation:led-glow-red 1.8s ease-in-out infinite alternate;background-color:#f55;border-radius:50%;box-shadow:0 0 6px #f55c,0 0 12px #f559,0 0 18px #f556;display:inline-block;height:10px;right:14px;width:10px}.instrument-card .signal-circle.black{background-color:#21222c;border-radius:50%;box-shadow:0 0 6px #21222ccc,0 0 12px #21222c99,0 0 18px #21222c66;display:inline-block;height:10px;right:14px;width:10px}.instrument-card .instrument-card-content{grid-gap:.5rem;align-items:center;display:grid;gap:.5rem;grid-template-columns:30px minmax(50px,1fr) minmax(120px,2fr) minmax(80px,1fr) minmax(80px,1fr) minmax(100px,1fr) minmax(100px,1fr) 22px;width:100%}.instrument-card .instrument-card-content:hover .delete-button{opacity:1!important}.instrument-card .instrument-card-content:hover .signal-circle{transform:scale(1.1)}.instrument-card .instrument-card-content .card-cell{overflow:hidden;padding:0 .5rem;text-overflow:ellipsis;white-space:nowrap}.instrument-card .delete-menu{align-items:center;background:#282a36e6;border-radius:6px;display:flex;flex-direction:column;height:100%;justify-content:center;left:0;opacity:0;padding:20px;position:absolute;top:0;transition:opacity .3s ease,visibility .3s ease;visibility:hidden;width:100%;z-index:10}.instrument-card .delete-menu p{margin-bottom:1rem;text-align:center}.instrument-card .delete-menu .delete-menu-buttons{display:flex;gap:1rem;margin-left:0;margin-top:.5rem}.instrument-card .delete-menu .delete-menu-buttons button{min-width:80px;padding:.5rem 1.5rem}.instrument-card.show-delete-menu .card-content,.instrument-card.show-delete-menu .signal-circle{display:none}.instrument-card.show-delete-menu .delete-menu{display:flex;opacity:1;visibility:visible}.card{background-color:#21222c;border-radius:6px;box-shadow:0 4px 6px #0000001a;color:#f8f8f2;cursor:pointer;margin-top:3rem;max-width:220px;min-height:100px;overflow:visible;padding:1rem;position:relative;text-align:center;transform-style:preserve-3d;transition:transform .3s ease,box-shadow .3s ease;width:100%}.card:hover .delete-button{opacity:1}.card .delete-button{background-color:#f55;border:none;border-radius:50%;color:#282a36;cursor:pointer;display:block;font-family:Arial,sans-serif;font-size:18px;height:20px;line-height:20px;opacity:0;position:absolute;right:8px;text-align:center;top:8px;transition:opacity .3s ease;width:20px;z-index:2}.card .delete-button:before{color:#21222c;content:"×";display:block;line-height:1;transform:translateY(-1px)}.card .delete-button:hover{background-color:#ff0909;opacity:1}.card:hover{box-shadow:0 10px 20px #0000004d;transform:scale(1.12)}.card .card-description,.card .card-title{word-wrap:break-word;display:block;max-width:100%;overflow-wrap:break-word;text-overflow:ellipsis;white-space:normal}.card .card-title{font-size:1rem;font-weight:700;margin-bottom:.5rem}.card .card-description{color:#6272a4;font-size:.9rem;line-height:1.4}.card .signal-circle{bottom:8px;position:absolute;right:8px}.card .signal-circle.green{animation:led-glow-green 1.8s ease-in-out infinite alternate;background-color:#50fa7b;box-shadow:0 0 6px #50fa7bcc,0 0 12px #50fa7b99,0 0 18px #50fa7b66}.card .signal-circle.green,.card .signal-circle.yellow{border-radius:50%;display:inline-block;height:10px;right:14px;width:10px}.card .signal-circle.yellow{animation:led-glow-yellow 1.8s ease-in-out infinite alternate;background-color:#f1fa8c;box-shadow:0 0 6px #f1fa8ccc,0 0 12px #f1fa8c99,0 0 18px #f1fa8c66}.card .signal-circle.orange{animation:led-glow-orange 1.8s ease-in-out infinite alternate;background-color:#ffb86c;box-shadow:0 0 6px #ffb86ccc,0 0 12px #ffb86c99,0 0 18px #ffb86c66}.card .signal-circle.orange,.card .signal-circle.red{border-radius:50%;display:inline-block;height:10px;right:14px;width:10px}.card .signal-circle.red{animation:led-glow-red 1.8s ease-in-out infinite alternate;background-color:#f55;box-shadow:0 0 6px #f55c,0 0 12px #f559,0 0 18px #f556}.card .signal-circle.black{background-color:#21222c;border-radius:50%;box-shadow:0 0 6px #21222ccc,0 0 12px #21222c99,0 0 18px #21222c66;display:inline-block;height:10px;right:14px;width:10px}.card .delete-menu{align-items:center;background:#282a36e6;background-color:#21222c;border-radius:6px;display:flex;flex-direction:column;height:100%;justify-content:center;left:0;opacity:0;position:absolute;top:0;transition:opacity .3s ease,visibility .3s ease;visibility:hidden;width:100%;z-index:10}.card .delete-menu p{color:#f8f8f2;font-size:1rem;font-weight:700;margin-bottom:1rem}.card .delete-menu .delete-menu-buttons{display:flex;gap:.5rem}.card .delete-menu .delete-menu-buttons button{align-items:center;border:none;border-radius:4px;cursor:pointer;display:flex;font-size:.9rem;height:30px;justify-content:center;padding:0;transition:background-color .3s ease,transform .3s ease;width:40px}.card .delete-menu .delete-menu-buttons button:hover{transform:scale(1.1)}.card .delete-menu .delete-menu-buttons button:first-child{background-color:#f55;color:#21222c}.card .delete-menu .delete-menu-buttons button:last-child{background-color:#6272a4;color:#21222c}.card.show-delete-menu .delete-menu{opacity:1;visibility:visible}.card.show-delete-menu .card-content{display:none}.add-node-button{align-items:center;background-color:#21222c;border-radius:8px;cursor:pointer;display:flex;height:100px;justify-content:center;margin-top:3rem;position:relative;transition:transform .3s ease;width:220px}.add-node-button:hover{transform:scale(1.1)}.add-node-button .plus-icon{color:#50fa7b;font-size:2rem;font-weight:700;pointer-events:none}.modal-overlay{align-items:center;background:#282a36e6;display:flex;height:100%;justify-content:center;left:0;opacity:0;position:fixed;top:0;transition:opacity .3s ease,visibility .3s ease;visibility:hidden;width:100%;z-index:1000}.modal-overlay.active{opacity:1;visibility:visible}.modal-content{background-color:#21222c;border-radius:8px;box-shadow:0 4px 6px #0003;display:flex;flex-direction:column;gap:1rem;padding:1.5rem;width:300px}.modal-content input{background-color:#f8f8f2;border:2px solid #282a36;border-radius:6px;color:#282a36;font-size:.9rem;outline:none;padding:.5rem;transition:border-color .3s ease;width:100%}.modal-content input:focus{border-color:#50fa7b}.modal-content .modal-buttons{display:flex;justify-content:space-between}.modal-content .modal-buttons button{border:none;border-radius:6px;cursor:pointer;font-size:.9rem;padding:.5rem 1rem;transition:background-color .3s ease}.modal-content .modal-buttons button:first-child{background-color:#50fa7b;color:#21222c}.modal-content .modal-buttons button:first-child:hover{background-color:#1ef956}.modal-content .modal-buttons button:last-child{background-color:#6272a4;color:#21222c}.modal-content .modal-buttons button:last-child:hover{background-color:#4d5b86}@keyframes led-glow-green{0%{box-shadow:0 0 6px #50fa7bcc,0 0 12px #50fa7b99,0 0 18px #50fa7b66}50%{box-shadow:0 0 10px #50fa7b,0 0 18px #50fa7be6,0 0 26px #50fa7bb3}to{box-shadow:0 0 6px #50fa7bcc,0 0 12px #50fa7b99,0 0 18px #50fa7b66}}@keyframes led-glow-yellow{0%{box-shadow:0 0 6px #f1fa8ccc,0 0 12px #f1fa8c99,0 0 18px #f1fa8c66}50%{box-shadow:0 0 10px #f1fa8c,0 0 18px #f1fa8ce6,0 0 26px #f1fa8cb3}to{box-shadow:0 0 6px #f1fa8ccc,0 0 12px #f1fa8c99,0 0 18px #f1fa8c66}}@keyframes led-glow-orange{0%{box-shadow:0 0 6px #ffb86ccc,0 0 12px #ffb86c99,0 0 18px #ffb86c66}50%{box-shadow:0 0 10px #ffb86c,0 0 18px #ffb86ce6,0 0 26px #ffb86cb3}to{box-shadow:0 0 6px #ffb86ccc,0 0 12px #ffb86c99,0 0 18px #ffb86c66}}@keyframes led-glow-red{0%{box-shadow:0 0 6px #f55c,0 0 12px #f559,0 0 18px #f556}50%{box-shadow:0 0 10px #f55,0 0 18px #ff5555e6,0 0 26px #ff5555b3}to{box-shadow:0 0 6px #f55c,0 0 12px #f559,0 0 18px #f556}}@keyframes led-glow-black{0%{box-shadow:0 0 2px #0009,0 0 4px #0006}50%{box-shadow:0 0 3px #000c,0 0 6px #00000080}to{box-shadow:0 0 2px #0009,0 0 4px #0006}}.node-details-page{padding:2rem}.node-details-page .node-title{color:#8be9fd;font-size:1.5rem;margin-bottom:2rem;text-align:center}.node-details-page button{border:none;border-radius:4px;color:#282a36;cursor:pointer;margin-bottom:1rem;margin-right:1rem;padding:.5rem 1rem;transition:background-color .3s ease,transform .2s ease}.node-details-page button:hover{transform:scale(1.1)}.node-details-page .header-row{grid-gap:.5rem;background-color:#21222c;border-radius:6px;color:#6272a4;cursor:default;display:grid;font-weight:700;gap:.5rem;grid-template-columns:30px minmax(50px,1fr) minmax(120px,2fr) minmax(80px,1fr) minmax(80px,1fr) minmax(100px,1fr) minmax(100px,1fr) 22px;margin-bottom:.5rem;padding:.5rem}.node-details-page .drag-handle-header{flex-shrink:1;margin-right:0;width:10px}.node-details-page .card-cell{flex:1 1;padding:0 .5rem;text-align:center;word-break:word-break}.node-details-page .draggable-instruments{display:flex;flex-direction:column;gap:.5rem}.node-details-page .instrument-card{align-items:center;background-color:#21222c;border-radius:8px;box-shadow:0 4px 6px #0003;color:#f8f8f2;display:flex;min-height:50px;overflow:visible;padding:.5rem;position:relative;transition:transform .3s ease,box-shadow .3s ease}.node-details-page .instrument-card:hover{box-shadow:0 8px 12px #0000004d;transform:scale(1.02)}.node-details-page .instrument-card:hover .delete-button{opacity:1}.node-details-page .instrument-card .delete-button{background-color:#f55;border:none;border-radius:50%;color:#282a36;cursor:pointer;display:block;font-family:Arial,sans-serif;font-size:18px;height:20px;line-height:20px;opacity:0;position:absolute;right:-6px;text-align:center;top:8px;transition:opacity .3s ease;width:20px;z-index:2}.node-details-page .instrument-card .delete-button:before{color:#21222c;content:"×";display:block;line-height:1;transform:translateY(-1px)}.node-details-page .instrument-card .delete-button:hover{background-color:#ff0909;opacity:1}.node-details-page .instrument-card .signal-circle{border-radius:50%;bottom:5px;height:12px;opacity:1;position:absolute;right:5px;width:12px}.node-details-page .instrument-card .signal-circle.green{animation:led-glow-green 1.8s ease-in-out infinite alternate;background-color:#50fa7b;border-radius:50%;box-shadow:0 0 6px #50fa7bcc,0 0 12px #50fa7b99,0 0 18px #50fa7b66;display:inline-block;height:10px;right:14px;width:10px}.node-details-page .instrument-card .signal-circle.yellow{animation:led-glow-yellow 1.8s ease-in-out infinite alternate;background-color:#f1fa8c;border-radius:50%;box-shadow:0 0 6px #f1fa8ccc,0 0 12px #f1fa8c99,0 0 18px #f1fa8c66;display:inline-block;height:10px;right:14px;width:10px}.node-details-page .instrument-card .signal-circle.orange{animation:led-glow-orange 1.8s ease-in-out infinite alternate;background-color:#ffb86c;border-radius:50%;box-shadow:0 0 6px #ffb86ccc,0 0 12px #ffb86c99,0 0 18px #ffb86c66;display:inline-block;height:10px;right:14px;width:10px}.node-details-page .instrument-card .signal-circle.red{animation:led-glow-red 1.8s ease-in-out infinite alternate;background-color:#f55;border-radius:50%;box-shadow:0 0 6px #f55c,0 0 12px #f559,0 0 18px #f556;display:inline-block;height:10px;right:14px;width:10px}.node-details-page .instrument-card .signal-circle.black{background-color:#21222c;border-radius:50%;box-shadow:0 0 6px #21222ccc,0 0 12px #21222c99,0 0 18px #21222c66;display:inline-block;height:10px;right:14px;width:10px}.node-details-page .instrument-card .card-content{align-items:center;display:flex;flex:1 1;gap:.5rem}.node-details-page .instrument-card .card-content .card-cell{color:#f8f8f2;flex:1 1;font-size:.9rem;padding:0 .5rem;text-align:center}.node-details-page .delete-menu{align-items:center;background:#282a36e6;border-radius:6px;display:none;flex-direction:row;height:100%;justify-content:center;left:0;opacity:0;position:absolute;top:0;transition:opacity .3s ease,visibility .3s ease;visibility:hidden;width:100%;z-index:10}.node-details-page .delete-menu p{color:#f8f8f2;font-size:1rem;font-weight:700;margin:0}.node-details-page .delete-menu .delete-menu-buttons{display:flex;gap:.5rem;margin-left:1rem}.node-details-page .delete-menu .delete-menu-buttons button{border:none;border-radius:4px;cursor:pointer;font-size:.9rem;padding:.5rem 1rem}.node-details-page .delete-menu .delete-menu-buttons button:first-child{background-color:#f55;color:#282a36}.node-details-page .delete-menu .delete-menu-buttons button:last-child{background-color:#6272a4;color:#282a36}.node-details-page.show-delete-menu .card-content,.node-details-page.show-delete-menu .signal-circle{display:none}.node-details-page.show-delete-menu .delete-menu{display:flex;opacity:1;visibility:visible}.add-group-button,.add-instrument-button{align-items:center;background-color:#50fa7b;border:none;border-radius:4px;color:#282a36;cursor:pointer;display:inline-flex;font-size:1.125rem;font-weight:700;justify-content:center;margin-bottom:1rem;padding:.5rem 1rem;transition:background-color .3s ease}.add-group-button:hover,.add-instrument-button:hover{background-color:#1ef956}.add-group-button svg,.add-instrument-button svg{fill:#282a36;height:20px;margin-right:.5rem;width:20px}.modal{background-color:#21222c;border-radius:8px;box-shadow:0 8px 16px #0000004d;color:#f8f8f2;left:50%;max-width:400px;padding:2rem;position:fixed;top:50%;transform:translate(-50%,-50%);width:100%;z-index:1000}.modal h3{font-size:1.5rem;margin-bottom:1rem;text-align:center}.modal .form-field{display:flex;flex-direction:column;margin-bottom:.5rem}.modal .form-field label{color:#6272a4;font-size:.8rem;margin-bottom:.25rem}.modal .form-field input,.modal .form-field select{background-color:#282a36;border:1px solid #6272a4;border-radius:4px;color:#f8f8f2;font-size:1.125rem;padding:.25rem .5rem;transition:border-color .3s ease}.modal .form-field input:focus,.modal .form-field select:focus{border-color:#50fa7b;outline:none}.modal .toggle-advanced-search{background-color:#6272a4;border:none;border-radius:4px;color:#f8f8f2;cursor:pointer;display:block;font-size:.8rem;margin-top:.5rem;padding:.25rem .5rem;transition:background-color .3s ease;width:100%}.modal .toggle-advanced-search:hover{background-color:#4d5b86}.modal .form-buttons{display:flex;gap:.5rem;justify-content:space-between}.modal .form-buttons button{border:none;border-radius:4px;cursor:pointer;flex:1 1;font-size:1.125rem;padding:.5rem 1rem;transition:background-color .3s ease}.modal .form-buttons button:first-child{background-color:#50fa7b;color:#282a36}.modal .form-buttons button:first-child:hover{background-color:#1ef956}.modal .form-buttons button:last-child{background-color:#f55;color:#282a36}.modal .form-buttons button:last-child:hover{background-color:#f22}.add-group-button{background-color:#ffb86c}.add-group-button:hover{background-color:#ff9f39}.modal-group{background-color:#21222c;border-radius:8px;box-shadow:0 8px 16px #0000004d;color:#f8f8f2;left:50%;max-width:500px;padding:2rem;position:fixed;top:50%;transform:translate(-50%,-50%);transition:all .3s ease;width:100%;z-index:1000}.modal-group h3{font-size:1.5rem;margin-bottom:1rem;text-align:center}.modal-group .form-field{display:flex;flex-direction:column;margin-bottom:1rem}.modal-group .form-field label{color:#f8f8f2;font-size:1.125rem;margin-bottom:.25rem}.modal-group .form-field input,.modal-group .form-field textarea{background-color:#282a36;border:1px solid #6272a4;border-radius:4px;color:#f8f8f2;font-size:1.125rem;padding:.5rem;transition:border-color .3s ease}.modal-group .form-field input:focus,.modal-group .form-field textarea:focus{border-color:#50fa7b;outline:none}.modal-group .form-field textarea{min-height:100px;resize:vertical}.modal-group .error-message{color:#f55;font-size:.8rem;margin-top:.25rem}.modal-group .form-buttons{display:flex;gap:.5rem;justify-content:space-between}.modal-group .form-buttons button{border:none;border-radius:4px;cursor:pointer;flex:1 1;font-size:1.125rem;padding:.5rem 1rem;transition:background-color .3s ease}.modal-group .form-buttons button:first-child{background-color:#50fa7b;color:#282a36}.modal-group .form-buttons button:first-child:hover{background-color:#1ef956}.modal-group .form-buttons button:last-child{background-color:#f55;color:#282a36}.modal-group .form-buttons button:last-child:hover{background-color:#f22}.group-container{background-color:#21222c;border-radius:8px;box-shadow:0 4px 6px #0000001a;margin-bottom:2rem;position:relative;transition:transform .3s ease,box-shadow .3s ease}.group-container:hover{box-shadow:0 4px 6px #0000001a;transform:none}.group-container .group-header{align-items:center;background-color:#21222c;border-radius:8px 8px 0 0;color:#ffb86c;cursor:default;display:grid;font-size:1.1rem;font-weight:700;grid-template-columns:30px 1fr;padding:.5rem 40px .5rem .5rem;position:relative;transition:background-color .3s ease,color .3s ease}.group-container .group-header:hover{background-color:#0b0b0f;color:#ff9f39}.group-container .group-header h3{flex-grow:1;margin:0;text-align:center}.group-container .group-header .delete-group-button-wrapper{opacity:0;position:absolute;right:8px;top:8px;transition:opacity .3s ease;z-index:2}.group-container .group-header .delete-group-button{background-color:#f55;border:none;border-radius:50%;cursor:pointer;font-size:18px;height:22px;padding:0;position:relative;transition:background-color .3s ease;width:22px}.group-container .group-header:hover .delete-group-button-wrapper{opacity:1}.group-container .group-header .drag-handle{cursor:grab;height:24px;margin-right:.5rem;width:24px}.group-container .group-header .drag-handle svg{fill:#6272a4;height:24px;width:24px}.group-container .group-header .drag-handle:hover svg{fill:#f8f8f2}.group-container .group-content{background-color:#44475a;border-radius:0 0 8px 8px;display:flex;flex-direction:column;gap:.5rem;padding:20px}.group-container .draggable{left:auto;pointer-events:none;position:absolute;top:auto;transform:translateZ(0);transition:transform .2s ease-in-out,top .2s ease-in-out,left .2s ease-in-out;z-index:10}.group-container .draggable.in-place{transition:transform .5s ease,top .5s ease,left .5s ease}.group-container .instrument-wrapper.in-place{transform:scale(1.05);transition:transform .5s ease-out}
+/*# sourceMappingURL=main.2c2fd341.css.map*/
+============================================================
+
+==================== frontend/build/static/js/main.e5e77763.js ====================
+[Файл слишком большой для включения (451885 символов)]
+============================================================
+
+==================== frontend/build/static/js/main.e5e77763.js.LICENSE.txt ====================
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/**
+ * @license React
+ * react-dom-client.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react-dom.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react-jsx-runtime.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * scheduler.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * use-sync-external-store-with-selector.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+============================================================
+
+
+ИТОГОВАЯ СТАТИСТИКА:
+Обработано файлов: 53
+Преобладающий язык: JavaScript
+
+Обработанные файлы:
+  - README.md
+  - bd.sh
+  - main.py
+  - requirements.txt
+  - project_source_code.txt
+  - alembic/env.py
+  - alembic/versions/037f21b707b5_new_models.py
+  - alembic/versions/8ba69486bb06_add_order_field_to_groups.py
+  - alembic/versions/b0d08833131e_add_index_within_group_to_.py
+  - app/__init__.py
+  - app/crud.py
+  - app/database.py
+  - app/main.py
+  - app/models.py
+  - app/schemas.py
+  - app/routers/__init__.py
+  - app/routers/groups.py
+  - app/routers/instruments.py
+  - app/routers/nodes.py
+  - frontend/README.md
+  - frontend/package-lock.json
+  - frontend/package.json
+  - frontend/public/index.html
+  - frontend/public/manifest.json
+  - frontend/public/robots.txt
+  - frontend/src/App.js
+  - frontend/src/App.test.js
+  - frontend/src/code.txt
+  - frontend/src/index.js
+  - frontend/src/reportWebVitals.js
+  - frontend/src/routes.js
+  - frontend/src/setupTests.js
+  - frontend/src/api/apiClient.js
+  - frontend/src/components/AddGroupModal.jsx
+  - frontend/src/components/AddInstrumentModal.jsx
+  - frontend/src/components/AddNodeButton.jsx
+  - frontend/src/components/DeleteInstrumentMenu.jsx
+  - frontend/src/components/DeleteNodeMenu.jsx
+  - frontend/src/components/GroupCard.jsx
+  - frontend/src/components/InstrumentCard.jsx
+  - frontend/src/components/NodeCard.jsx
+  - frontend/src/components/SearchBar.jsx
+  - frontend/src/components/index.jsx
+  - frontend/src/pages/HomePage.jsx
+  - frontend/src/pages/NodeDetails.jsx
+  - frontend/src/pages/NotFound.jsx
+  - frontend/build/manifest.json
+  - frontend/build/robots.txt
+  - frontend/build/index.html
+  - frontend/build/asset-manifest.json
+  - frontend/build/static/css/main.2c2fd341.css
+  - frontend/build/static/js/main.e5e77763.js
+  - frontend/build/static/js/main.e5e77763.js.LICENSE.txt
